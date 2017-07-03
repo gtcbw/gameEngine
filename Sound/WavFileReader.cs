@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Sound.Contracts;
+﻿using Sound.Contracts;
 using System.IO;
 
 namespace Sound

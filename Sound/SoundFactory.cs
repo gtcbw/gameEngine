@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Sound.Contracts;
-using System.Threading;
-using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
-using FrameworkContracts;
-
 
 namespace Sound
 {
-    public class SoundFactory : ISoundFactory, IResourceCleaner, ISoundInterrupter
+    public class SoundFactory : ISoundFactory, ISoundInterrupter
     {
         private IBufferLoader _bufferLoader;
         private List<BufferSources> _buffers;
@@ -24,7 +18,6 @@ namespace Sound
             _maxDistance = maxDistance;
             _volume = volume;
             _buffers = new List<BufferSources>();
-            //AL.DistanceModel(ALDistanceModel.LinearDistance);
         }
 
         ISound ISoundFactory.LoadSound(string fileName, bool listenerDependent, bool looped = false)
@@ -59,11 +52,6 @@ namespace Sound
             sound.SetVolume(_volume);
 
             return sound;
-        }
-
-        void IResourceCleaner.Clear()
-        {
-            ClearBufferAndSources();
         }
 
         void ISoundFactory.DeleteSound(ISound sound)
