@@ -32,7 +32,7 @@ namespace Graphics
             CurrentResolution = desiredResolution;
         }
 
-        public void SetViewPort(Resolution desiredResolution)
+        private void SetViewPort(Resolution desiredResolution)
         {
             GL.Viewport(0, 0, desiredResolution.X, desiredResolution.Y); 
         }

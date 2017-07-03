@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.cs" />
     <Compile Include="IAlphaBlender.cs" />
     <Compile Include="IAlphaTester.cs" />
     <Compile Include="IBackgroundColor.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Normal.cs" />
     <Compile Include="Polygon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resolution.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="VertexPosition.cs" />
     <Compile Include="VertexTextureCoordinate.cs" />

@@ -1,11 +1,19 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using Graphics.Contracts;
+using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
     public class Initializer
     {
-        public void Initialize()
+        public static void Initialize(Configuration configuration)
         {
+            Window window = new Window(configuration.Resolution.X, configuration.Resolution.Y);
+
+            window.Resize += (sender, e) =>
+            {
+                GL.Viewport(0, 0, configuration.Resolution.X, configuration.Resolution.Y);
+            };
+
             GL.Enable(EnableCap.Texture2D);
             GL.ClearDepth(1.0);
             GL.DepthFunc(DepthFunction.Less);

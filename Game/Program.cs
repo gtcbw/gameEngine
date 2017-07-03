@@ -1,4 +1,5 @@
-﻿using Sound;
+﻿using Graphics.Contracts;
+using Sound;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Game
         static void Main(string[] args)
         {
             Initializer.Init();
+
+            Graphics.Initializer.Initialize(new Configuration { Resolution = new Resolution { X = 800, Y = 600 } });
 
             Initializer.CleanUp();
         }
