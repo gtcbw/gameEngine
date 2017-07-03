@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK.Graphics.OpenGL;
-using Render.Contracts;
+﻿using OpenTK.Graphics.OpenGL;
+using Graphics.Contracts;
 
-namespace Render
+namespace Graphics
 {
     public class Light : ILight
     {

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FrameworkContracts;
-using BaseTypes;
-using Render.Contracts;
+﻿using Graphics.Contracts;
 
-namespace Render
+namespace Graphics
 {
     public class Texture : ITexture
     {

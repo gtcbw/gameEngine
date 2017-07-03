@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Render.Contracts;
+using Graphics.Contracts;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace Render
+namespace Graphics
 {
     public class Camera : ICamera
     {
-        private FrameworkContracts.IPlayerCamera _playerCamera;
         private bool _depthTestEnabled;
         private IScreen _screen;
 
-        public Camera(FrameworkContracts.IPlayerCamera playerCamera, IScreen screen)
+        public Camera(IScreen screen)
         {
-            _playerCamera = playerCamera;
             _screen = screen;
         }
 
@@ -41,7 +36,7 @@ namespace Render
         {
             GL.MatrixMode(MatrixMode.Projection);
 
-            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_screen.AspectRatio, 0.2f, 600.0f);
+            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_screen.AspectRatio, 0.15f, 400.0f);
             GL.LoadMatrix(ref matrix);
 
             GL.MatrixMode(MatrixMode.Modelview);
@@ -56,17 +51,17 @@ namespace Render
         }
         private void UpdatePosition()
         {
-            Matrix4 modelview = Matrix4.LookAt(
-            (float)_playerCamera.CameraPosition.PositionX,
-                (float)_playerCamera.CameraPosition.PositionY,
-                (float)_playerCamera.CameraPosition.PositionZ,
-                (float)_playerCamera.LookAtPosition.PositionX,
-                (float)_playerCamera.LookAtPosition.PositionY,
-                (float)_playerCamera.LookAtPosition.PositionZ,
-                0, 1, 0
-                );
+            //Matrix4 modelview = Matrix4.LookAt(
+            //(float)_playerCamera.CameraPosition.PositionX,
+            //    (float)_playerCamera.CameraPosition.PositionY,
+            //    (float)_playerCamera.CameraPosition.PositionZ,
+            //    (float)_playerCamera.LookAtPosition.PositionX,
+            //    (float)_playerCamera.LookAtPosition.PositionY,
+            //    (float)_playerCamera.LookAtPosition.PositionZ,
+            //    0, 1, 0
+            //    );
 
-            GL.LoadMatrix(ref modelview);
+            //GL.LoadMatrix(ref modelview);
         }
     }
 }

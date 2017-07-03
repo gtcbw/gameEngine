@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Render.Contracts;
+﻿using Graphics.Contracts;
 using OpenTK.Graphics.OpenGL;
 
-namespace Render
+namespace Graphics
 {
     public class LightSwitch : ILightSwitch
     {

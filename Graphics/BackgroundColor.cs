@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FrameworkContracts;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using OpenTK.Graphics;
 using System.Drawing;
-using Render.Contracts;
+using Graphics.Contracts;
 
-namespace Render
+namespace Graphics
 {
     public class BackgroundColor : IBackgroundColor
     {

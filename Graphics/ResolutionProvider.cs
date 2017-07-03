@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Render.Contracts;
+using Graphics.Contracts;
 using OpenTK;
 
-namespace Render
+namespace Graphics
 {
     public class ResolutionProvider : IResolutionProvider
     {

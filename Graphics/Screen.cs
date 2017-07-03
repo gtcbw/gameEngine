@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FrameworkContracts;
-using Settings;
-using System.Drawing;
-using OpenTK;
-using OpenTK.Graphics;
+﻿using System.Drawing;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
 using OpenTK.Platform;
-using Render.Contracts;
+using Graphics.Contracts;
 
-namespace Render
+namespace Graphics
 {
     public class Screen : IScreen
     {
