@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Sound.Contracts
 {
-    public class WavFileContent
+    public sealed class WavFileContent
     {
         public byte[] ByteContent { set; get; }
 

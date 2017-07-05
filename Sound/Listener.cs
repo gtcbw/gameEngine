@@ -3,7 +3,7 @@ using OpenTK.Audio.OpenAL;
 
 namespace Sound
 {
-    public class Listener : IEar
+    public sealed class Listener : IEar
     {
         void IEar.SetPosition(float x, float y, float z)
         {

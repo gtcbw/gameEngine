@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class RenderedSideSwitcher : IRenderedSideSwitcher
+    public sealed class RenderedSideSwitcher : IRenderedSideSwitcher
     {
         void IRenderedSideSwitcher.SwitchToFrontSide()
         {

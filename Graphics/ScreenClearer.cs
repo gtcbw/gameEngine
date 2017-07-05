@@ -1,8 +1,9 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using Graphics.Contracts;
+using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class ScreenClearer
+    public sealed class ScreenClearer : IScreenClearer
     {
         public void CleanScreen()
         {

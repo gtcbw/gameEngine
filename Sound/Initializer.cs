@@ -3,7 +3,7 @@ using OpenTK.Audio;
 
 namespace Sound
 {
-    public class Initializer
+    public sealed class Initializer
     {
         private static AudioContext _context = null;
 

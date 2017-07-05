@@ -2,7 +2,7 @@
 
 namespace Graphics
 {
-    public class Texture : ITexture
+    public sealed class Texture : ITexture
     {
         public int TextureId
         {

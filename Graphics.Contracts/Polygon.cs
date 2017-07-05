@@ -2,7 +2,7 @@
 
 namespace Graphics.Contracts
 {
-    public class Polygon
+    public sealed class Polygon
     {
         public Normal Normal { set; get; }
 

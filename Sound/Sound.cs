@@ -3,7 +3,7 @@ using OpenTK.Audio.OpenAL;
 
 namespace Sound
 {
-    public class Sound : IComplexSound
+    public sealed class Sound : IComplexSound
     {
         private int _source;
 

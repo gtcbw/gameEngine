@@ -58,6 +58,7 @@
     <Compile Include="IScaler.cs" />
     <Compile Include="IScreen.cs" />
     <Compile Include="IRenderedSideSwitcher.cs" />
+    <Compile Include="IScreenClearer.cs" />
     <Compile Include="ITexture.cs" />
     <Compile Include="ITextureChanger.cs" />
     <Compile Include="ITextureLoader.cs" />

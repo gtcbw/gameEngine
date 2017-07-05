@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class LightSwitch : ILightSwitch
+    public sealed class LightSwitch : ILightSwitch
     {
         void ILightSwitch.On()
         {

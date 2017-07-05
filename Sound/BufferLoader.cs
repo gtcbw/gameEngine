@@ -4,7 +4,7 @@ using OpenTK.Audio.OpenAL;
 
 namespace Sound
 {
-    public class BufferLoader : IBufferLoader
+    public sealed class BufferLoader : IBufferLoader
     {
         private IWavFileReader _wavFileReader;
 

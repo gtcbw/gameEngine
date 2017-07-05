@@ -1,6 +1,6 @@
 ﻿namespace Graphics.Contracts
 {
-    public class Configuration
+    public sealed class Configuration
     {
         public Resolution Resolution { set;get;}
     }

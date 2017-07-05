@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class WorldRotator : IWorldRotator
+    public sealed class WorldRotator : IWorldRotator
     {
         void IWorldRotator.RotateX(double degree)
         {

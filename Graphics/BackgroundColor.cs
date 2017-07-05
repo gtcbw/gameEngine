@@ -5,7 +5,7 @@ using Graphics.Contracts;
 
 namespace Graphics
 {
-    public class BackgroundColor : IBackgroundColor
+    public sealed class BackgroundColor : IBackgroundColor
     {
         private Color _backgroundColor;
 

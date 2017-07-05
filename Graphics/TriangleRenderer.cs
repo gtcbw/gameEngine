@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class TriangleRenderer : IPolygonRenderer
+    public sealed class TriangleRenderer : IPolygonRenderer
     {
         void IPolygonRenderer.RenderPolygons(List<Polygon> polygons)
         {

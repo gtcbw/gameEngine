@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class Initializer
+    public sealed class Initializer
     {
         public static void Initialize(Configuration configuration)
         {

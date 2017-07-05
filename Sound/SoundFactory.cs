@@ -5,7 +5,7 @@ using OpenTK.Audio.OpenAL;
 
 namespace Sound
 {
-    public class SoundFactory : ISoundFactory, ISoundInterrupter
+    public sealed class SoundFactory : ISoundFactory, ISoundInterrupter
     {
         private IBufferLoader _bufferLoader;
         private List<BufferSources> _buffers;

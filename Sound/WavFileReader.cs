@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Sound
 {
-    public class WavFileReader : IWavFileReader
+    public sealed class WavFileReader : IWavFileReader
     {
         WavFileContent IWavFileReader.LoadWave(string fileName)
         {

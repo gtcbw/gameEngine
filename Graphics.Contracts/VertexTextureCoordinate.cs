@@ -1,6 +1,6 @@
 ﻿namespace Graphics.Contracts
 {
-    public class VertexTextureCoordinate
+    public sealed class VertexTextureCoordinate
     {
         public float X { set; get; }
 

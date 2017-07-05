@@ -3,7 +3,7 @@ using Graphics.Contracts;
 
 namespace Graphics
 {
-    public class LightCollectionProvider : ILightCollectionProvider
+    public sealed class LightCollectionProvider : ILightCollectionProvider
     {
         ILightCollection ILightCollectionProvider.GetCollection(int levelId)
         {

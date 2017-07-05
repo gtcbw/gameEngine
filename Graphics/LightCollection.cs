@@ -5,7 +5,7 @@ using Graphics.Contracts;
 
 namespace Graphics
 {
-    public class LightCollection : ILightCollection
+    public sealed class LightCollection : ILightCollection
     {
         private List<ILight> _lights;
 

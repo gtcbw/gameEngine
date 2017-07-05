@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class TextureTranslator : ITextureTranslator
+    public sealed class TextureTranslator : ITextureTranslator
     {
 
         void ITextureTranslator.TranslateTexture(double x, double y)

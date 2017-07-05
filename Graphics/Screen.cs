@@ -5,7 +5,7 @@ using Graphics.Contracts;
 
 namespace Graphics
 {
-    public class Screen : IScreen
+    public sealed class Screen : IScreen
     {
         public double AspectRatio { private set; get; }
         public Resolution CurrentResolution { private set; get; }

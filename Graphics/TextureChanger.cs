@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class TextureChanger : ITextureChanger
+    public sealed class TextureChanger : ITextureChanger
     {
         private int _textureId;
 

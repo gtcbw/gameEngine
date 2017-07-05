@@ -3,7 +3,7 @@ using Sound.Contracts;
 
 namespace Sound
 {
-    public class BufferSources
+    public sealed class BufferSources
     {
         public SoundBuffer Buffer { set; get; }
 

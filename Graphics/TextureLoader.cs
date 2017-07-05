@@ -5,7 +5,7 @@ using Graphics.Contracts;
 
 namespace Graphics
 {
-    public class TextureLoader : ITextureLoader
+    public sealed class TextureLoader : ITextureLoader
     {
         private ITextureChanger _textureChanger;
 
@@ -14,7 +14,7 @@ namespace Graphics
             _textureChanger = textureChanger;
         }
 
-        public ITexture LoadTexture(string texturePath, bool mipMap)
+        public ITexture LoadTexture(string texturePath)
         {
             int id = GL.GenTexture();
             
@@ -33,15 +33,8 @@ namespace Graphics
 
             bitmap.UnlockBits(bitmapData);
 
-            if (mipMap)
-            {
-                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-            }
-            else
-            {
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            }
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
             Texture texture = new Texture 
             { 

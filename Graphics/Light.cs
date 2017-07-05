@@ -3,7 +3,7 @@ using Graphics.Contracts;
 
 namespace Graphics
 {
-    public class Light : ILight
+    public sealed class Light : ILight
     {
         private EnableCap _lightIdentifier;
         private LightName _lightName;

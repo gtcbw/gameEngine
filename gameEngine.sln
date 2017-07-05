@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphics", "Graphics\Graphi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", "{386A8C51-2B65-4FF5-9EB9-48C28E8A3862}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine.Contracts", "Engine.Contracts\Engine.Contracts.csproj", "{A9140007-C3AE-4DCE-A75C-407031CC5481}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine.Framework", "Engine.Framework\Engine.Framework.csproj", "{FB4EB763-0C1A-4AE2-8F6C-9EB82800277D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{386A8C51-2B65-4FF5-9EB9-48C28E8A3862}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{386A8C51-2B65-4FF5-9EB9-48C28E8A3862}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{386A8C51-2B65-4FF5-9EB9-48C28E8A3862}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9140007-C3AE-4DCE-A75C-407031CC5481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9140007-C3AE-4DCE-A75C-407031CC5481}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9140007-C3AE-4DCE-A75C-407031CC5481}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9140007-C3AE-4DCE-A75C-407031CC5481}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB4EB763-0C1A-4AE2-8F6C-9EB82800277D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB4EB763-0C1A-4AE2-8F6C-9EB82800277D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB4EB763-0C1A-4AE2-8F6C-9EB82800277D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB4EB763-0C1A-4AE2-8F6C-9EB82800277D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

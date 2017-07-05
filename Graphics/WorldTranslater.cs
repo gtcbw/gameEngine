@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class WorldTranslator : IWorldTranslator
+    public sealed class WorldTranslator : IWorldTranslator
     {
         void IWorldTranslator.TranslateWorld(double x, double y, double z)
         {

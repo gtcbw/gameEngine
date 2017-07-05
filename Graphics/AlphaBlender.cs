@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class AlphaBlender : IAlphaBlender
+    public sealed class AlphaBlender : IAlphaBlender
     {
 
         void IAlphaBlender.BeginBlending()

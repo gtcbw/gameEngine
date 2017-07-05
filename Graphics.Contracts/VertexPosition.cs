@@ -1,6 +1,6 @@
 ﻿namespace Graphics.Contracts
 {
-    public class VertexPosition
+    public sealed class VertexPosition
     {
         public float X { set; get; }
 

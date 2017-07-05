@@ -5,7 +5,7 @@ using OpenTK;
 
 namespace Graphics
 {
-    public class ResolutionProvider : IResolutionProvider
+    public sealed class ResolutionProvider : IResolutionProvider
     {
         public List<Resolution> GetSupportedResolutions()
         {

@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class AlphaTester : IAlphaTester
+    public sealed class AlphaTester : IAlphaTester
     {
         void IAlphaTester.Begin()
         {

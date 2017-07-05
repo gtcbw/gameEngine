@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Sound.Contracts
 {
-    public class SoundBuffer
+    public sealed class SoundBuffer
     {
         public int Id { set; get; }
 

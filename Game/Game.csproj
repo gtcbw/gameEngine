@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoopCreator.cs" />
+    <Compile Include="OpenTkDependencies\PressedKeyDetector.cs" />
+    <Compile Include="OpenTkDependencies\Window.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,6 +57,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Engine.Contracts\Engine.Contracts.csproj">
+      <Project>{a9140007-c3ae-4dce-a75c-407031cc5481}</Project>
+      <Name>Engine.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Engine.Framework\Engine.Framework.csproj">
+      <Project>{fb4eb763-0c1a-4ae2-8f6c-9eb82800277d}</Project>
+      <Name>Engine.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Graphics.Contracts\Graphics.Contracts.csproj">
       <Project>{a13c5a44-3305-4bd0-9d83-5106a360c30f}</Project>
       <Name>Graphics.Contracts</Name>

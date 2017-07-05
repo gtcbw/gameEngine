@@ -1,6 +1,6 @@
 ﻿namespace Graphics.Contracts
 {
-    public class Normal
+    public sealed class Normal
     {
         public float X { set; get; }
 

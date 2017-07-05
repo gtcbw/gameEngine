@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class Scaler : IScaler
+    public sealed class Scaler : IScaler
     {
         void IScaler.Scale(double x, double y, double z)
         {

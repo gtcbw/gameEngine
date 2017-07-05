@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class DepthTestActivator : IDepthTestActivator
+    public sealed class DepthTestActivator : IDepthTestActivator
     {
         void IDepthTestActivator.Activate()
         {

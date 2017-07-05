@@ -5,7 +5,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public class Camera : ICamera
+    public sealed class Camera : ICamera
     {
         private bool _depthTestEnabled;
         private IScreen _screen;
