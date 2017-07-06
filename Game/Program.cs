@@ -3,6 +3,8 @@ using Graphics.Contracts;
 using Sound;
 using OpenTK.Graphics.OpenGL;
 using Engine.Contracts;
+using Engine.Framework;
+using System;
 
 namespace Game
 {
@@ -19,10 +21,13 @@ namespace Game
 
             IMouseController mouseController = new MouseController(window.Mouse, c.Resolution.X, c.Resolution.Y, c.Resolution.AspectRatio, c.InvertMouse);
             IPressedKeyDetector pressedKeyDetector = new PressedKeyDetector(window.Keyboard);
+            IFrameTimeProvider timeProvider = new FrameTimeProvider();
 
             Graphics.Initializer.Initialize();
 
-            LoopCreator.BuildLoop()();
+            Action loop = LoopCreator.BuildLoop();
+
+            loop();
 
             Initializer.CleanUp();
         }
