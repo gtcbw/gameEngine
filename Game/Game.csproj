@@ -48,7 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoopCreator.cs" />
-    <Compile Include="OpenTkDependencies\MouseController.cs" />
+    <Compile Include="OpenTkDependencies\AbsoluteMousePositionProvider.cs" />
+    <Compile Include="OpenTkDependencies\MousePositionDeltaProvider.cs" />
+    <Compile Include="OpenTkDependencies\MouseButtonEventProvider.cs" />
     <Compile Include="OpenTkDependencies\PressedKeyDetector.cs" />
     <Compile Include="OpenTkDependencies\Window.cs" />
     <Compile Include="Program.cs" />

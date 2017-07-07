@@ -1,4 +1,4 @@
-﻿namespace Engine.Contracts
+﻿namespace Engine.Contracts.Input
 {
     public enum Keys
     {

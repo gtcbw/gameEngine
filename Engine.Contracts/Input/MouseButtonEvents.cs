@@ -1,15 +1,7 @@
-﻿namespace Engine.Contracts
+﻿namespace Engine.Contracts.Input
 {
-    public sealed class MouseEvents
+    public sealed class MouseButtonEvents
     {
-        public double PositionX { set; get; }
-
-        public double PositionY { set; get; }
-
-        public double PositionXDelta { get; set; }
-
-        public double PositionYDelta { get; set; }
-
         public int WheelDelta { get; set; }
 
         public bool LeftButtonPressed { get; set; }

@@ -1,6 +1,6 @@
-﻿using Engine.Contracts;
-using System;
+﻿using System;
 using OpenTK.Input;
+using Engine.Contracts.Input;
 
 namespace Game.OpenTkDependencies
 {

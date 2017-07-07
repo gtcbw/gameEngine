@@ -40,11 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input\IAbsoluteMousePositionProvider.cs" />
     <Compile Include="IFrameTimeProvider.cs" />
-    <Compile Include="IMouseController.cs" />
-    <Compile Include="IPressedKeyDetector.cs" />
-    <Compile Include="Keys.cs" />
-    <Compile Include="MouseEvents.cs" />
+    <Compile Include="Input\IMouseButtonEventProvider.cs" />
+    <Compile Include="Input\IMousePositionDeltaProvider.cs" />
+    <Compile Include="Input\IPressedKeyDetector.cs" />
+    <Compile Include="Input\Keys.cs" />
+    <Compile Include="Input\MouseButtonEvents.cs" />
+    <Compile Include="Input\MousePosition.cs" />
+    <Compile Include="Input\MousePositionDelta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
