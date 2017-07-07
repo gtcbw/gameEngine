@@ -5,5 +5,7 @@
         public Resolution Resolution { set; get; }
 
         public bool InvertMouse { set; get; }
+
+        public int SoundVolume { set; get; }
     }
 }

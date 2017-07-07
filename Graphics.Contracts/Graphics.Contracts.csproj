@@ -47,6 +47,7 @@
     <Compile Include="IAlphaBlender.cs" />
     <Compile Include="IAlphaTester.cs" />
     <Compile Include="IBackgroundColor.cs" />
+    <Compile Include="IBufferSwapper.cs" />
     <Compile Include="ICamera.cs" />
     <Compile Include="IDepthTestActivator.cs" />
     <Compile Include="ILight.cs" />

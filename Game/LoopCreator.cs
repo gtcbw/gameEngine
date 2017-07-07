@@ -2,21 +2,40 @@
 using Graphics;
 using Graphics.Contracts;
 using System;
+using Engine.Contracts.Input;
+using Game.OpenTkDependencies;
+using Sound;
+using Sound.Contracts;
 
 namespace Game
 {
-    public class LoopCreator
+    internal class LoopCreator
     {
-        public static Action BuildLoop()
+        internal static Action BuildLoop(Configuration config)
         {
-            FrameTimeProvider frameTimeProvider = new FrameTimeProvider();
+            Window window = new Window(config.Resolution.X, config.Resolution.Y);
+
+            IMousePositionDeltaProvider mousePositionDeltaProvider = new MousePositionDeltaProvider(window.Mouse, config.InvertMouse);
+            IMouseButtonEventProvider mouseButtonEventProvider = new MouseButtonEventProvider(window.Mouse);
+            IPressedKeyDetector pressedKeyDetector = new PressedKeyDetector(window.Keyboard);
+            FrameTimeProvider timeProvider = new FrameTimeProvider();
             IScreenClearer screenClearer = new ScreenClearer();
+            ITextureChanger textureChanger = new TextureChanger();
+            ITextureLoader textureCache = new TextureCache(new TextureLoader(textureChanger));
+            BufferLoader bufferLoader = new BufferLoader(new WavFileReader());
+            ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
 
             return () =>
             {
-                frameTimeProvider.MeasureTimeSinceLastFrame();
+                int i = 0;
+                while(i < 300)
+                {
+                    timeProvider.MeasureTimeSinceLastFrame();
+                    screenClearer.CleanScreen();
+                    ((IBufferSwapper)window).SwapBuffers();
 
-                screenClearer.CleanScreen();
+                    i++;
+                }
             };
         }
     }

@@ -1,11 +1,6 @@
-﻿using Game.OpenTkDependencies;
-using Graphics.Contracts;
+﻿using Graphics.Contracts;
 using Sound;
-using OpenTK.Graphics.OpenGL;
-using Engine.Contracts;
-using Engine.Framework;
 using System;
-using Engine.Contracts.Input;
 
 namespace Game
 {
@@ -17,17 +12,9 @@ namespace Game
 
             Initializer.Init();
             
-            Window window = new Window(c.Resolution.X, c.Resolution.Y);
-            window.Resize += (sender, e) => { GL.Viewport(0, 0, c.Resolution.X, c.Resolution.Y); };
-
-            IMousePositionDeltaProvider mousePositionDeltaProvider = new MousePositionDeltaProvider(window.Mouse, c.InvertMouse);
-            IMouseButtonEventProvider mouseButtonEventProvider = new MouseButtonEventProvider(window.Mouse);
-            IPressedKeyDetector pressedKeyDetector = new PressedKeyDetector(window.Keyboard);
-            IFrameTimeProvider timeProvider = new FrameTimeProvider();
+            Action loop = LoopCreator.BuildLoop(c);
 
             Graphics.Initializer.Initialize();
-
-            Action loop = LoopCreator.BuildLoop();
 
             loop();
 
