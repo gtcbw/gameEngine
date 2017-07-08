@@ -4,19 +4,19 @@ using System.Drawing;
 
 namespace Game.OpenTkDependencies
 {
-    public sealed class MousePositionDeltaProvider : IMousePositionDeltaProvider
+    public sealed class MousePositionController : IMousePositionController
     {
         private MouseDevice _mouseDevice;
         private const int _fixPixelCountForMouseCenter = 200;
-        private bool _invertMouse;
+        private IMousePositionDeltaObserver _mousePositionDeltaObserver;
 
-        public MousePositionDeltaProvider(MouseDevice mouseDevice, bool invertMouse)
+        public MousePositionController(MouseDevice mouseDevice, IMousePositionDeltaObserver mousePositionDeltaObserver)
         {
             _mouseDevice = mouseDevice;
-            _invertMouse = invertMouse;
+            _mousePositionDeltaObserver = mousePositionDeltaObserver;
         }
 
-        MousePositionDelta IMousePositionDeltaProvider.GetPositionDelta()
+        void IMousePositionController.MeasureMousePositionDelta()
         {
             MousePositionDelta mousePositionDelta = new MousePositionDelta();
 
@@ -25,12 +25,9 @@ namespace Game.OpenTkDependencies
             mousePositionDelta.PositionDeltaX = cursor.X - _fixPixelCountForMouseCenter;
             mousePositionDelta.PositionDeltaY = _fixPixelCountForMouseCenter - cursor.Y;
 
-            if (_invertMouse)
-                mousePositionDelta.PositionDeltaY *= -1;
-
             System.Windows.Forms.Cursor.Position = new Point(_fixPixelCountForMouseCenter, _fixPixelCountForMouseCenter);
 
-            return mousePositionDelta;
+            _mousePositionDeltaObserver.MousePositionDeltaUpdated(mousePositionDelta);
         }
     }
 }

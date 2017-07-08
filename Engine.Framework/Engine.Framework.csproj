@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrameTimeProvider.cs" />
+    <Compile Include="PlayerViewDirectionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextureCache.cs" />
   </ItemGroup>

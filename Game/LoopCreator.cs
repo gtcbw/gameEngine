@@ -15,7 +15,8 @@ namespace Game
         {
             Window window = new Window(config.Resolution.X, config.Resolution.Y);
 
-            IMousePositionDeltaProvider mousePositionDeltaProvider = new MousePositionDeltaProvider(window.Mouse, config.InvertMouse);
+            PlayerViewDirectionProvider PlayerViewDirectionProvider = new PlayerViewDirectionProvider(config.InvertMouse, config.MouseSensitivity, 80.0);
+            IMousePositionController mousePositionController = new MousePositionController(window.Mouse, PlayerViewDirectionProvider);
             IMouseButtonEventProvider mouseButtonEventProvider = new MouseButtonEventProvider(window.Mouse);
             IPressedKeyDetector pressedKeyDetector = new PressedKeyDetector(window.Keyboard);
             FrameTimeProvider timeProvider = new FrameTimeProvider();
@@ -31,6 +32,7 @@ namespace Game
                 while(i < 300)
                 {
                     timeProvider.MeasureTimeSinceLastFrame();
+                    mousePositionController.MeasureMousePositionDelta();
                     screenClearer.CleanScreen();
                     ((IBufferSwapper)window).SwapBuffers();
 

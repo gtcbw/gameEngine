@@ -7,5 +7,7 @@
         public bool InvertMouse { set; get; }
 
         public int SoundVolume { set; get; }
+
+        public double MouseSensitivity { set; get; }
     }
 }
