@@ -6,6 +6,9 @@ using Engine.Contracts.Input;
 using Game.OpenTkDependencies;
 using Sound;
 using Sound.Contracts;
+using Landscape.Rendering;
+using Engine.Contracts;
+using System.Collections.Generic;
 
 namespace Game
 {
@@ -15,8 +18,8 @@ namespace Game
         {
             Window window = new Window(config.Resolution.X, config.Resolution.Y);
 
-            PlayerViewDirectionProvider PlayerViewDirectionProvider = new PlayerViewDirectionProvider(config.InvertMouse, config.MouseSensitivity, 80.0);
-            IMousePositionController mousePositionController = new MousePositionController(window.Mouse, PlayerViewDirectionProvider);
+            PlayerViewDirectionProvider playerViewDirectionProvider = new PlayerViewDirectionProvider(config.InvertMouse, config.MouseSensitivity, 80.0);
+            IMousePositionController mousePositionController = new MousePositionController(window.Mouse, playerViewDirectionProvider);
             IMouseButtonEventProvider mouseButtonEventProvider = new MouseButtonEventProvider(window.Mouse);
             IPressedKeyDetector pressedKeyDetector = new PressedKeyDetector(window.Keyboard);
             FrameTimeProvider timeProvider = new FrameTimeProvider();
@@ -26,17 +29,36 @@ namespace Game
             BufferLoader bufferLoader = new BufferLoader(new WavFileReader());
             ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
 
+            ICamera camera = new Camera(4.0 / 3.0);
+
+            // environment rendring
+            ITexture horizontexture = textureCache.LoadTexture("gebirgedunkel.bmp");
+            IEnumerable<Polygon> polygons = new SurfaceRectangleBuilder().CreateRectangle(-1, 0, 4, 1);
+            PolygonRenderer polygonRenderer = new PolygonRenderer();
+            ITextureTranslator textureTranslator = new TextureTranslator();
+            IWorldTranslator worldTranslator = new WorldTranslator();
+            IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerViewDirectionProvider, textureTranslator, worldTranslator);
+
+            // 
+
+
             return () =>
             {
-                int i = 0;
-                while(i < 300)
+                while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
                 {
                     timeProvider.MeasureTimeSinceLastFrame();
                     mousePositionController.MeasureMousePositionDelta();
                     screenClearer.CleanScreen();
-                    ((IBufferSwapper)window).SwapBuffers();
 
-                    i++;
+
+                    // calculation
+
+                    //rendring
+                    camera.SetDefaultPerspective();
+                    horizon.Render();
+
+
+                    ((IBufferSwapper)window).SwapBuffers();
                 }
             };
         }

@@ -4,6 +4,6 @@ namespace Graphics.Contracts
 {
     public interface IPolygonRenderer
     {
-        void RenderPolygons(List<Polygon> polygons);
+        void RenderPolygons(IEnumerable<Polygon> polygons);
     }
 }

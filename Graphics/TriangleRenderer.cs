@@ -6,7 +6,7 @@ namespace Graphics
 {
     public sealed class TriangleRenderer : IPolygonRenderer
     {
-        void IPolygonRenderer.RenderPolygons(List<Polygon> polygons)
+        void IPolygonRenderer.RenderPolygons(IEnumerable<Polygon> polygons)
         {
             GL.Begin(PrimitiveType.Triangles);
 

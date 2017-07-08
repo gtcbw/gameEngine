@@ -52,6 +52,7 @@
     <Compile Include="Input\MousePosition.cs" />
     <Compile Include="Input\MousePositionDelta.cs" />
     <Compile Include="Input\ViewDirection.cs" />
+    <Compile Include="IRenderingElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

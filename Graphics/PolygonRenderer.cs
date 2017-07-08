@@ -6,7 +6,7 @@ namespace Graphics
 {
     public sealed class PolygonRenderer : IPolygonRenderer
     {
-        void IPolygonRenderer.RenderPolygons(List<Polygon> polygons)
+        void IPolygonRenderer.RenderPolygons(IEnumerable<Polygon> polygons)
         {
             foreach (Polygon polygon in polygons)
             {

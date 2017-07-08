@@ -8,18 +8,18 @@ namespace Graphics
     public sealed class Camera : ICamera
     {
         private bool _depthTestEnabled;
-        private IScreen _screen;
+        private double _aspectRatio;
 
-        public Camera(IScreen screen)
+        public Camera(double aspectRatio)
         {
-            _screen = screen;
+            _aspectRatio = aspectRatio;
         }
 
         void ICamera.SetDefaultPerspective()
         {
             GL.MatrixMode(MatrixMode.Projection);
 
-            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_screen.AspectRatio, 0.1f, 20.0f);
+            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_aspectRatio, 0.1f, 20.0f);
             GL.LoadMatrix(ref matrix);
 
             GL.MatrixMode(MatrixMode.Modelview);
@@ -36,7 +36,7 @@ namespace Graphics
         {
             GL.MatrixMode(MatrixMode.Projection);
 
-            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_screen.AspectRatio, 0.15f, 400.0f);
+            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_aspectRatio, 0.15f, 400.0f);
             GL.LoadMatrix(ref matrix);
 
             GL.MatrixMode(MatrixMode.Modelview);

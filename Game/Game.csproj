@@ -78,6 +78,10 @@
       <Project>{96b83948-e522-4ffd-b3e6-93d4080288fe}</Project>
       <Name>Graphics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Landscape.Rendering\Landscape.Rendering.csproj">
+      <Project>{13a34020-5f95-4872-a988-8f1c926b50f6}</Project>
+      <Name>Landscape.Rendering</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sound.Contracts\Sound.Contracts.csproj">
       <Project>{83c3f491-7792-4f4f-9d86-9b540707667e}</Project>
       <Name>Sound.Contracts</Name>

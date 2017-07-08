@@ -6,6 +6,6 @@ namespace Graphics.Contracts
     {
         public Normal Normal { set; get; }
 
-        public List<Vertex> Vertices { set; get; }
+        public IEnumerable<Vertex> Vertices { set; get; }
     }
 }
