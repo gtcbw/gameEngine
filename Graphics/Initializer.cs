@@ -13,8 +13,8 @@ namespace Graphics
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             GL.AlphaFunc(AlphaFunction.Greater, 0.02f);
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Front);
+            //GL.Enable(EnableCap.CullFace);
+            //GL.CullFace(CullFaceMode.Front);
         }
     }
 }

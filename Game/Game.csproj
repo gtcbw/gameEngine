@@ -82,6 +82,14 @@
       <Project>{13a34020-5f95-4872-a988-8f1c926b50f6}</Project>
       <Name>Landscape.Rendering</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Math.Contracts\Math.Contracts.csproj">
+      <Project>{7b59ee89-ef4c-47da-8d9a-9c437b943893}</Project>
+      <Name>Math.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Math\Math.csproj">
+      <Project>{f0129e9c-f6ea-440e-95fa-0ff9a78d3c7f}</Project>
+      <Name>Math</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sound.Contracts\Sound.Contracts.csproj">
       <Project>{83c3f491-7792-4f4f-9d86-9b540707667e}</Project>
       <Name>Sound.Contracts</Name>

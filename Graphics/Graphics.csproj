@@ -73,9 +73,17 @@
     <Compile Include="WorldTranslater.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Engine.Contracts\Engine.Contracts.csproj">
+      <Project>{a9140007-c3ae-4dce-a75c-407031cc5481}</Project>
+      <Name>Engine.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Graphics.Contracts\Graphics.Contracts.csproj">
       <Project>{A13C5A44-3305-4BD0-9D83-5106A360C30F}</Project>
       <Name>Graphics.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\World.Model\World.Model.csproj">
+      <Project>{38a22d00-9fc4-4dcb-8246-9f6cc26446fb}</Project>
+      <Name>World.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿namespace Engine.Contracts.Input
+﻿namespace Engine.Contracts
 {
     public class ViewDirection
     {

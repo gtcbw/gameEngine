@@ -38,7 +38,7 @@ namespace Landscape.Rendering
             _worldTranslator.Store();
             _worldTranslator.TranslateWorld(0, -_playerViewDirectionProvider.GetViewDirection().DegreeY / 90.0, 0);
             _textureTranslator.Store();
-            _textureTranslator.TranslateTexture(-_playerViewDirectionProvider.GetViewDirection().DegreeXZ / 90.0, 0);
+            _textureTranslator.TranslateTexture((_playerViewDirectionProvider.GetViewDirection().DegreeXZ / 360.0), 0);
             _polygonRenderer.RenderPolygons(_polygons);
             _textureTranslator.Reset();
             _worldTranslator.Reset();

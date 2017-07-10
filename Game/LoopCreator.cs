@@ -9,6 +9,7 @@ using Sound.Contracts;
 using Landscape.Rendering;
 using Engine.Contracts;
 using System.Collections.Generic;
+using Math;
 
 namespace Game
 {
@@ -29,18 +30,23 @@ namespace Game
             BufferLoader bufferLoader = new BufferLoader(new WavFileReader());
             ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
 
-            ICamera camera = new Camera(4.0 / 3.0);
+            IPlayerPositionProvider playerPositionProvider = new PlayerPositionProvider();
+            IPlayerViewRayProvider playerViewRayProvider = new PlayerViewRayProvider(playerPositionProvider, playerViewDirectionProvider, new VectorHelper());
+            ICamera camera = new Camera(4.0 / 3.0, playerViewRayProvider);
 
             // environment rendring
             ITexture horizontexture = textureCache.LoadTexture("gebirgedunkel.bmp");
             IEnumerable<Polygon> polygons = new SurfaceRectangleBuilder().CreateRectangle(-1, 0, 4, 1);
-            PolygonRenderer polygonRenderer = new PolygonRenderer();
+            IPolygonRenderer polygonRenderer = new PolygonRenderer();
             ITextureTranslator textureTranslator = new TextureTranslator();
             IWorldTranslator worldTranslator = new WorldTranslator();
+            IWorldRotator worldRotator = new WorldRotator();
             IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerViewDirectionProvider, textureTranslator, worldTranslator);
 
-            // 
-
+            // tempboden 
+            ITexture boden = textureCache.LoadTexture("boden.bmp");
+            IEnumerable<Polygon> floorPolygons = new SurfaceRectangleBuilder().CreateRectangle(-100, -100, 200, 200, 0, 400);
+            //
 
             return () =>
             {
@@ -53,10 +59,17 @@ namespace Game
 
                     // calculation
 
-                    //rendring
+                    //rendring 2D
                     camera.SetDefaultPerspective();
                     horizon.Render();
 
+                    //rendering 3D
+                    camera.SetInGamePerspective();
+                    textureChanger.SetTexture(boden.TextureId);
+                    worldTranslator.Store();
+                    worldRotator.RotateX(90);
+                    polygonRenderer.RenderPolygons(floorPolygons);
+                    worldTranslator.Reset();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }

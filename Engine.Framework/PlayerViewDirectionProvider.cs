@@ -1,4 +1,5 @@
-﻿using Engine.Contracts.Input;
+﻿using Engine.Contracts;
+using Engine.Contracts.Input;
 
 namespace Engine.Framework
 {
@@ -24,7 +25,7 @@ namespace Engine.Framework
 
         void IMousePositionDeltaObserver.MousePositionDeltaUpdated(MousePositionDelta mousePositionDelta)
         {
-            _viewDegreeXZ -= mousePositionDelta.PositionDeltaX * _mouseSensitivity;
+            _viewDegreeXZ += mousePositionDelta.PositionDeltaX * _mouseSensitivity;
 
             if (_invertMouse)
                 _viewDegreeY -= mousePositionDelta.PositionDeltaY * _mouseSensitivity;

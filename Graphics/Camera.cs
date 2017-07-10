@@ -2,6 +2,8 @@
 using Graphics.Contracts;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Engine.Contracts;
+using World.Model;
 
 namespace Graphics
 {
@@ -9,10 +11,12 @@ namespace Graphics
     {
         private bool _depthTestEnabled;
         private double _aspectRatio;
+        private IPlayerViewRayProvider _playerViewRayProvider;
 
-        public Camera(double aspectRatio)
+        public Camera(double aspectRatio, IPlayerViewRayProvider playerViewRayProvider)
         {
             _aspectRatio = aspectRatio;
+            _playerViewRayProvider = playerViewRayProvider;
         }
 
         void ICamera.SetDefaultPerspective()
@@ -51,17 +55,19 @@ namespace Graphics
         }
         private void UpdatePosition()
         {
-            //Matrix4 modelview = Matrix4.LookAt(
-            //(float)_playerCamera.CameraPosition.PositionX,
-            //    (float)_playerCamera.CameraPosition.PositionY,
-            //    (float)_playerCamera.CameraPosition.PositionZ,
-            //    (float)_playerCamera.LookAtPosition.PositionX,
-            //    (float)_playerCamera.LookAtPosition.PositionY,
-            //    (float)_playerCamera.LookAtPosition.PositionZ,
-            //    0, 1, 0
-            //    );
+            Ray ray = _playerViewRayProvider.GetPlayerViewRay();
 
-            //GL.LoadMatrix(ref modelview);
+            Matrix4 modelview = Matrix4.LookAt(
+            (float)ray.StartPosition.X,
+                (float)ray.StartPosition.Y,
+                (float)ray.StartPosition.Z,
+                (float)(ray.StartPosition.X + ray.Direction.X),
+                (float)(ray.StartPosition.Y + ray.Direction.Y),
+                (float)(ray.StartPosition.Z + ray.Direction.Z),
+                0, 1, 0
+                );
+
+            GL.LoadMatrix(ref modelview);
         }
     }
 }
