@@ -10,6 +10,7 @@ using Landscape.Rendering;
 using Engine.Contracts;
 using System.Collections.Generic;
 using Math;
+using Math.Contracts;
 
 namespace Game
 {
@@ -46,6 +47,17 @@ namespace Game
             // tempboden 
             ITexture boden = textureCache.LoadTexture("boden.bmp");
             IEnumerable<Polygon> floorPolygons = new SurfaceRectangleBuilder().CreateRectangle(-100, -100, 200, 200, 0, 400);
+            //
+
+            // height
+            int sideLength = 10;
+            int meters = 2;
+            float[] heightValues = new float[sideLength * sideLength];
+            for (int i = 0; i < sideLength * sideLength; i++)
+            {
+                heightValues[i] = (float)((i % 10) / 2.0);
+            }
+            IHeightCalculator HeightCalculator = new HeightCalculator(heightValues, sideLength, meters);
             //
 
             return () =>

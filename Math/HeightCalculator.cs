@@ -4,7 +4,7 @@ namespace Math
 {
     public sealed class HeightCalculator : IHeightCalculator
     {
-        private readonly double[] _heightValues;
+        private readonly float[] _heightValues;
         private int _sideLength;
         private int _meters;
 
@@ -26,22 +26,17 @@ namespace Math
         private double langerVektorZ;
         private double gesuchtesZ, gesuchtesX;
 
-        public HeightCalculator()
+        public HeightCalculator(float[] heightValues, int sideLength, int meters)
         {
-            _sideLength = 10;
-            _meters = 2;
-            _heightValues = new double[_sideLength * _sideLength];
-
-            for (int i = 0; i < _sideLength * _sideLength; i++)
-            {
-                _heightValues[i] = (i % 10) / 2.0;
-            }
+            _sideLength = sideLength;
+            _meters = meters;
+            _heightValues = heightValues;
         }
 
         double IHeightCalculator.CalculateHeight(double x, double z)
         {
-            if ((x < 0) || (z < 0) || (x >= (_sideLength - 1) * _meters) || (z >= (_sideLength - 1) * _meters))
-                return 1.0;
+            if ((x < 0) || (z < 0) || (x > (_sideLength - 1) * _meters) || (z >= (_sideLength - 1) * _meters))
+                return 0.0;
 
             Ax = (int)x;
             Az = (int)z;
