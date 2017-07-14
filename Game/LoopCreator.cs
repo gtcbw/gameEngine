@@ -58,6 +58,8 @@ namespace Game
                 heightValues[i] = (float)((i % 10) / 2.0);
             }
             IHeightCalculator HeightCalculator = new HeightCalculator(heightValues, sideLength, meters);
+            VertexBufferFactory vertexBufferFactory = new VertexBufferFactory();
+            vertexBufferFactory.CreateBuffer();
             //
 
             return () =>
@@ -77,11 +79,14 @@ namespace Game
 
                     //rendering 3D
                     camera.SetInGamePerspective();
-                    textureChanger.SetTexture(boden.TextureId);
-                    worldTranslator.Store();
-                    worldRotator.RotateX(90);
-                    polygonRenderer.RenderPolygons(floorPolygons);
-                    worldTranslator.Reset();
+                    //textureChanger.SetTexture(boden.TextureId);
+                    //worldTranslator.Store();
+                    //worldRotator.RotateX(90);
+                    //polygonRenderer.RenderPolygons(floorPolygons);
+                    //worldTranslator.Reset();
+
+                    //render floor
+                    vertexBufferFactory.Draw();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }
