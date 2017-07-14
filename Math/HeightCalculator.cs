@@ -9,7 +9,7 @@ namespace Math
         private int _meters;
 
         private int Ax, Az, Bx, Bz, Cx, Cz, Dx, Dz;
-        private double hoehea, hoeheb, hoehec, hoehed, differenz;
+        private double hoehea, hoeheb, hoehec, hoehed;
 
         private double VektorAx;
         private double VektorAz;
@@ -19,12 +19,10 @@ namespace Math
         private double VektorlaengeC;
         private double langerVektorY;
         private double lamdakurz;
-        private double hoechstesY;
         private double lamda;
         private double prozentY;
         private double langerVektorX;
         private double langerVektorZ;
-        private double gesuchtesZ, gesuchtesX;
 
         public HeightCalculator(float[] heightValues, int sideLength, int meters)
         {
@@ -44,6 +42,10 @@ namespace Math
                 Ax -= Ax % _meters;
             if (Az % _meters != 0)
                 Az -= Az % _meters;
+
+            if ((x == Ax) && (z == Az))
+                return _heightValues[((Az / _meters) * _sideLength) + (Ax / _meters)];
+
             Bx = Ax + _meters;
             Bz = Az;
             Cx = Ax + _meters;
@@ -58,26 +60,19 @@ namespace Math
             VektorlaengeA = (VektorAx * VektorAx) + (VektorAz * VektorAz);
             VektorlaengeC = (VektorCx * VektorCx) + (VektorCz * VektorCz);
 
-            if ((x == Ax) && (z == Az))
-                return _heightValues[((Az / _meters) * _sideLength) + (Ax / _meters)];
-
             if (VektorlaengeA < VektorlaengeC)
             {
                 hoehea = _heightValues[((Az / _meters) * _sideLength) + (Ax / _meters)];
                 hoeheb = _heightValues[((Bz / _meters) * _sideLength) + (Bx / _meters)];
                 hoehed = _heightValues[((Dz / _meters) * _sideLength) + (Dx / _meters)];
-                differenz = hoehea - ((hoeheb + hoehed) / 2);
-
-                hoehec = ((hoeheb + hoehed) / 2) - differenz;
+                hoehec = ((hoeheb + hoehed) / 2) - (hoehea - ((hoeheb + hoehed) / 2));
             }
             else
             {
                 hoehec = _heightValues[((Cz / _meters) * _sideLength) + (Cx / _meters)];
                 hoeheb = _heightValues[((Bz / _meters) * _sideLength) + (Bx / _meters)];
                 hoehed = _heightValues[((Dz / _meters) * _sideLength) + (Dx / _meters)];
-                differenz = hoehec - ((hoeheb + hoehed) / 2);
-
-                hoehea = ((hoeheb + hoehed) / 2) - differenz;
+                hoehea = ((hoeheb + hoehed) / 2) - (hoehec - ((hoeheb + hoehed) / 2));
             }
 
             ///2Dvektoren sind Ax, Az.   Was ist Lamda?
@@ -88,13 +83,10 @@ namespace Math
                 else
                     lamda = 0;
 
-                gesuchtesZ = Az + (lamda * VektorAz);
-                prozentY = (Cz - gesuchtesZ) / (Cz - Bz);
-
-                hoechstesY = (prozentY * (hoeheb - hoehec)) + hoehec;
+                prozentY = (Cz - (Az + (lamda * VektorAz))) / (Cz - Bz);
 
                 langerVektorX = Bx - Ax;
-                langerVektorY = hoechstesY - hoehea;
+                langerVektorY = (prozentY * (hoeheb - hoehec)) + hoehec - hoehea;
                 if (langerVektorX != 0)
                     lamdakurz = (x - Ax) / langerVektorX;
                 else
@@ -107,13 +99,10 @@ namespace Math
                 else
                     lamda = 0;
 
-                gesuchtesX = Ax + (lamda * VektorAx);
-                prozentY = (Cx - gesuchtesX) / (Cx - Dx);
-
-                hoechstesY = (prozentY * (hoehed - hoehec)) + hoehec;
+                prozentY = (Cx - (Ax + (lamda * VektorAx))) / (Cx - Dx);
 
                 langerVektorZ = Dz - Az;
-                langerVektorY = hoechstesY - hoehea;
+                langerVektorY = (prozentY * (hoehed - hoehec)) + hoehec - hoehea;
                 if (langerVektorZ != 0)
                     lamdakurz = (z - Az) / langerVektorZ;
                 else
