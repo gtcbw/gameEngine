@@ -50,6 +50,7 @@
     <Compile Include="AlphaBlender.cs" />
     <Compile Include="AlphaTester.cs" />
     <Compile Include="BackgroundColor.cs" />
+    <Compile Include="BufferedMeshUnitRenderer.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="DepthTestActivator.cs" />
     <Compile Include="Initializer.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="TextureChanger.cs" />
     <Compile Include="TextureLoader.cs" />
     <Compile Include="TextureTranslator.cs" />
-    <Compile Include="VertexBufferFactory.cs" />
+    <Compile Include="BufferedMeshUnitFactory.cs" />
     <Compile Include="WorldRotator.cs" />
     <Compile Include="WorldTranslater.cs" />
   </ItemGroup>

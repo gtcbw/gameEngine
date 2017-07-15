@@ -1,0 +1,50 @@
+﻿using Graphics.Contracts;
+using Math.Contracts;
+
+namespace Engine.Framework
+{
+    public sealed class MeshUnitBuilder
+    {
+        private IBufferedMeshUnitFactory _bufferedMeshUnitFactory;
+        private IHeightCalculator _heightCalculator;
+
+        public MeshUnitBuilder(IBufferedMeshUnitFactory bufferedMeshUnitFactory,
+            IHeightCalculator heightCalculator)
+        {
+            _bufferedMeshUnitFactory = bufferedMeshUnitFactory;
+            _heightCalculator = heightCalculator;
+        }
+
+        public BufferedMeshUnit CreateRelativeHeightMapUnit(int sideLengthInMeters, int metersPerTriangleSide, int startx, int startz)
+        {
+            int numberOfRows = sideLengthInMeters / metersPerTriangleSide;
+
+            float [] vertices = new float[(numberOfRows + 1) * (numberOfRows + 1) * 3];
+
+            ushort[] indices = new ushort[numberOfRows * numberOfRows * 6];
+
+            for (int z = 0; z < numberOfRows + 1; z++)
+            {
+                for (int x = 0; x < numberOfRows + 1; x++)
+                {
+                    float xcoord = (x * metersPerTriangleSide) + startx;
+                    float zcoord = (z * metersPerTriangleSide) + startz;
+
+                    vertices[(((z * (numberOfRows + 1)) + x) * 3)] = xcoord;
+                    vertices[(((z * (numberOfRows + 1)) + x) * 3) + 1] = (float)_heightCalculator.CalculateHeight(xcoord, zcoord);
+                    vertices[(((z * (numberOfRows + 1)) + x) * 3) + 2] = zcoord;
+                }
+            }
+
+            for(int rowz = 0; rowz < numberOfRows; rowz++)
+            {
+                for (int rowx = 0; rowx < numberOfRows; rowx++)
+                {
+                    //indices[] = 
+                }
+            }
+
+            return _bufferedMeshUnitFactory.GenerateBuffer(vertices, indices);
+        }
+    }
+}

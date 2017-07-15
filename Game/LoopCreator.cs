@@ -58,8 +58,9 @@ namespace Game
                 heightValues[i] = (float)((i % 10) / 2.0);
             }
             IHeightCalculator HeightCalculator = new HeightCalculator(heightValues, sideLength, meters);
-            VertexBufferFactory vertexBufferFactory = new VertexBufferFactory();
-            vertexBufferFactory.CreateBuffer();
+            IBufferedMeshUnitFactory bufferedMeshUnitFactory = new BufferedMeshUnitFactory();
+            BufferedMeshUnit unit = CreateBuffer(bufferedMeshUnitFactory);
+            IBufferedMeshUnitRenderer bufferedMeshUnitRenderer = new BufferedMeshUnitRenderer();
             //
 
             return () =>
@@ -86,11 +87,45 @@ namespace Game
                     //worldTranslator.Reset();
 
                     //render floor
-                    vertexBufferFactory.Draw();
+                    bufferedMeshUnitRenderer.RenderMesh(unit);
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }
             };
+        }
+
+        public static BufferedMeshUnit CreateBuffer(IBufferedMeshUnitFactory bufferedMeshUnitFactory)
+        {
+
+            float[] array = new float[4 * 3];
+
+            array[0] = -5;
+            array[1] = 0;
+            array[2] = -5;
+
+            array[3] = 5;
+            array[4] = 0;
+            array[5] = -5;
+
+            array[6] = 5;
+            array[7] = 0;
+            array[8] = 5;
+
+            array[9] = -5;
+            array[10] = 0;
+            array[11] = 5;
+
+            ushort[] indices = new ushort[6];
+
+            indices[0] = 0;
+            indices[1] = 1;
+            indices[2] = 2;
+
+            indices[3] = 0;
+            indices[4] = 2;
+            indices[5] = 3;
+
+            return bufferedMeshUnitFactory.GenerateBuffer(array, indices);
         }
     }
 }

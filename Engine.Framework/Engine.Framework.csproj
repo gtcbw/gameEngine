@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrameTimeProvider.cs" />
+    <Compile Include="MeshUnitBuilder.cs" />
     <Compile Include="PlayerPositionProvider.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />
     <Compile Include="PlayerViewRayProvider.cs" />
