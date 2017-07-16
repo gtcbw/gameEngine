@@ -40,7 +40,13 @@ namespace Engine.Framework
             {
                 for (int rowx = 0; rowx < numberOfRows; rowx++)
                 {
-                    //indices[] = 
+                    indices[((rowx + (rowz * numberOfRows)) * 6) + 0] = (ushort)(0 + (rowx + (rowz * (numberOfRows + 1))));
+                    indices[((rowx + (rowz * numberOfRows)) * 6) + 1] = (ushort)(1 + (rowx + (rowz * (numberOfRows + 1))));
+                    indices[((rowx + (rowz * numberOfRows)) * 6) + 2] = (ushort)(1 + (rowx + ((rowz + 1) * (numberOfRows + 1))));
+
+                    indices[((rowx + (rowz * numberOfRows)) * 6) + 3] = (ushort)(0 + (rowx + (rowz * (numberOfRows + 1))));
+                    indices[((rowx + (rowz * numberOfRows)) * 6) + 4] = (ushort)(1 + (rowx + ((rowz + 1) * (numberOfRows + 1))));
+                    indices[((rowx + (rowz * numberOfRows)) * 6) + 5] = (ushort)(0 + (rowx + ((rowz + 1) * (numberOfRows + 1))));
                 }
             }
 

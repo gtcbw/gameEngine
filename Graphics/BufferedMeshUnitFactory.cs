@@ -18,7 +18,7 @@ namespace Graphics
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, indexBufferId);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indexArray.Length * sizeof(ushort), indexArray, BufferUsageHint.StaticDraw);
 
-            return new BufferedMeshUnit { IndexBufferId = indexBufferId, VertexBufferId = bufferId };
+            return new BufferedMeshUnit { IndexBufferId = indexBufferId, VertexBufferId = bufferId, NumberOfIndices = indexArray.Length };
         }
 
         void IBufferedMeshUnitFactory.Delete(BufferedMeshUnit meshUnit)

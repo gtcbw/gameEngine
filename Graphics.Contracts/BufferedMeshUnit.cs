@@ -5,5 +5,7 @@
         public uint VertexBufferId { set; get; }
 
         public uint IndexBufferId { set; get; }
+
+        public int NumberOfIndices { set; get; }
     }
 }

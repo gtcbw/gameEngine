@@ -17,7 +17,7 @@ namespace Graphics
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, unit.IndexBufferId);
 
-            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedShort, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, unit.NumberOfIndices, DrawElementsType.UnsignedShort, IntPtr.Zero);
 
             GL.DisableClientState(ArrayCap.VertexArray);
 
