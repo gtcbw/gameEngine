@@ -41,9 +41,9 @@ namespace Game
             }
             IHeightCalculator heightCalculator = new HeightCalculator(heightValues, sideLength, meters);
 
-            IPlayerPositionProvider playerPositionProvider = new PlayerPositionProvider(pressedKeyDetector, heightCalculator, timeProvider);
-            IPlayerViewRayProvider playerViewRayProvider = new PlayerViewRayProvider(playerPositionProvider, playerViewDirectionProvider, new VectorHelper());
-            ICamera camera = new Camera(4.0 / 3.0, playerViewRayProvider);
+            PlayerPositionProvider playerPositionProvider = new PlayerPositionProvider(pressedKeyDetector, heightCalculator, timeProvider, playerViewDirectionProvider, new VectorHelper());
+            //IPlayerViewRayProvider playerViewRayProvider = new PlayerViewRayProvider(playerPositionProvider, playerViewDirectionProvider, new VectorHelper());
+            ICamera camera = new Camera(4.0 / 3.0, playerPositionProvider);
 
             // environment rendring
             ITexture horizontexture = textureCache.LoadTexture("gebirgedunkel.bmp");
@@ -64,10 +64,11 @@ namespace Game
             {
                 while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
                 {
-                    timeProvider.MeasureTimeSinceLastFrame();
-                    mousePositionController.MeasureMousePositionDelta();
                     screenClearer.CleanScreen();
 
+                    timeProvider.MeasureTimeSinceLastFrame();
+                    mousePositionController.MeasureMousePositionDelta();
+                    playerPositionProvider.UpdatePosition();
 
                     // calculation
 

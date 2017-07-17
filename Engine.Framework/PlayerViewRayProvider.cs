@@ -24,7 +24,7 @@ namespace Engine.Framework
             Position position = _playerPositionProvider.GetPlayerPosition();
 
             Ray ray = new Ray();
-            ray.StartPosition = new Position { X = position.X, Y = position.Y + _playerPositionProvider.GetHeight(), Z = position.Z };
+           // ray.StartPosition = new Position { X = position.X, Y = position.Y + _playerPositionProvider.GetHeight(), Z = position.Z };
 
             ViewDirection direction = _playerViewDirectionProvider.GetViewDirection();
 
