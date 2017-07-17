@@ -14,7 +14,7 @@ namespace Engine.Framework
             _stopwatch = Stopwatch.StartNew();
         }
 
-        public double GetTimeInSecondsSinceLastFrame()
+        double IFrameTimeProvider.GetTimeInSecondsSinceLastFrame()
         {
             return _timeOfCurrentFrame;
         }

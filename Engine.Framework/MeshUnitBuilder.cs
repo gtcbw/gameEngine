@@ -5,13 +5,13 @@ namespace Engine.Framework
 {
     public sealed class MeshUnitBuilder
     {
-        private IBufferedMeshUnitFactory _bufferedMeshUnitFactory;
+        private IBufferObjectFactory _bufferObjectFactory;
         private IHeightCalculator _heightCalculator;
 
-        public MeshUnitBuilder(IBufferedMeshUnitFactory bufferedMeshUnitFactory,
+        public MeshUnitBuilder(IBufferObjectFactory bufferObjectFactory,
             IHeightCalculator heightCalculator)
         {
-            _bufferedMeshUnitFactory = bufferedMeshUnitFactory;
+            _bufferObjectFactory = bufferObjectFactory;
             _heightCalculator = heightCalculator;
         }
 
@@ -50,7 +50,12 @@ namespace Engine.Framework
                 }
             }
 
-            return _bufferedMeshUnitFactory.GenerateBuffer(vertices, indices);
+            return new BufferedMeshUnit
+            {
+                IndexBufferId = _bufferObjectFactory.GenerateIndexBuffer(indices),
+                NumberOfIndices = indices.Length,
+                VertexBufferId = _bufferObjectFactory.GenerateVertexBuffer(vertices)
+            };
         }
     }
 }

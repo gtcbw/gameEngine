@@ -31,7 +31,17 @@ namespace Game
             BufferLoader bufferLoader = new BufferLoader(new WavFileReader());
             ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
 
-            IPlayerPositionProvider playerPositionProvider = new PlayerPositionProvider();
+            // height
+            int sideLength = 10;
+            int meters = 2;
+            float[] heightValues = new float[sideLength * sideLength];
+            for (int i = 0; i < sideLength * sideLength; i++)
+            {
+                heightValues[i] = (float)((i % 3) / 3.0);
+            }
+            IHeightCalculator heightCalculator = new HeightCalculator(heightValues, sideLength, meters);
+
+            IPlayerPositionProvider playerPositionProvider = new PlayerPositionProvider(pressedKeyDetector, heightCalculator, timeProvider);
             IPlayerViewRayProvider playerViewRayProvider = new PlayerViewRayProvider(playerPositionProvider, playerViewDirectionProvider, new VectorHelper());
             ICamera camera = new Camera(4.0 / 3.0, playerViewRayProvider);
 
@@ -44,23 +54,10 @@ namespace Game
             IWorldRotator worldRotator = new WorldRotator();
             IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerViewDirectionProvider, textureTranslator, worldTranslator);
 
-            // tempboden 
-            ITexture boden = textureCache.LoadTexture("boden.bmp");
-            IEnumerable<Polygon> floorPolygons = new SurfaceRectangleBuilder().CreateRectangle(-100, -100, 200, 200, 0, 400);
-            //
 
-            // height
-            int sideLength = 10;
-            int meters = 2;
-            float[] heightValues = new float[sideLength * sideLength];
-            for (int i = 0; i < sideLength * sideLength; i++)
-            {
-                heightValues[i] = (float)((i % 10) / 2.0);
-            }
-            IHeightCalculator HeightCalculator = new HeightCalculator(heightValues, sideLength, meters);
-            IBufferedMeshUnitFactory bufferedMeshUnitFactory = new BufferedMeshUnitFactory();
+            IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
             IBufferedMeshUnitRenderer bufferedMeshUnitRenderer = new BufferedMeshUnitRenderer();
-            BufferedMeshUnit unit = new MeshUnitBuilder(bufferedMeshUnitFactory, HeightCalculator).CreateRelativeHeightMapUnit(20, 1, 0, 0);
+            BufferedMeshUnit unit = new MeshUnitBuilder(bufferObjectFactory, heightCalculator).CreateRelativeHeightMapUnit(20, 1, 0, 0);
             //
 
             return () =>
@@ -80,11 +77,6 @@ namespace Game
 
                     //rendering 3D
                     camera.SetInGamePerspective();
-                    //textureChanger.SetTexture(boden.TextureId);
-                    //worldTranslator.Store();
-                    //worldRotator.RotateX(90);
-                    //polygonRenderer.RenderPolygons(floorPolygons);
-                    //worldTranslator.Reset();
 
                     //render floor
                     bufferedMeshUnitRenderer.RenderMesh(unit);

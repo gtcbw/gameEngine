@@ -48,7 +48,7 @@
     <Compile Include="IAlphaBlender.cs" />
     <Compile Include="IAlphaTester.cs" />
     <Compile Include="IBackgroundColor.cs" />
-    <Compile Include="IBufferedMeshUnitFactory.cs" />
+    <Compile Include="IBufferObjectFactory.cs" />
     <Compile Include="IBufferedMeshUnitRenderer.cs" />
     <Compile Include="IBufferSwapper.cs" />
     <Compile Include="ICamera.cs" />
