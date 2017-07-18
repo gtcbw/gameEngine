@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="HeightCalculatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VectorHelperTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

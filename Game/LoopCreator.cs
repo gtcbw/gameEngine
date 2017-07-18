@@ -41,7 +41,12 @@ namespace Game
             }
             IHeightCalculator heightCalculator = new HeightCalculator(heightValues, sideLength, meters);
 
-            PlayerPositionProvider playerPositionProvider = new PlayerPositionProvider(pressedKeyDetector, heightCalculator, timeProvider, playerViewDirectionProvider, new VectorHelper());
+            PlayerPositionProvider playerPositionProvider = new PlayerPositionProvider(pressedKeyDetector, 
+                heightCalculator, 
+                timeProvider, 
+                playerViewDirectionProvider, 
+                new VectorHelper(),
+                new KeyMapper(pressedKeyDetector));
             //IPlayerViewRayProvider playerViewRayProvider = new PlayerViewRayProvider(playerPositionProvider, playerViewDirectionProvider, new VectorHelper());
             ICamera camera = new Camera(4.0 / 3.0, playerPositionProvider);
 
