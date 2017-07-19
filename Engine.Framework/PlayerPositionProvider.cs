@@ -14,7 +14,7 @@ namespace Engine.Framework
         private readonly IVectorHelper _vectorHelper;
         private readonly IKeyMapper _keyMapper;
         private readonly double _height = 1.8;
-        private readonly double _metersPerSecond = 2;
+        private readonly double _metersPerSecond;
 
         private Position _position = new Position();
         private Ray _ray = new Ray();
@@ -24,7 +24,8 @@ namespace Engine.Framework
             IFrameTimeProvider frameTimeProvider,
             IPlayerViewDirectionProvider playerViewDirectionProvider,
             IVectorHelper vectorHelper,
-            IKeyMapper keyMapper)
+            IKeyMapper keyMapper,
+            double metersPerSecond)
         {
             _pressedKeyDetector = pressedKeyDetector;
             _frameTimeProvider = frameTimeProvider;
@@ -32,27 +33,29 @@ namespace Engine.Framework
             _playerViewDirectionProvider = playerViewDirectionProvider;
             _vectorHelper = vectorHelper;
             _keyMapper = keyMapper;
+            _metersPerSecond = metersPerSecond;
         }
 
         public void UpdatePosition()
         {
-            Ray ray = new Ray();
-            Position position = new Position();
-
             ViewDirection direction = _playerViewDirectionProvider.GetViewDirection();
 
-            ray.Direction = _vectorHelper.CreateFromDegrees(direction.DegreeXZ, direction.DegreeY);
+            Vector2D vectorXZ = _vectorHelper.ConvertDegreeToVector(direction.DegreeXZ);
+            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(direction.DegreeY);
 
-            MovePosition(position, ray.Direction);
+            _ray.Direction = new Vector
+            {
+                X = vectorXZ.X * vectorY.X,
+                Z = vectorXZ.Z * vectorY.X,
+                Y = vectorY.Z
+            };
 
-            position.Y = _heightCalculator.CalculateHeight(position.X, position.Z);
+            MovePosition(_position, vectorXZ);
 
-            ray.StartPosition = new Position { X = position.X, Y = position.Y + _height, Z = position.Z };
+            _position.Y = _heightCalculator.CalculateHeight(_position.X, _position.Z);
 
-            _position = position;
-            _ray = ray;
+            _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
         }
-
 
         private void MovePosition(Position position, Vector2D viewDirection)
         {

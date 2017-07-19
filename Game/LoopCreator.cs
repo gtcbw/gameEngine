@@ -46,8 +46,8 @@ namespace Game
                 timeProvider, 
                 playerViewDirectionProvider, 
                 new VectorHelper(),
-                new KeyMapper(pressedKeyDetector));
-            //IPlayerViewRayProvider playerViewRayProvider = new PlayerViewRayProvider(playerPositionProvider, playerViewDirectionProvider, new VectorHelper());
+                new KeyMapper(pressedKeyDetector),
+                3);
             ICamera camera = new Camera(4.0 / 3.0, playerPositionProvider);
 
             // environment rendring

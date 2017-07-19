@@ -45,7 +45,6 @@
     <Compile Include="MeshUnitBuilder.cs" />
     <Compile Include="PlayerPositionProvider.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />
-    <Compile Include="PlayerViewRayProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SurfaceRectangleBuilder.cs" />
     <Compile Include="TextureCache.cs" />

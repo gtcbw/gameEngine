@@ -5,7 +5,7 @@ namespace Math
 {
     public sealed class VectorHelper : IVectorHelper
     {
-        Vector IVectorHelper.CalculateUnitLengthVector(Vector vector)
+        public Vector CalculateUnitLengthVector(Vector vector)
         {
             double squareRoot = System.Math.Sqrt((vector.X * vector.X) + (vector.Y * vector.Y) + (vector.Z * vector.Z));
 
@@ -17,10 +17,10 @@ namespace Math
             };
         }
 
-        Vector IVectorHelper.CreateFromDegrees(double degreeXZ, double degreeY)
+        public Vector CreateFromDegrees(double degreeXZ, double degreeY)
         {
-            Vector2D mainVector = ConvertDegreeToFlatVector(degreeXZ);
-            Vector2D yVector = ConvertDegreeToFlatVector(degreeY);
+            Vector2D mainVector = ConvertDegreeToVector(degreeXZ);
+            Vector2D yVector = ConvertDegreeToVector(degreeY);
 
             Vector vector = new Vector
             {
@@ -31,7 +31,7 @@ namespace Math
             return vector;
         }
 
-        private Vector2D ConvertDegreeToFlatVector(double degree)
+        public Vector2D ConvertDegreeToVector(double degree)
         {
             Vector vector = new Vector();
 
@@ -64,22 +64,22 @@ namespace Math
             return vector;
         }
 
-        Vector2D IVectorHelper.Rotate90Degree(Vector2D vector)
+        public Vector2D Rotate90Degree(Vector2D vector)
         {
             return new Vector2D { X = -vector.Z, Z = vector.X };
         }
 
-        Vector2D IVectorHelper.Rotate180Degree(Vector2D vector)
+        public Vector2D Rotate180Degree(Vector2D vector)
         {
             return new Vector2D { X = -vector.X, Z = -vector.Z };
         }
 
-        Vector2D IVectorHelper.Rotate270Degree(Vector2D vector)
+        public Vector2D Rotate270Degree(Vector2D vector)
         {
             return new Vector2D { X = vector.Z, Z = -vector.X };
         }
 
-        Vector2D IVectorHelper.MixTwoRectangularVectors(Vector2D vectorOne, Vector2D vectorTwo)
+        public Vector2D MixTwoRectangularVectors(Vector2D vectorOne, Vector2D vectorTwo)
         {
             return new Vector2D
             {
