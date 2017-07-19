@@ -1,15 +1,9 @@
 ﻿using Math.Contracts;
-using System;
 using System.Collections.Generic;
 using World.Model;
 
 namespace Math
 {
-    public sealed class FieldCoordinates
-    {
-        public int X { set; get; }
-        public int Z { set; get; }
-    }
     public sealed class ActiveFieldCalculator : IActiveFieldCalculator
     {
         private readonly int _lengthPerSquad;
@@ -21,38 +15,36 @@ namespace Math
             _numberOfSquadsPerSide = numberOfSquadsPerSide;
         }
 
-        public IEnumerable<int> CalculateActiveFields(Position position)
+        public IEnumerable<FieldCoordinates> CalculateActiveFields(Position position)
         {
             int x = (int)position.X / _lengthPerSquad;
             int z = (int)position.Z / _lengthPerSquad;
 
-            int centerField = x + (z * _numberOfSquadsPerSide);
+            List<FieldCoordinates> result = new List<FieldCoordinates>();
 
-            List<int> result = new List<int>();
-
-            result.Add(centerField);
+            result.Add(new FieldCoordinates { X = x, Z = z });
 
             if (x > 0)
-                result.Add(centerField - 1);
+                result.Add(new FieldCoordinates { X = x - 1, Z = z });
             if (x < _numberOfSquadsPerSide - 1)
-                result.Add(centerField + 1);
+                result.Add(new FieldCoordinates { X = x + 1, Z = z });
 
             if (z > 0)
             {
-                result.Add(centerField - _numberOfSquadsPerSide);
+                result.Add(new FieldCoordinates { X = x, Z = z - 1 });
                 if (x > 0)
-                    result.Add(centerField - _numberOfSquadsPerSide - 1);
+                    result.Add(new FieldCoordinates { X = x - 1, Z = z - 1 });
                 if (x < _numberOfSquadsPerSide - 1)
-                    result.Add(centerField - _numberOfSquadsPerSide + 1);
+                    result.Add(new FieldCoordinates { X = x + 1, Z = z - 1 });
             }
 
             if (z < _numberOfSquadsPerSide - 1)
             {
-                result.Add(centerField + _numberOfSquadsPerSide);
+                result.Add(new FieldCoordinates { X = x, Z = z + 1 });
                 if (x > 0)
-                    result.Add(centerField + _numberOfSquadsPerSide - 1);
+                    result.Add(new FieldCoordinates { X = x - 1, Z = z + 1 });
                 if (x < _numberOfSquadsPerSide - 1)
-                    result.Add(centerField + _numberOfSquadsPerSide + 1);
+                    result.Add(new FieldCoordinates { X = x + 1, Z = z + 1 });
             }
 
             return result;

@@ -12,46 +12,53 @@ namespace Math.Test
         public void AllFieldsAreFound()
         {
             ActiveFieldCalculator activeFieldCalculator = new ActiveFieldCalculator(10, 3);
-            IEnumerable<int> result = activeFieldCalculator.CalculateActiveFields(new Position { X = 14, Y = 0, Z = 17 });
+            List<FieldCoordinates> result = activeFieldCalculator.CalculateActiveFields(new Position { X = 14, Y = 0, Z = 17 }).ToList();
 
             Assert.AreEqual(9, result.Count());
-            Assert.IsTrue(result.Contains(0));
-            Assert.IsTrue(result.Contains(1));
-            Assert.IsTrue(result.Contains(2));
-            Assert.IsTrue(result.Contains(3));
-            Assert.IsTrue(result.Contains(4));
-            Assert.IsTrue(result.Contains(5));
-            Assert.IsTrue(result.Contains(6));
-            Assert.IsTrue(result.Contains(7));
-            Assert.IsTrue(result.Contains(8));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 0));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 0));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 0));
+
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 1));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 1));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 1));
+
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 2));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 2));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 2));
         }
 
         [TestMethod]
         public void FourExistingFieldsAreFound()
         {
             ActiveFieldCalculator activeFieldCalculator = new ActiveFieldCalculator(10, 3);
-            IEnumerable<int> result = activeFieldCalculator.CalculateActiveFields(new Position { X = 6, Y = 0, Z = 21 });
+            IEnumerable<FieldCoordinates> result = activeFieldCalculator.CalculateActiveFields(new Position { X = 6, Y = 0, Z = 21 });
 
             Assert.AreEqual(4, result.Count());
-            Assert.IsTrue(result.Contains(3));
-            Assert.IsTrue(result.Contains(4));
-            Assert.IsTrue(result.Contains(6));
-            Assert.IsTrue(result.Contains(7));
+
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 1));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 1));
+
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 2));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 2));
         }
 
         [TestMethod]
         public void SixExistingFieldsAreFound()
         {
             ActiveFieldCalculator activeFieldCalculator = new ActiveFieldCalculator(10, 3);
-            IEnumerable<int> result = activeFieldCalculator.CalculateActiveFields(new Position { X = 29, Y = 0, Z = 13 });
+            IEnumerable<FieldCoordinates> result = activeFieldCalculator.CalculateActiveFields(new Position { X = 29, Y = 0, Z = 13 });
 
             Assert.AreEqual(6, result.Count());
-            Assert.IsTrue(result.Contains(1));
-            Assert.IsTrue(result.Contains(2));
-            Assert.IsTrue(result.Contains(4));
-            Assert.IsTrue(result.Contains(5));
-            Assert.IsTrue(result.Contains(7));
-            Assert.IsTrue(result.Contains(8));
+
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 0));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 0));
+
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 1));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 1));
+
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 2));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 2));
         }
     }
 }
