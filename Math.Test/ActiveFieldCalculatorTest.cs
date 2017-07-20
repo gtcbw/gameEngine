@@ -15,17 +15,17 @@ namespace Math.Test
             List<FieldCoordinates> result = activeFieldCalculator.CalculateActiveFields(new Position { X = 14, Y = 0, Z = 17 }).ToList();
 
             Assert.AreEqual(9, result.Count());
-            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 0));
-            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 0));
-            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 0));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 0 && x.ID == 0));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 0 && x.ID == 1));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 0 && x.ID == 2));
 
-            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 1));
-            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 1));
-            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 1));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 1 && x.ID == 3));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 1 && x.ID == 4));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 1 && x.ID == 5));
 
-            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 2));
-            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 2));
-            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 2));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 0 && x.Z == 2 && x.ID == 6));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 1 && x.Z == 2 && x.ID == 7));
+            Assert.IsNotNull(result.FirstOrDefault(x => x.X == 2 && x.Z == 2 && x.ID == 8));
         }
 
         [TestMethod]

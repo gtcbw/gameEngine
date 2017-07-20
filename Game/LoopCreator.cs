@@ -11,6 +11,7 @@ using Engine.Contracts;
 using System.Collections.Generic;
 using Math;
 using Math.Contracts;
+using System.Diagnostics;
 
 namespace Game
 {
@@ -51,7 +52,7 @@ namespace Game
             ICamera camera = new Camera(4.0 / 3.0, playerPositionProvider);
 
             // environment rendring
-            ITexture horizontexture = textureCache.LoadTexture("gebirgedunkel.bmp");
+            ITexture horizontexture = textureCache.LoadTexture("horizon.bmp");
             IEnumerable<Polygon> polygons = new SurfaceRectangleBuilder().CreateRectangle(-1, 0, 4, 1);
             IPolygonRenderer polygonRenderer = new PolygonRenderer();
             ITextureTranslator textureTranslator = new TextureTranslator();
@@ -62,7 +63,11 @@ namespace Game
 
             IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
             IBufferedMeshUnitRenderer bufferedMeshUnitRenderer = new BufferedMeshUnitRenderer();
-            BufferedMeshUnit unit = new MeshUnitBuilder(bufferObjectFactory, heightCalculator).CreateRelativeHeightMapUnit(20, 1, 0, 0);
+            Stopwatch f = new Stopwatch();
+            f.Start();
+            BufferedMeshUnit unit = new MeshUnitBuilder(bufferObjectFactory, heightCalculator).CreateRelativeHeightMapUnit(200, 4, 0, 0);
+            f.Stop();
+            long t = f.ElapsedMilliseconds;
             //
 
             return () =>

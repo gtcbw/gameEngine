@@ -47,6 +47,8 @@ namespace Math
                     result.Add(new FieldCoordinates { X = x + 1, Z = z + 1 });
             }
 
+            result.ForEach(field => field.ID = field.X + (field.Z * _numberOfSquadsPerSide));
+
             return result;
         }
     }
