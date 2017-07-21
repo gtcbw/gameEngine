@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="FloorCollection.cs" />
     <Compile Include="Horizon.cs" />
+    <Compile Include="DelayedFloorLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +53,14 @@
     <ProjectReference Include="..\Graphics.Contracts\Graphics.Contracts.csproj">
       <Project>{a13c5a44-3305-4bd0-9d83-5106a360c30f}</Project>
       <Name>Graphics.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Math.Contracts\Math.Contracts.csproj">
+      <Project>{7b59ee89-ef4c-47da-8d9a-9c437b943893}</Project>
+      <Name>Math.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\World.Model\World.Model.csproj">
+      <Project>{38a22d00-9fc4-4dcb-8246-9f6cc26446fb}</Project>
+      <Name>World.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
