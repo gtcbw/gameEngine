@@ -5,7 +5,6 @@ namespace Graphics
 {
     public sealed class AlphaBlender : IAlphaBlender
     {
-
         void IAlphaBlender.BeginBlending()
         {
             GL.Enable(EnableCap.Blend);
