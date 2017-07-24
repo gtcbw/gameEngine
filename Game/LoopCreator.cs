@@ -63,12 +63,9 @@ namespace Game
 
             IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
             IBufferedMeshUnitRenderer bufferedMeshUnitRenderer = new BufferedMeshUnitRenderer();
-            Stopwatch f = new Stopwatch();
-            f.Start();
-            BufferedMeshUnit unit = new MeshUnitBuilder(bufferObjectFactory, heightCalculator).CreateRelativeHeightMapUnit(200, 4, 0, 0);
-            f.Stop();
-            long t = f.ElapsedMilliseconds;
-            //
+            FloorCollection floorCollection = new FloorCollection(bufferedMeshUnitRenderer);
+            IDelayedFloorLoader floorLoader = new DelayedFloorLoader(bufferObjectFactory, heightCalculator, floorCollection, 50, 4);
+            FieldManager fieldManager = new FieldManager(playerPositionProvider, floorLoader, new FieldChangeAnalyzer(), new ActiveFieldCalculator(200, 10));
 
             return () =>
             {
@@ -79,7 +76,7 @@ namespace Game
                     timeProvider.MeasureTimeSinceLastFrame();
                     mousePositionController.MeasureMousePositionDelta();
                     playerPositionProvider.UpdatePosition();
-
+                    fieldManager.UpdateFieldsByPlayerPosition();
                     // calculation
 
                     //rendring 2D
@@ -90,7 +87,7 @@ namespace Game
                     camera.SetInGamePerspective();
 
                     //render floor
-                    bufferedMeshUnitRenderer.RenderMesh(unit);
+                    ((IRenderingElement)floorCollection).Render();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }

@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FieldChangeAnalyzer.cs" />
+    <Compile Include="FieldManager.cs" />
     <Compile Include="FloorCollection.cs" />
     <Compile Include="Horizon.cs" />
     <Compile Include="DelayedFloorLoader.cs" />

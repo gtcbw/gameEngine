@@ -7,7 +7,7 @@ using World.Model;
 
 namespace Landscape.Rendering
 {
-    public sealed class DelayedFloorLoader
+    public sealed class DelayedFloorLoader : IDelayedFloorLoader
     {
         private IBufferObjectFactory _bufferObjectFactory;
         private IHeightCalculator _heightCalculator;
@@ -44,7 +44,7 @@ namespace Landscape.Rendering
             _indexBufferId = _bufferObjectFactory.GenerateIndexBuffer(indices);
         }
 
-        public void UpdateMesh(IEnumerable<FieldCoordinates> addedFields, IEnumerable<FieldCoordinates> removedFields)
+        void IDelayedFloorLoader.UpdateMesh(IEnumerable<FieldCoordinates> addedFields, IEnumerable<FieldCoordinates> removedFields)
         {
             foreach(FieldCoordinates field in removedFields)
             {

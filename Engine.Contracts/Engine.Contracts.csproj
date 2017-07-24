@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDelayedFloorLoader.cs" />
+    <Compile Include="IFieldChangeAnalyzer.cs" />
     <Compile Include="IFloorCollection.cs" />
     <Compile Include="Input\IAbsoluteMousePositionProvider.cs" />
     <Compile Include="IFrameTimeProvider.cs" />

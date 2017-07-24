@@ -16,7 +16,7 @@ namespace Engine.Framework
         private readonly double _height = 1.8;
         private readonly double _metersPerSecond;
 
-        private Position _position = new Position();
+        private Position _position = new Position { X = 250, Z = 250 };
         private Ray _ray = new Ray();
 
         public PlayerPositionProvider(IPressedKeyDetector pressedKeyDetector,
