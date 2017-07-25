@@ -11,7 +11,6 @@ using Engine.Contracts;
 using System.Collections.Generic;
 using Math;
 using Math.Contracts;
-using System.Diagnostics;
 
 namespace Game
 {
@@ -33,12 +32,14 @@ namespace Game
             ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
 
             // height
-            int sideLength = 10;
+            int sideLength = 500;
             int meters = 2;
             float[] heightValues = new float[sideLength * sideLength];
             for (int i = 0; i < sideLength * sideLength; i++)
             {
-                heightValues[i] = (float)((i % 3) / 3.0);
+                //heightValues[i] = (float)((i % 3) / 3.0);
+                heightValues[i] = (float)System.Math.Sin(i / 7200.0) * 2;
+
             }
             IHeightCalculator heightCalculator = new HeightCalculator(heightValues, sideLength, meters);
 
@@ -70,6 +71,10 @@ namespace Game
             IDelayedFloorLoader floorLoader = new DelayedFloorLoader(bufferObjectFactory, heightCalculator, floorCollection, 50, 2);
             FieldManager fieldManager = new FieldManager(playerPositionProvider, floorLoader, new FieldChangeAnalyzer(), new ActiveFieldCalculator(100, 10));
 
+            IFog fog = new Fog();
+            float[] color = { 0.3f, 0.7f, 0.3f };
+            fog.SetColor(color);
+
             return () =>
             {
                 while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
@@ -90,7 +95,9 @@ namespace Game
                     camera.SetInGamePerspective();
 
                     //render floor
+                    fog.StartFog();
                     ((IRenderingElement)floorCollection).Render();
+                    fog.StopFog();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }

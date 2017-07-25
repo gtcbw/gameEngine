@@ -53,6 +53,7 @@
     <Compile Include="BufferedMeshUnitRenderer.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="DepthTestActivator.cs" />
+    <Compile Include="Fog.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="LightCollection.cs" />
