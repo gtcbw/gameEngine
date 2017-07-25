@@ -71,7 +71,9 @@ namespace Landscape.Rendering
             {
                 FieldCoordinates field = _fieldQueue.ElementAt(0);
                 _fieldQueue.RemoveAt(0);
-                float[] vertices = CreateVertices(_numberOfRows, _metersPerTriangleSide, field.X * _metersPerTriangleSide, field.Z * _metersPerTriangleSide);
+                int startx = field.X * _metersPerTriangleSide * _numberOfRows;
+                int startz = field.Z * _metersPerTriangleSide * _numberOfRows;
+                float[] vertices = CreateVertices(_numberOfRows, _metersPerTriangleSide, startx, startz);
                 _fieldVertexQueue.Add(new FieldVertices { Field = field, Vertices = vertices });
             }
         }

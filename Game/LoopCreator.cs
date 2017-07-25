@@ -48,7 +48,10 @@ namespace Game
                 playerViewDirectionProvider, 
                 new VectorHelper(),
                 new KeyMapper(pressedKeyDetector),
-                3);
+                3,
+                500,
+                500);
+
             ICamera camera = new Camera(4.0 / 3.0, playerPositionProvider);
 
             // environment rendring
@@ -64,8 +67,8 @@ namespace Game
             IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
             IBufferedMeshUnitRenderer bufferedMeshUnitRenderer = new BufferedMeshUnitRenderer();
             FloorCollection floorCollection = new FloorCollection(bufferedMeshUnitRenderer);
-            IDelayedFloorLoader floorLoader = new DelayedFloorLoader(bufferObjectFactory, heightCalculator, floorCollection, 50, 4);
-            FieldManager fieldManager = new FieldManager(playerPositionProvider, floorLoader, new FieldChangeAnalyzer(), new ActiveFieldCalculator(200, 10));
+            IDelayedFloorLoader floorLoader = new DelayedFloorLoader(bufferObjectFactory, heightCalculator, floorCollection, 50, 2);
+            FieldManager fieldManager = new FieldManager(playerPositionProvider, floorLoader, new FieldChangeAnalyzer(), new ActiveFieldCalculator(100, 10));
 
             return () =>
             {

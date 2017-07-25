@@ -16,7 +16,7 @@ namespace Engine.Framework
         private readonly double _height = 1.8;
         private readonly double _metersPerSecond;
 
-        private Position _position = new Position { X = 250, Z = 250 };
+        private Position _position;
         private Ray _ray = new Ray();
 
         public PlayerPositionProvider(IPressedKeyDetector pressedKeyDetector,
@@ -25,7 +25,9 @@ namespace Engine.Framework
             IPlayerViewDirectionProvider playerViewDirectionProvider,
             IVectorHelper vectorHelper,
             IKeyMapper keyMapper,
-            double metersPerSecond)
+            double metersPerSecond,
+            double startX,
+            double startZ)
         {
             _pressedKeyDetector = pressedKeyDetector;
             _frameTimeProvider = frameTimeProvider;
@@ -34,6 +36,7 @@ namespace Engine.Framework
             _vectorHelper = vectorHelper;
             _keyMapper = keyMapper;
             _metersPerSecond = metersPerSecond;
+            _position = new Position { X = startX, Z = startZ };
         }
 
         public void UpdatePosition()

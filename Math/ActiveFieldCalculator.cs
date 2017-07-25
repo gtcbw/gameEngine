@@ -22,6 +22,9 @@ namespace Math
 
             List<FieldCoordinates> result = new List<FieldCoordinates>();
 
+            if (x < 0 || z < 0 || z >= _numberOfQuadsPerSide || x >= _numberOfQuadsPerSide)
+                return result;
+
             result.Add(new FieldCoordinates { X = x, Z = z, RelativeID = 4 });
 
             if (x > 0)
