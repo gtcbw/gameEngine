@@ -31,16 +31,11 @@ namespace Game
             BufferLoader bufferLoader = new BufferLoader(new WavFileReader());
             ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
 
-            // height
+
+            BitmapToHeightConverter converter = new BitmapToHeightConverter();
+            float[] heightValues = converter.ConvertBitmap("heightmap.bmp", 20);
             int sideLength = 500;
             int meters = 2;
-            float[] heightValues = new float[sideLength * sideLength];
-            for (int i = 0; i < sideLength * sideLength; i++)
-            {
-                //heightValues[i] = (float)((i % 3) / 3.0);
-                heightValues[i] = (float)System.Math.Sin(i / 7200.0) * 2;
-
-            }
             IHeightCalculator heightCalculator = new HeightCalculator(heightValues, sideLength, meters);
 
             PlayerPositionProvider playerPositionProvider = new PlayerPositionProvider(pressedKeyDetector, 
