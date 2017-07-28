@@ -27,6 +27,17 @@ namespace Graphics
             return bufferId;
         }
 
+        uint IBufferObjectFactory.GenerateTextureCoordBuffer(float[] texCoordArray)
+        {
+            uint texCoordId;
+
+            GL.GenBuffers(1, out texCoordId);
+            GL.BindBuffer(BufferTarget.TextureBuffer, texCoordId);
+            GL.BufferData(BufferTarget.TextureBuffer, texCoordArray.Length * sizeof(float), texCoordArray, BufferUsageHint.StaticDraw);
+
+            return texCoordId;
+        }
+
         void IBufferObjectFactory.Delete(uint bufferId)
         {
             GL.DeleteBuffers(1, ref bufferId);

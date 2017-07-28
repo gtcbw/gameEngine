@@ -6,6 +6,8 @@
 
         public uint IndexBufferId { set; get; }
 
+        public uint? TextureBufferId { get; set; }
+
         public int NumberOfIndices { set; get; }
     }
 }

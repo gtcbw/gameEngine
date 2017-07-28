@@ -1,10 +1,5 @@
 ﻿using Graphics.Contracts;
 using Math.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using World.Model;
 
 namespace Landscape.Rendering
@@ -16,7 +11,7 @@ namespace Landscape.Rendering
         private IBufferObjectFactory _bufferObjectFactory;
         private double _halfStreetWidth;
         private double _radius;
-        private  float _minHeight = 0.06f;
+        private  float _minHeight = 0.1f;
 
         public CurvedStreetMeshBuilder(IVectorHelper vectorHelper, 
             IHeightCalculator heightCalculator,
@@ -34,27 +29,54 @@ namespace Landscape.Rendering
         public BufferedMeshUnit BuildMeshUnit(Position circleCenter, int startDegree, int endDegree)
         {
             float[] vertices = CreateVertices(circleCenter, startDegree, endDegree);
+            ushort[] indexArray = CreateIndexArray(endDegree - startDegree);
+            float[] textureCoords = CreateTextureCoordinates(endDegree - startDegree);
 
-            ushort[] indexArray = CreateIndexArray(90);
             return new BufferedMeshUnit
             {
                 VertexBufferId = _bufferObjectFactory.GenerateVertexBuffer(vertices),
                 IndexBufferId = _bufferObjectFactory.GenerateIndexBuffer(indexArray),
+                TextureBufferId = _bufferObjectFactory.GenerateTextureCoordBuffer(textureCoords),
                 NumberOfIndices = indexArray.Length
             };
+        }
+
+        private float[] CreateTextureCoordinates(int numberOfQuads)
+        {
+            float[] texCoords = new float[(numberOfQuads + 1) * 4];
+
+            for (int i = 0; i <= numberOfQuads; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    texCoords[i * 4] = 0;
+                    texCoords[(i * 4) + 1] = 0;
+                    texCoords[(i * 4) + 2] = 1;
+                    texCoords[(i * 4) + 3] = 0;
+                }
+                else
+                {
+                    texCoords[i * 4] = 0;
+                    texCoords[(i * 4) + 1] = 1;
+                    texCoords[(i * 4) + 2] = 1;
+                    texCoords[(i * 4) + 3] = 1;
+                }
+            }
+
+            return texCoords;
         }
 
         private ushort[] CreateIndexArray(int numberOfQuads)
         {
             ushort[] indices = new ushort[numberOfQuads * 6];
 
-            for(int i = 0; i < numberOfQuads; i++)
+            for (int i = 0; i < numberOfQuads; i++)
             {
-                indices[(i * 6) + 0] = (ushort)((i * 2) + 0);
+                indices[i * 6] = (ushort)(i * 2);
                 indices[(i * 6) + 1] = (ushort)(((i + 1) * 2) + 1);
-                indices[(i * 6) + 2] = (ushort)(((i + 1) * 2) + 0);
+                indices[(i * 6) + 2] = (ushort)((i + 1) * 2);
 
-                indices[(i * 6) + 3] = (ushort)((i * 2) + 0);
+                indices[(i * 6) + 3] = (ushort)(i * 2);
                 indices[(i * 6) + 4] = (ushort)((i * 2) + 1);
                 indices[(i * 6) + 5] = (ushort)(((i + 1) * 2) + 1);
             }
@@ -62,7 +84,7 @@ namespace Landscape.Rendering
             return indices;
         }
 
-        public float[] CreateVertices(Position circleCenter, int startDegree, int endDegree)
+        private float[] CreateVertices(Position circleCenter, int startDegree, int endDegree)
         {
             float[] vertices = new float[(endDegree - startDegree + 1) * 6];
             int index = 0;

@@ -78,7 +78,7 @@ namespace Game
                 bufferObjectFactory,
                 8,
                 100);
-
+            ITexture streettexture = textureCache.LoadTexture("street.bmp");
             streetCollection.AddMeshUnit(0, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 0, 90));
             streetCollection.AddMeshUnit(1, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 90, 180));
             streetCollection.AddMeshUnit(2, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 180, 270));
@@ -108,6 +108,7 @@ namespace Game
                     //render floor
                     fog.StartFog();
                     colorRenderer.Render();
+                    textureChanger.SetTexture(streettexture.TextureId);
                     ((IRenderingElement)streetCollection).Render();
                     fog.StopFog();
 
