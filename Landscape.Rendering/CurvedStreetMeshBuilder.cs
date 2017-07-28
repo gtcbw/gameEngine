@@ -16,6 +16,7 @@ namespace Landscape.Rendering
         private IBufferObjectFactory _bufferObjectFactory;
         private double _halfStreetWidth;
         private double _radius;
+        private  float _minHeight = 0.06f;
 
         public CurvedStreetMeshBuilder(IVectorHelper vectorHelper, 
             IHeightCalculator heightCalculator,
@@ -50,12 +51,12 @@ namespace Landscape.Rendering
             for(int i = 0; i < numberOfQuads; i++)
             {
                 indices[(i * 6) + 0] = (ushort)((i * 2) + 0);
-                indices[(i * 6) + 1] = (ushort)(((i + 1) * 2) + 0);
-                indices[(i * 6) + 2] = (ushort)(((i + 1) * 2) + 1);
+                indices[(i * 6) + 1] = (ushort)(((i + 1) * 2) + 1);
+                indices[(i * 6) + 2] = (ushort)(((i + 1) * 2) + 0);
 
                 indices[(i * 6) + 3] = (ushort)((i * 2) + 0);
-                indices[(i * 6) + 4] = (ushort)(((i + 1) * 2) + 1);
-                indices[(i * 6) + 5] = (ushort)((i * 2) + 1);
+                indices[(i * 6) + 4] = (ushort)((i * 2) + 1);
+                indices[(i * 6) + 5] = (ushort)(((i + 1) * 2) + 1);
             }
 
             return indices;
@@ -75,14 +76,14 @@ namespace Landscape.Rendering
                     X = circleCenter.X + (vector.X * (_radius - _halfStreetWidth)),
                     Z = circleCenter.Z + (vector.Z * (_radius - _halfStreetWidth)),
                 };
-                innerVertex.Y = _heightCalculator.CalculateHeight(innerVertex.X, innerVertex.Z);
+                innerVertex.Y = _heightCalculator.CalculateHeight(innerVertex.X, innerVertex.Z) + _minHeight;
 
                 Position outerVertex = new Position
                 {
                     X = circleCenter.X + (vector.X * (_radius + _halfStreetWidth)),
                     Z = circleCenter.Z + (vector.Z * (_radius + _halfStreetWidth)),
                 };
-                outerVertex.Y = _heightCalculator.CalculateHeight(outerVertex.X, outerVertex.Z);
+                outerVertex.Y = _heightCalculator.CalculateHeight(outerVertex.X, outerVertex.Z) + _minHeight;
 
                 vertices[index++] = (float)innerVertex.X;
                 vertices[index++] = (float)innerVertex.Y;

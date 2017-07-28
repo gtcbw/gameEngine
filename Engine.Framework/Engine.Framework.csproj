@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapToHeightConverter.cs" />
+    <Compile Include="ColorRenderer.cs" />
     <Compile Include="FrameTimeProvider.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="MeshUnitBuilder.cs" />

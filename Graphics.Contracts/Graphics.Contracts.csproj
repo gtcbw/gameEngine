@@ -52,6 +52,7 @@
     <Compile Include="IBufferedMeshUnitRenderer.cs" />
     <Compile Include="IBufferSwapper.cs" />
     <Compile Include="ICamera.cs" />
+    <Compile Include="IColorSetter.cs" />
     <Compile Include="IDepthTestActivator.cs" />
     <Compile Include="IFog.cs" />
     <Compile Include="ILight.cs" />

@@ -60,11 +60,12 @@ namespace Game
             IWorldTranslator worldTranslator = new WorldTranslator();
             IWorldRotator worldRotator = new WorldRotator();
             IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerViewDirectionProvider, textureTranslator, worldTranslator);
-
+            IColorSetter colorSetter = new ColorSetter();
 
             IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
             IBufferedMeshUnitRenderer bufferedMeshUnitRenderer = new BufferedMeshUnitRenderer();
-            FloorCollection floorCollection = new FloorCollection(bufferedMeshUnitRenderer);
+            IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
+            IMeshUnitCollection streetCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IDelayedFloorLoader floorLoader = new DelayedFloorLoader(bufferObjectFactory, heightCalculator, floorCollection, 50, 2);
             FieldManager fieldManager = new FieldManager(playerPositionProvider, floorLoader, new FieldChangeAnalyzer(), new ActiveFieldCalculator(100, 10));
 
@@ -78,10 +79,12 @@ namespace Game
                 8,
                 100);
 
-            var street = curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 0, 90);
-            var street1 = curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 90, 180);
-            var street2 = curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 180, 270);
-            var street3 = curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 270, 360);
+            streetCollection.AddMeshUnit(0, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 0, 90));
+            streetCollection.AddMeshUnit(1, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 90, 180));
+            streetCollection.AddMeshUnit(2, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 180, 270));
+            streetCollection.AddMeshUnit(3, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 270, 360));
+
+            IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
 
             return () =>
             {
@@ -103,13 +106,10 @@ namespace Game
                     camera.SetInGamePerspective();
 
                     //render floor
-                   // fog.StartFog();
-                    //((IRenderingElement)floorCollection).Render();
-                    bufferedMeshUnitRenderer.RenderMesh(street);
-                    bufferedMeshUnitRenderer.RenderMesh(street1);
-                    bufferedMeshUnitRenderer.RenderMesh(street2);
-                    bufferedMeshUnitRenderer.RenderMesh(street3);
-                    //fog.StopFog();
+                    fog.StartFog();
+                    colorRenderer.Render();
+                    ((IRenderingElement)streetCollection).Render();
+                    fog.StopFog();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }

@@ -9,7 +9,6 @@ namespace Graphics
 {
     public sealed class Camera : ICamera
     {
-        private bool _depthTestEnabled;
         private double _aspectRatio;
         private IPlayerViewRayProvider _playerViewRayProvider;
 
@@ -29,11 +28,7 @@ namespace Graphics
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            if (_depthTestEnabled)
-            {
-                GL.Disable(EnableCap.DepthTest);
-                _depthTestEnabled = false;
-            }
+            GL.Disable(EnableCap.DepthTest);
         }
 
         void ICamera.SetInGamePerspective()
@@ -47,11 +42,7 @@ namespace Graphics
 
             UpdatePosition();
 
-            if (!_depthTestEnabled)
-            {
-                GL.Enable(EnableCap.DepthTest);
-                _depthTestEnabled = true;
-            }
+            GL.Enable(EnableCap.DepthTest);
         }
         private void UpdatePosition()
         {

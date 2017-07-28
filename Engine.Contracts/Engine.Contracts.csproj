@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="IDelayedFloorLoader.cs" />
     <Compile Include="IFieldChangeAnalyzer.cs" />
-    <Compile Include="IFloorCollection.cs" />
+    <Compile Include="IMeshUnitCollection.cs" />
     <Compile Include="Input\IAbsoluteMousePositionProvider.cs" />
     <Compile Include="IFrameTimeProvider.cs" />
     <Compile Include="Input\IKeyMapper.cs" />

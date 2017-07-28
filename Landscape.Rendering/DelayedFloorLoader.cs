@@ -11,7 +11,7 @@ namespace Landscape.Rendering
     {
         private IBufferObjectFactory _bufferObjectFactory;
         private IHeightCalculator _heightCalculator;
-        private IFloorCollection _floorCollection;
+        private IMeshUnitCollection _floorCollection;
         private uint _indexBufferId;
         private int _numberOfIndices;
 
@@ -29,7 +29,7 @@ namespace Landscape.Rendering
 
         public DelayedFloorLoader(IBufferObjectFactory bufferObjectFactory,
             IHeightCalculator heightCalculator,
-            IFloorCollection floorCollection,
+            IMeshUnitCollection floorCollection,
             int numberOfRows, 
             int metersPerTriangleSide)
         {
@@ -48,7 +48,7 @@ namespace Landscape.Rendering
         {
             foreach(FieldCoordinates field in removedFields)
             {
-                _floorCollection.RemoveFloorPart(field.ID);
+                _floorCollection.RemoveMeshUnit(field.ID);
             }
 
             if(addedFields.Count() > 0)
@@ -65,7 +65,7 @@ namespace Landscape.Rendering
                     NumberOfIndices = _numberOfIndices,
                     VertexBufferId = _bufferObjectFactory.GenerateVertexBuffer(fieldVertices.Vertices)
                 };
-                _floorCollection.AddFloorPart(fieldVertices.Field.ID, bufferedMeshUnit);
+                _floorCollection.AddMeshUnit(fieldVertices.Field.ID, bufferedMeshUnit);
             }
             else if (_fieldQueue.Count > 0)
             {
