@@ -9,7 +9,7 @@ namespace Graphics
         void IBufferedMeshUnitRenderer.RenderMesh(BufferedMeshUnit unit)
         {
             GL.Disable(EnableCap.Texture2D);
-            GL.Color3(0.5f, 0.8f, 0.2f);
+            GL.Color3((float)(1.0 / 255.0 * 50.0), (float)(1.0 / 255.0 * 180.0), (float)(1.0 / 255.0 * 50.0));
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, unit.VertexBufferId);
             GL.EnableClientState(ArrayCap.VertexArray);

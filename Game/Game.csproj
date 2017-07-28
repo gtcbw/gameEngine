@@ -98,6 +98,10 @@
       <Project>{577ccce9-cd97-4bd7-a29e-d23a6665c57b}</Project>
       <Name>Sound</Name>
     </ProjectReference>
+    <ProjectReference Include="..\World.Model\World.Model.csproj">
+      <Project>{38A22D00-9FC4-4DCB-8246-9F6CC26446FB}</Project>
+      <Name>World.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

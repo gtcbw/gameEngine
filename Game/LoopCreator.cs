@@ -11,6 +11,7 @@ using Engine.Contracts;
 using System.Collections.Generic;
 using Math;
 using Math.Contracts;
+using World.Model;
 
 namespace Game
 {
@@ -31,6 +32,7 @@ namespace Game
             BufferLoader bufferLoader = new BufferLoader(new WavFileReader());
             ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
 
+            VectorHelper vectorHelper = new VectorHelper();
 
             BitmapToHeightConverter converter = new BitmapToHeightConverter();
             float[] heightValues = converter.ConvertBitmap("heightmap.bmp", 20);
@@ -41,14 +43,14 @@ namespace Game
             PlayerPositionProvider playerPositionProvider = new PlayerPositionProvider(pressedKeyDetector, 
                 heightCalculator, 
                 timeProvider, 
-                playerViewDirectionProvider, 
-                new VectorHelper(),
+                playerViewDirectionProvider,
+                vectorHelper,
                 new KeyMapper(pressedKeyDetector),
                 3,
                 500,
                 500);
 
-            ICamera camera = new Camera(4.0 / 3.0, playerPositionProvider);
+            ICamera camera = new Camera(config.Resolution.AspectRatio, playerPositionProvider);
 
             // environment rendring
             ITexture horizontexture = textureCache.LoadTexture("horizon.bmp");
@@ -67,8 +69,19 @@ namespace Game
             FieldManager fieldManager = new FieldManager(playerPositionProvider, floorLoader, new FieldChangeAnalyzer(), new ActiveFieldCalculator(100, 10));
 
             IFog fog = new Fog();
-            float[] color = { 0.3f, 0.7f, 0.3f };
+            float[] color = { (float)(1.0 / 255.0 * 50.0), (float)(1.0 / 255.0 * 150.0), (float)(1.0 / 255.0 * 50.0) };
             fog.SetColor(color);
+
+            CurvedStreetMeshBuilder curvedStreetMeshBuilder = new CurvedStreetMeshBuilder(vectorHelper, 
+                heightCalculator,
+                bufferObjectFactory,
+                8,
+                100);
+
+            var street = curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 0, 90);
+            var street1 = curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 90, 180);
+            var street2 = curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 180, 270);
+            var street3 = curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 270, 360);
 
             return () =>
             {
@@ -90,9 +103,13 @@ namespace Game
                     camera.SetInGamePerspective();
 
                     //render floor
-                    fog.StartFog();
-                    ((IRenderingElement)floorCollection).Render();
-                    fog.StopFog();
+                   // fog.StartFog();
+                    //((IRenderingElement)floorCollection).Render();
+                    bufferedMeshUnitRenderer.RenderMesh(street);
+                    bufferedMeshUnitRenderer.RenderMesh(street1);
+                    bufferedMeshUnitRenderer.RenderMesh(street2);
+                    bufferedMeshUnitRenderer.RenderMesh(street3);
+                    //fog.StopFog();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }

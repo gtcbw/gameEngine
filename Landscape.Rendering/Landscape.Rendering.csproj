@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurvedStreetMeshBuilder.cs" />
     <Compile Include="FieldChangeAnalyzer.cs" />
     <Compile Include="FieldManager.cs" />
     <Compile Include="FloorCollection.cs" />
