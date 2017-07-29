@@ -36,9 +36,12 @@ namespace Game
 
             BitmapToHeightConverter converter = new BitmapToHeightConverter();
             float[] heightValues = converter.ConvertBitmap("heightmap.bmp", 20);
-            int sideLength = 500;
-            int meters = 2;
-            IHeightCalculator heightCalculator = new HeightCalculator(heightValues, sideLength, meters);
+            int numberOfQuadsPerSideOfArea = 500;
+            int metersPerQuad = 2;
+            int numberOfFieldsPerAreaSide = 3;
+            int lengthOfFieldSide = 100;
+
+            IHeightCalculator heightCalculator = new HeightCalculator(heightValues, numberOfQuadsPerSideOfArea, metersPerQuad);
 
             PlayerPositionProvider playerPositionProvider = new PlayerPositionProvider(pressedKeyDetector, 
                 heightCalculator, 
@@ -47,8 +50,8 @@ namespace Game
                 vectorHelper,
                 new KeyMapper(pressedKeyDetector),
                 3,
-                500,
-                500);
+                150,
+                150);
 
             ICamera camera = new Camera(config.Resolution.AspectRatio, playerPositionProvider);
 
@@ -66,23 +69,25 @@ namespace Game
             IBufferedMeshUnitRenderer bufferedMeshUnitRenderer = new BufferedMeshUnitRenderer();
             IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IMeshUnitCollection streetCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
-            IDelayedFloorLoader floorLoader = new DelayedFloorLoader(bufferObjectFactory, heightCalculator, floorCollection, 50, 2);
-            FieldManager fieldManager = new FieldManager(playerPositionProvider, floorLoader, new FieldChangeAnalyzer(), new ActiveFieldCalculator(100, 10));
+
+            IVertexByFieldCreator floorVertexCreator = new FloorVertexCreator(heightCalculator, lengthOfFieldSide / metersPerQuad, metersPerQuad);
+            IMeshUnitCreator floorMeshUnitCreator = new FloorMeshUnitCreator(bufferObjectFactory, lengthOfFieldSide / metersPerQuad);
+            IMeshUnitByFieldLoader floorLoader = new DelayedMeshUnitLoader(floorVertexCreator, floorMeshUnitCreator, floorCollection);
+
+            IVertexByFieldCreator streetVertexCreator = new StreetVertexCreator(vectorHelper, heightCalculator, 8, lengthOfFieldSide / 2.0);
+            IMeshUnitCreator streetMeshUnitCreator = new StreetMeshUnitCreator(bufferObjectFactory, 90);
+            IMeshUnitByFieldLoader streetLoader = new DelayedMeshUnitLoader(streetVertexCreator, streetMeshUnitCreator, streetCollection);
+
+            FieldManager fieldManager = new FieldManager(playerPositionProvider,
+                new List<IMeshUnitByFieldLoader> { floorLoader, streetLoader },
+                new FieldChangeAnalyzer(), 
+                new ActiveFieldCalculator(lengthOfFieldSide, numberOfFieldsPerAreaSide));
 
             IFog fog = new Fog();
             float[] color = { (float)(1.0 / 255.0 * 50.0), (float)(1.0 / 255.0 * 150.0), (float)(1.0 / 255.0 * 50.0) };
             fog.SetColor(color);
 
-            CurvedStreetMeshBuilder curvedStreetMeshBuilder = new CurvedStreetMeshBuilder(vectorHelper, 
-                heightCalculator,
-                bufferObjectFactory,
-                8,
-                100);
             ITexture streettexture = textureCache.LoadTexture("street.bmp");
-            streetCollection.AddMeshUnit(0, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 0, 90));
-            streetCollection.AddMeshUnit(1, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 90, 180));
-            streetCollection.AddMeshUnit(2, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 180, 270));
-            streetCollection.AddMeshUnit(3, curvedStreetMeshBuilder.BuildMeshUnit(new Position { X = 500, Z = 500 }, 270, 360));
 
             IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
 

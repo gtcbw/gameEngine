@@ -3,7 +3,7 @@ using World.Model;
 
 namespace Engine.Contracts
 {
-    public interface IDelayedFloorLoader
+    public interface IMeshUnitByFieldLoader
     {
         void UpdateMesh(IEnumerable<FieldCoordinates> addedFields, IEnumerable<FieldCoordinates> removedFields);
     }
