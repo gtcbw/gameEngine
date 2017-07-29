@@ -26,6 +26,7 @@ namespace Landscape.Rendering
 
         private List<FieldCoordinates> _fieldQueue = new List<FieldCoordinates>();
         private List<FieldVertices> _fieldVertexQueue = new List<FieldVertices>();
+        private Dictionary<int, uint> _vertexIdByFieldId = new Dictionary<int, uint>();
 
         public DelayedFloorLoader(IBufferObjectFactory bufferObjectFactory,
             IHeightCalculator heightCalculator,
@@ -39,7 +40,7 @@ namespace Landscape.Rendering
             _numberOfRows = numberOfRows;
             _metersPerTriangleSide = metersPerTriangleSide;
 
-            ushort[] indices = CreateStandardIndexMesh(_numberOfRows);
+            ushort[] indices = CreateStandardIndexMesh();
             _numberOfIndices = indices.Length;
             _indexBufferId = _bufferObjectFactory.GenerateIndexBuffer(indices);
         }
@@ -48,7 +49,25 @@ namespace Landscape.Rendering
         {
             foreach(FieldCoordinates field in removedFields)
             {
-                _floorCollection.RemoveMeshUnit(field.ID);
+                if (_vertexIdByFieldId.Keys.Contains(field.ID))
+                {
+                    _floorCollection.RemoveMeshUnit(field.ID);
+                    _bufferObjectFactory.Delete(_vertexIdByFieldId[field.ID]);
+                    _vertexIdByFieldId.Remove(field.ID);
+                }
+                else
+                {
+                    var queuedField = _fieldQueue.FirstOrDefault(x => x.ID == field.ID);
+                    if (queuedField != null)
+                    {
+                        _fieldQueue.Remove(queuedField);
+                    }
+                    else
+                    {
+                        var vertexField = _fieldVertexQueue.First(x => x.Field.ID == field.ID);
+                        _fieldVertexQueue.Remove(vertexField);
+                    }
+                }
             }
 
             if(addedFields.Count() > 0)
@@ -65,54 +84,56 @@ namespace Landscape.Rendering
                     NumberOfIndices = _numberOfIndices,
                     VertexBufferId = _bufferObjectFactory.GenerateVertexBuffer(fieldVertices.Vertices)
                 };
+                _vertexIdByFieldId.Add(fieldVertices.Field.ID, bufferedMeshUnit.VertexBufferId);
                 _floorCollection.AddMeshUnit(fieldVertices.Field.ID, bufferedMeshUnit);
             }
             else if (_fieldQueue.Count > 0)
             {
                 FieldCoordinates field = _fieldQueue.ElementAt(0);
                 _fieldQueue.RemoveAt(0);
-                int startx = field.X * _metersPerTriangleSide * _numberOfRows;
-                int startz = field.Z * _metersPerTriangleSide * _numberOfRows;
-                float[] vertices = CreateVertices(_numberOfRows, _metersPerTriangleSide, startx, startz);
+                float[] vertices = CreateVertices(field);
                 _fieldVertexQueue.Add(new FieldVertices { Field = field, Vertices = vertices });
             }
         }
 
-        private float[] CreateVertices(int numberOfRows, int metersPerTriangleSide, int startx, int startz)
+        private float[] CreateVertices(FieldCoordinates field)
         {
-            float[] vertices = new float[(numberOfRows + 1) * (numberOfRows + 1) * 3];
+            int startx = field.X * _metersPerTriangleSide * _numberOfRows;
+            int startz = field.Z * _metersPerTriangleSide * _numberOfRows;
 
-            for (int z = 0; z < numberOfRows + 1; z++)
+            float[] vertices = new float[(_numberOfRows + 1) * (_numberOfRows + 1) * 3];
+
+            for (int z = 0; z < _numberOfRows + 1; z++)
             {
-                for (int x = 0; x < numberOfRows + 1; x++)
+                for (int x = 0; x < _numberOfRows + 1; x++)
                 {
-                    float xcoord = (x * metersPerTriangleSide) + startx;
-                    float zcoord = (z * metersPerTriangleSide) + startz;
+                    float xcoord = (x * _metersPerTriangleSide) + startx;
+                    float zcoord = (z * _metersPerTriangleSide) + startz;
 
-                    vertices[(((z * (numberOfRows + 1)) + x) * 3)] = xcoord;
-                    vertices[(((z * (numberOfRows + 1)) + x) * 3) + 1] = (float)_heightCalculator.CalculateHeight(xcoord, zcoord);
-                    vertices[(((z * (numberOfRows + 1)) + x) * 3) + 2] = zcoord;
+                    vertices[(((z * (_numberOfRows + 1)) + x) * 3)] = xcoord;
+                    vertices[(((z * (_numberOfRows + 1)) + x) * 3) + 1] = (float)_heightCalculator.CalculateHeight(xcoord, zcoord);
+                    vertices[(((z * (_numberOfRows + 1)) + x) * 3) + 2] = zcoord;
                 }
             }
 
             return vertices;
         }
 
-        private ushort[] CreateStandardIndexMesh(int numberOfRows)
+        private ushort[] CreateStandardIndexMesh()
         {
-            ushort[] indices = new ushort[numberOfRows * numberOfRows * 6];
+            ushort[] indices = new ushort[_numberOfRows * _numberOfRows * 6];
 
-            for (int rowz = 0; rowz < numberOfRows; rowz++)
+            for (int rowz = 0; rowz < _numberOfRows; rowz++)
             {
-                for (int rowx = 0; rowx < numberOfRows; rowx++)
+                for (int rowx = 0; rowx < _numberOfRows; rowx++)
                 {
-                    indices[((rowx + (rowz * numberOfRows)) * 6) + 0] = (ushort)(0 + (rowx + (rowz * (numberOfRows + 1))));
-                    indices[((rowx + (rowz * numberOfRows)) * 6) + 1] = (ushort)(1 + (rowx + (rowz * (numberOfRows + 1))));
-                    indices[((rowx + (rowz * numberOfRows)) * 6) + 2] = (ushort)(1 + (rowx + ((rowz + 1) * (numberOfRows + 1))));
+                    indices[((rowx + (rowz * _numberOfRows)) * 6) + 0] = (ushort)(0 + (rowx + (rowz * (_numberOfRows + 1))));
+                    indices[((rowx + (rowz * _numberOfRows)) * 6) + 1] = (ushort)(1 + (rowx + (rowz * (_numberOfRows + 1))));
+                    indices[((rowx + (rowz * _numberOfRows)) * 6) + 2] = (ushort)(1 + (rowx + ((rowz + 1) * (_numberOfRows + 1))));
 
-                    indices[((rowx + (rowz * numberOfRows)) * 6) + 3] = (ushort)(0 + (rowx + (rowz * (numberOfRows + 1))));
-                    indices[((rowx + (rowz * numberOfRows)) * 6) + 4] = (ushort)(1 + (rowx + ((rowz + 1) * (numberOfRows + 1))));
-                    indices[((rowx + (rowz * numberOfRows)) * 6) + 5] = (ushort)(0 + (rowx + ((rowz + 1) * (numberOfRows + 1))));
+                    indices[((rowx + (rowz * _numberOfRows)) * 6) + 3] = (ushort)(0 + (rowx + (rowz * (_numberOfRows + 1))));
+                    indices[((rowx + (rowz * _numberOfRows)) * 6) + 4] = (ushort)(1 + (rowx + ((rowz + 1) * (_numberOfRows + 1))));
+                    indices[((rowx + (rowz * _numberOfRows)) * 6) + 5] = (ushort)(0 + (rowx + ((rowz + 1) * (_numberOfRows + 1))));
                 }
             }
 

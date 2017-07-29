@@ -41,13 +41,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CurvedStreetMeshBuilder.cs" />
+    <Compile Include="DelayedStreetLoader.cs" />
     <Compile Include="FieldChangeAnalyzer.cs" />
     <Compile Include="FieldManager.cs" />
+    <Compile Include="FloorMeshUnitCreator.cs" />
+    <Compile Include="FloorVertexCreator.cs" />
     <Compile Include="MeshUnitCollection.cs" />
     <Compile Include="Horizon.cs" />
     <Compile Include="DelayedFloorLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StreetMeshUnitCreator.cs" />
     <Compile Include="StreetRenderer.cs" />
+    <Compile Include="StreetVertexCreator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine.Contracts\Engine.Contracts.csproj">

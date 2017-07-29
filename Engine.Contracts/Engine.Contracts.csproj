@@ -43,6 +43,7 @@
     <Compile Include="IDelayedFloorLoader.cs" />
     <Compile Include="IFieldChangeAnalyzer.cs" />
     <Compile Include="IMeshUnitCollection.cs" />
+    <Compile Include="IMeshUnitCreator.cs" />
     <Compile Include="Input\IAbsoluteMousePositionProvider.cs" />
     <Compile Include="IFrameTimeProvider.cs" />
     <Compile Include="Input\IKeyMapper.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Input\MousePosition.cs" />
     <Compile Include="Input\MousePositionDelta.cs" />
     <Compile Include="IPlayerViewRayProvider.cs" />
+    <Compile Include="IVertexByFieldCreator.cs" />
     <Compile Include="ViewDirection.cs" />
     <Compile Include="IRenderingElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
