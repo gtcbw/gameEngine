@@ -42,6 +42,8 @@ namespace Landscape.Rendering
                     return CreateHorizontalCurvedLine(leftLowCornerX + (_radius * 2), leftLowCornerZ + _radius);
                 case StreetShape.LineVertical:
                     return CreateVerticalLine(leftLowCornerX + _radius, leftLowCornerZ);
+                case StreetShape.LineCurveVertical:
+                    return CreateVerticalCurvedLine(leftLowCornerX + _radius, leftLowCornerZ);
                 case StreetShape.CurveFirstQuarter:
                     return CreateVerticesForCurve(leftLowCornerX, leftLowCornerZ, 0, 90);
                 case StreetShape.CurveFourthQuarter:
@@ -52,6 +54,50 @@ namespace Landscape.Rendering
                     return CreateVerticesForCurve(leftLowCornerX, leftLowCornerZ + (_radius * 2), 270, 360);
             }
             return null;
+        }
+
+        private float[] CreateVerticalCurvedLine(double centerX, double centerZ)
+        {
+            float[] vertices = new float[91 * 6];
+            int index = 0;
+
+            double innerX, z, outerX;
+
+            innerX = centerX - _halfStreetWidth;
+            outerX = centerX + _halfStreetWidth;
+            z = centerZ;
+
+            for (int i = 0; i < 91; i++)
+            {
+                double sinus = System.Math.Sin(i / 22.5 * System.Math.PI) * 10;
+                sinus *= 1.0 - (System.Math.Abs(centerX - _radius - z) / _radius);
+
+                Position innerVertex = new Position
+                {
+                    X = innerX + sinus,
+                    Z = z,
+                };
+                innerVertex.Y = _heightCalculator.CalculateHeight(innerVertex.X, innerVertex.Z) + _minHeight;
+
+                Position outerVertex = new Position
+                {
+                    X = outerX + sinus,
+                    Z = z,
+                };
+                outerVertex.Y = _heightCalculator.CalculateHeight(outerVertex.X, outerVertex.Z) + _minHeight;
+
+                z += _radius * 2 / 90.0;
+
+                vertices[index++] = (float)innerVertex.X;
+                vertices[index++] = (float)innerVertex.Y;
+                vertices[index++] = (float)innerVertex.Z;
+
+                vertices[index++] = (float)outerVertex.X;
+                vertices[index++] = (float)outerVertex.Y;
+                vertices[index++] = (float)outerVertex.Z;
+            }
+
+            return vertices;
         }
 
         private float[] CreateHorizontalCurvedLine(double centerX, double centerZ)
@@ -68,7 +114,6 @@ namespace Landscape.Rendering
             for (int i = 0; i < 91; i++)
             {
                 double sinus = System.Math.Sin(i / 22.5 * System.Math.PI) * 10;
-
                 sinus *= 1.0 - (System.Math.Abs(centerX - _radius - x) / _radius);
                 
                 Position innerVertex = new Position
@@ -237,7 +282,7 @@ namespace Landscape.Rendering
             {1, StreetShape.LineHorizontal },
             {7, StreetShape.LineCurveHorizontal },
             {3, StreetShape.LineVertical },
-            {5, StreetShape.LineVertical },
+            {5, StreetShape.LineCurveVertical },
         };
     }
 }
