@@ -50,8 +50,8 @@ namespace Game
                 vectorHelper,
                 new KeyMapper(pressedKeyDetector),
                 3,
-                150,
-                150);
+                50,
+                50);
 
             ICamera camera = new Camera(config.Resolution.AspectRatio, playerPositionProvider);
 
