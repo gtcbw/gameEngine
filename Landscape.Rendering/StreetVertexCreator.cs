@@ -70,7 +70,7 @@ namespace Landscape.Rendering
             for (int i = 0; i < 91; i++)
             {
                 double sinus = System.Math.Sin(i / 22.5 * System.Math.PI) * 10;
-                sinus *= 1.0 - (System.Math.Abs(centerZ - _radius - z) / _radius);
+                sinus *= 1.0 - (System.Math.Abs(centerZ + _radius - z) / _radius);
 
                 Position innerVertex = new Position
                 {

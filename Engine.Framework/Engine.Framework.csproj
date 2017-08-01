@@ -46,6 +46,7 @@
     <Compile Include="FrameTimeProvider.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="MeshUnitBuilder.cs" />
+    <Compile Include="PlantGridReader.cs" />
     <Compile Include="PlayerPositionProvider.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

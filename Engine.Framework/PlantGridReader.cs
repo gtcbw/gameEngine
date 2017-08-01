@@ -2,20 +2,23 @@
 
 namespace Engine.Framework
 {
-    public sealed class BitmapToHeightConverter
+    public class PlantGridReader
     {
-        public float[] ConvertBitmap(string filename, float maxHeight)
+        public bool[][] ConvertBitmapToGridByColor(string filename, int red, int green, int blue)
         {
             Bitmap heightmap = new Bitmap(filename);
 
-            float[] values = new float[heightmap.Width * heightmap.Height];
+            bool[][] values = new bool[heightmap.Height][];
 
-            for(int z = 0; z< heightmap.Height; z++)
+            for (int z = 0; z < heightmap.Height; z++)
             {
+                values[z] = new bool[heightmap.Width];
+
                 for (int x = 0; x < heightmap.Width; x++)
                 {
                     Color pixel = heightmap.GetPixel(x, heightmap.Height - z - 1);
-                    values[x + (z * heightmap.Width)] = pixel.GetBrightness() * maxHeight;
+
+                    values[z][x] = pixel.R == red && pixel.G == green && pixel.B == blue;
                 }
             }
             heightmap.Dispose();

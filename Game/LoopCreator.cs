@@ -35,10 +35,10 @@ namespace Game
             VectorHelper vectorHelper = new VectorHelper();
 
             BitmapToHeightConverter converter = new BitmapToHeightConverter();
-            float[] heightValues = converter.ConvertBitmap("heightmap.bmp", 20);
+            float[] heightValues = converter.ConvertBitmap("heightmap.bmp", 50);
             int numberOfQuadsPerSideOfArea = 500;
             int metersPerQuad = 2;
-            int numberOfFieldsPerAreaSide = 3;
+            int numberOfFieldsPerAreaSide = 10;
             int lengthOfFieldSide = 100;
 
             IHeightCalculator heightCalculator = new HeightCalculator(heightValues, numberOfQuadsPerSideOfArea, metersPerQuad);
@@ -76,7 +76,10 @@ namespace Game
 
             IVertexByFieldCreator streetVertexCreator = new StreetVertexCreator(vectorHelper, heightCalculator, 8, lengthOfFieldSide / 2.0);
             IMeshUnitCreator streetMeshUnitCreator = new StreetMeshUnitCreator(bufferObjectFactory, 90);
-            IMeshUnitByFieldLoader streetLoader = new DelayedMeshUnitLoader(streetVertexCreator, streetMeshUnitCreator, streetCollection);
+            IMeshUnitByFieldLoader streetLoader = new FrameDelayUnitByFieldLoader(
+                new DelayedMeshUnitLoader(streetVertexCreator, 
+                streetMeshUnitCreator, 
+                streetCollection), 6);
 
             FieldManager fieldManager = new FieldManager(playerPositionProvider,
                 new List<IMeshUnitByFieldLoader> { floorLoader, streetLoader },

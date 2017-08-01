@@ -10,7 +10,7 @@ namespace Landscape.Rendering
     {
         private IVertexByFieldCreator _vertexByFieldCreator;
         private IMeshUnitCreator _meshUnitCreator;
-        private IMeshUnitCollection _floorCollection;
+        private IMeshUnitCollection _meshUnitCollection;
 
         private class FieldVertices
         {
@@ -28,7 +28,7 @@ namespace Landscape.Rendering
         {
             _vertexByFieldCreator = vertexByFieldCreator;
             _meshUnitCreator = meshUnitCreator;
-            _floorCollection = floorCollection;
+            _meshUnitCollection = floorCollection;
         }
 
         void IMeshUnitByFieldLoader.UpdateMesh(IEnumerable<FieldCoordinates> addedFields, IEnumerable<FieldCoordinates> removedFields)
@@ -37,7 +37,7 @@ namespace Landscape.Rendering
             {
                 if (_vertexIdByFieldId.Keys.Contains(field.ID))
                 {
-                    _floorCollection.RemoveMeshUnit(field.ID);
+                    _meshUnitCollection.RemoveMeshUnit(field.ID);
                     _meshUnitCreator.DeleteMeshUnit(_vertexIdByFieldId[field.ID]);
                     _vertexIdByFieldId.Remove(field.ID);
                 }
@@ -68,7 +68,7 @@ namespace Landscape.Rendering
                 BufferedMeshUnit bufferedMeshUnit = _meshUnitCreator.CreateMeshUnit(fieldVertices.Vertices);
 
                 _vertexIdByFieldId.Add(fieldVertices.Field.ID, bufferedMeshUnit);
-                _floorCollection.AddMeshUnit(fieldVertices.Field.ID, bufferedMeshUnit);
+                _meshUnitCollection.AddMeshUnit(fieldVertices.Field.ID, bufferedMeshUnit);
             }
             else if (_fieldQueue.Count > 0)
             {

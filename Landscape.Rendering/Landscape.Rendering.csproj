@@ -44,9 +44,11 @@
     <Compile Include="FieldManager.cs" />
     <Compile Include="FloorMeshUnitCreator.cs" />
     <Compile Include="FloorVertexCreator.cs" />
+    <Compile Include="FrameDelayUnitByFieldLoader.cs" />
     <Compile Include="MeshUnitCollection.cs" />
     <Compile Include="Horizon.cs" />
     <Compile Include="DelayedMeshUnitLoader.cs" />
+    <Compile Include="PlantGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreetMeshUnitCreator.cs" />
     <Compile Include="StreetVertexCreator.cs" />
