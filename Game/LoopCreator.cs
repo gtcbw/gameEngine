@@ -49,7 +49,7 @@ namespace Game
                 playerViewDirectionProvider,
                 vectorHelper,
                 new KeyMapper(pressedKeyDetector),
-                3,
+                30,
                 50,
                 50);
 

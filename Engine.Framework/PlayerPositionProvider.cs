@@ -13,7 +13,7 @@ namespace Engine.Framework
         private readonly IPlayerViewDirectionProvider _playerViewDirectionProvider;
         private readonly IVectorHelper _vectorHelper;
         private readonly IKeyMapper _keyMapper;
-        private readonly double _height = 1.8;
+        private readonly double _height = 100.8;
         private readonly double _metersPerSecond;
 
         private Position _position;
