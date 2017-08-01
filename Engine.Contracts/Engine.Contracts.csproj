@@ -59,6 +59,7 @@
     <Compile Include="Input\MousePosition.cs" />
     <Compile Include="Input\MousePositionDelta.cs" />
     <Compile Include="IPlayerViewRayProvider.cs" />
+    <Compile Include="IPositionFilter.cs" />
     <Compile Include="IVertexByFieldCreator.cs" />
     <Compile Include="ViewDirection.cs" />
     <Compile Include="IRenderingElement.cs" />

@@ -32,7 +32,7 @@ namespace Graphics
                 hasAlphaChannel ? OpenTK.Graphics.OpenGL.PixelFormat.Bgra : OpenTK.Graphics.OpenGL.PixelFormat.Bgr, PixelType.UnsignedByte, bitmapData.Scan0);
 
             bitmap.UnlockBits(bitmapData);
-
+            
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
@@ -43,6 +43,8 @@ namespace Graphics
                 ResolutionY = bitmap.Height,
                 HasAlphaChannel = hasAlphaChannel
             };
+
+            bitmap.Dispose();
 
             return texture;
         }

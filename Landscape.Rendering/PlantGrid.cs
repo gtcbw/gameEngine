@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Engine.Contracts;
+using World.Model;
 
 namespace Landscape.Rendering
 {
-    public class PlantGrid
+    public class PlantGrid : IPositionFilter
     {
         private bool[][] _values;
         private int _metersPerGridField;
@@ -17,9 +14,12 @@ namespace Landscape.Rendering
             _metersPerGridField = metersPerGridField;
         }
 
-        public bool AreaIsFree(double x, double z)
+        bool IPositionFilter.IsValid(Position position)
         {
-            return false;
+            int x = (int)(position.X / _metersPerGridField);
+            int z = (int)(position.Z / _metersPerGridField);
+
+            return _values[z][x];
         }
     }
 }

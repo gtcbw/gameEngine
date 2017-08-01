@@ -36,6 +36,8 @@ namespace Game
 
             BitmapToHeightConverter converter = new BitmapToHeightConverter();
             float[] heightValues = converter.ConvertBitmap("heightmap.bmp", 50);
+            bool[][] plantmap = new PlantGridReader().ConvertBitmapToGridByColor("plantmap.bmp", 255, 255, 255);
+            IPositionFilter filter = new PlantGrid(plantmap, 10);
             int numberOfQuadsPerSideOfArea = 500;
             int metersPerQuad = 2;
             int numberOfFieldsPerAreaSide = 10;
@@ -80,6 +82,9 @@ namespace Game
                 new DelayedMeshUnitLoader(streetVertexCreator, 
                 streetMeshUnitCreator, 
                 streetCollection), 6);
+
+            IVertexByFieldCreator treeCreator = new TreeVertexCreator(filter, heightCalculator,
+                new TreePrototypeProvider(vectorHelper).GetPrototype(2, 8), lengthOfFieldSide, 1.5);
 
             FieldManager fieldManager = new FieldManager(playerPositionProvider,
                 new List<IMeshUnitByFieldLoader> { floorLoader, streetLoader },
