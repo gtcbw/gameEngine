@@ -50,7 +50,8 @@
     <Compile Include="AlphaBlender.cs" />
     <Compile Include="AlphaTester.cs" />
     <Compile Include="BackgroundColor.cs" />
-    <Compile Include="BufferedMeshUnitRenderer.cs" />
+    <Compile Include="VertexBufferUnitOffsetRenderer.cs" />
+    <Compile Include="VertexBufferUnitRenderer.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="ColorSetter.cs" />
     <Compile Include="DepthTestActivator.cs" />

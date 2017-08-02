@@ -4,7 +4,7 @@ namespace Engine.Contracts
 {
     public interface IMeshUnitCollection
     {
-        void AddMeshUnit(int id, BufferedMeshUnit unit);
+        void AddMeshUnit(int id, VertexBufferUnit unit);
 
         void RemoveMeshUnit(int id);
     }

@@ -23,9 +23,9 @@ namespace Landscape.Rendering
             _texCoordBufferId = _bufferObjectFactory.GenerateTextureCoordBuffer(texcoords);
         }
 
-        BufferedMeshUnit IMeshUnitCreator.CreateMeshUnit(float[] vertices)
+        VertexBufferUnit IMeshUnitCreator.CreateMeshUnit(float[] vertices)
         {
-            return new BufferedMeshUnit
+            return new VertexBufferUnit
             {
                 IndexBufferId = _indexBufferId,
                 NumberOfIndices = _numberOfIndices,
@@ -34,7 +34,7 @@ namespace Landscape.Rendering
             };
         }
 
-        void IMeshUnitCreator.DeleteMeshUnit(BufferedMeshUnit unit)
+        void IMeshUnitCreator.DeleteMeshUnit(VertexBufferUnit unit)
         {
             _bufferObjectFactory.Delete(unit.VertexBufferId);
         }

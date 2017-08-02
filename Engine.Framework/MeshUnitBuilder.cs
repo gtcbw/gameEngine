@@ -15,7 +15,7 @@ namespace Engine.Framework
             _heightCalculator = heightCalculator;
         }
 
-        public BufferedMeshUnit CreateRelativeHeightMapUnit(int sideLengthInMeters, int metersPerTriangleSide, int startx, int startz)
+        public VertexBufferUnit CreateRelativeHeightMapUnit(int sideLengthInMeters, int metersPerTriangleSide, int startx, int startz)
         {
             int numberOfRows = sideLengthInMeters / metersPerTriangleSide;
 
@@ -50,7 +50,7 @@ namespace Engine.Framework
                 }
             }
 
-            return new BufferedMeshUnit
+            return new VertexBufferUnit
             {
                 IndexBufferId = _bufferObjectFactory.GenerateIndexBuffer(indices),
                 NumberOfIndices = indices.Length,

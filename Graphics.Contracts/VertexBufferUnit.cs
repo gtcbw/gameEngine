@@ -1,6 +1,6 @@
 ﻿namespace Graphics.Contracts
 {
-    public class BufferedMeshUnit
+    public class VertexBufferUnit
     {
         public uint VertexBufferId { set; get; }
 

@@ -12,13 +12,13 @@ namespace Landscape.Rendering
             _bufferObjectFactory = bufferObjectFactory;
         }
 
-        BufferedMeshUnit IMeshUnitCreator.CreateMeshUnit(float[] vertices)
+        VertexBufferUnit IMeshUnitCreator.CreateMeshUnit(float[] vertices)
         {
             int numberOfVertices = vertices.Length / 3;
             ushort[] indices = CreateIndexArray(numberOfVertices);
             float[] texcoords = CreateTextureCoordinates(numberOfVertices);
 
-            return new BufferedMeshUnit
+            return new VertexBufferUnit
             {
                 IndexBufferId = _bufferObjectFactory.GenerateIndexBuffer(indices),
                 NumberOfIndices = indices.Length,
@@ -27,7 +27,7 @@ namespace Landscape.Rendering
             };
         }
 
-        void IMeshUnitCreator.DeleteMeshUnit(BufferedMeshUnit unit)
+        void IMeshUnitCreator.DeleteMeshUnit(VertexBufferUnit unit)
         {
             _bufferObjectFactory.Delete(unit.VertexBufferId);
             _bufferObjectFactory.Delete(unit.IndexBufferId);

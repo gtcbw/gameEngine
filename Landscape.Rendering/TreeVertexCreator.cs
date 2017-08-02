@@ -60,6 +60,9 @@ namespace Landscape.Rendering
                 positionZ += _minimumDistanceOfTree; 
             }
 
+            if (!positions.Any())
+                return null;
+
             return TranslatePrototypeByPositions(positions);
         }
 
@@ -68,17 +71,21 @@ namespace Landscape.Rendering
             int positionCount = positions.Count();
             float[] vertices = new float[12 * 8 * positionCount];
 
+            int nextVertexIndex = 0;
+
             foreach(Position position in positions)
             {
                 for (int i = 0; i < 8; i++)
                 {
                     for(int j = 0; j < 4; j++)
                     {
-                        vertices[(i * 12 * positionCount) + (j * 3)] = (float) (_treePrototype[i][(j * 3)] + position.X);
-                        vertices[(i * 12 * positionCount) + (j * 3) + 1] = (float)(_treePrototype[i][(j * 3) + 1] + position.Y);
-                        vertices[(i * 12 * positionCount) + (j * 3) + 2] = (float)(_treePrototype[i][(j * 3) + 2] + position.Z);
+                        vertices[nextVertexIndex + (i * 12 * positionCount) + (j * 3)] = (float)(_treePrototype[i][(j * 3)] + position.X);
+                        vertices[nextVertexIndex + (i * 12 * positionCount) + (j * 3) + 1] = (float)(_treePrototype[i][(j * 3) + 1] + position.Y);
+                        vertices[nextVertexIndex + (i * 12 * positionCount) + (j * 3) + 2] = (float)(_treePrototype[i][(j * 3) + 2] + position.Z);
                     }
                 }
+
+                nextVertexIndex += 12;
             }
 
             return vertices;

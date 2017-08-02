@@ -1,12 +1,16 @@
 ﻿using Graphics.Contracts;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 
 namespace Graphics
 {
-    public sealed class BufferedMeshUnitRenderer : IBufferedMeshUnitRenderer
+    public sealed class VertexBufferUnitOffsetRenderer : IVertexBufferUnitRenderer
     {
-        void IBufferedMeshUnitRenderer.RenderMesh(BufferedMeshUnit unit)
+        void IVertexBufferUnitRenderer.RenderMesh(VertexBufferUnit unit)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, unit.VertexBufferId);
             GL.EnableClientState(ArrayCap.VertexArray);
@@ -21,7 +25,7 @@ namespace Graphics
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, unit.IndexBufferId);
 
-            GL.DrawElements(PrimitiveType.Triangles, unit.NumberOfIndices, DrawElementsType.UnsignedShort, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, unit.NumberOfIndices / 8, DrawElementsType.UnsignedShort, unit.NumberOfIndices / 4);
 
             GL.DisableClientState(ArrayCap.VertexArray);
 

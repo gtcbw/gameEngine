@@ -20,7 +20,7 @@ namespace Landscape.Rendering
 
         private List<FieldCoordinates> _fieldQueue = new List<FieldCoordinates>();
         private List<FieldVertices> _fieldVertexQueue = new List<FieldVertices>();
-        private Dictionary<int, BufferedMeshUnit> _vertexIdByFieldId = new Dictionary<int, BufferedMeshUnit>();
+        private Dictionary<int, VertexBufferUnit> _vertexIdByFieldId = new Dictionary<int, VertexBufferUnit>();
 
         public DelayedMeshUnitLoader(IVertexByFieldCreator vertexByFieldCreator,
             IMeshUnitCreator meshUnitCreator,
@@ -65,7 +65,7 @@ namespace Landscape.Rendering
                 FieldVertices fieldVertices = _fieldVertexQueue.ElementAt(0);
                 _fieldVertexQueue.RemoveAt(0);
 
-                BufferedMeshUnit bufferedMeshUnit = _meshUnitCreator.CreateMeshUnit(fieldVertices.Vertices);
+                VertexBufferUnit bufferedMeshUnit = _meshUnitCreator.CreateMeshUnit(fieldVertices.Vertices);
 
                 _vertexIdByFieldId.Add(fieldVertices.Field.ID, bufferedMeshUnit);
                 _meshUnitCollection.AddMeshUnit(fieldVertices.Field.ID, bufferedMeshUnit);

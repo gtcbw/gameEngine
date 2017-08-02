@@ -4,8 +4,8 @@ namespace Engine.Contracts
 {
     public interface IMeshUnitCreator
     {
-        BufferedMeshUnit CreateMeshUnit(float[] vertices);
+        VertexBufferUnit CreateMeshUnit(float[] vertices);
 
-        void DeleteMeshUnit(BufferedMeshUnit unit);
+        void DeleteMeshUnit(VertexBufferUnit unit);
     }
 }
