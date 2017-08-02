@@ -41,14 +41,14 @@ namespace Landscape.Rendering
             for (int i = 0; i < numberOfVertices / 4; i++)
             {
                 texCoords[i * 8] = 1;
-                texCoords[(i * 8) + 1] = 0;
+                texCoords[(i * 8) + 1] = 1;
                 texCoords[(i * 8) + 2] = 1;
-                texCoords[(i * 8) + 3] = 1;
+                texCoords[(i * 8) + 3] = 0;
 
                 texCoords[(i * 8) + 4] = 0;
-                texCoords[(i * 8) + 5] = 1;
+                texCoords[(i * 8) + 5] = 0;
                 texCoords[(i * 8) + 6] = 0;
-                texCoords[(i * 8) + 7] = 0;
+                texCoords[(i * 8) + 7] = 1;
             }
 
             return texCoords;

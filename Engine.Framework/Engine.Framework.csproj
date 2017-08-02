@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapToHeightConverter.cs" />
+    <Compile Include="AlphaTestRenderer.cs" />
     <Compile Include="ColorRenderer.cs" />
     <Compile Include="FrameTimeProvider.cs" />
+    <Compile Include="IndexFactorByViewDirectionProvider.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="MeshUnitBuilder.cs" />
     <Compile Include="PlantGridReader.cs" />

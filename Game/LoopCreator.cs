@@ -71,7 +71,8 @@ namespace Game
             IVertexBufferUnitRenderer bufferedMeshUnitRenderer = new VertexBufferUnitRenderer();
             IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IMeshUnitCollection streetCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
-            IMeshUnitCollection treeCollection = new MeshUnitCollection(new VertexBufferUnitOffsetRenderer());
+            IMeshUnitCollection treeCollection = new MeshUnitCollection
+                (new VertexBufferUnitOffsetRenderer(8, new IndexFactorByViewDirectionProvider(playerViewDirectionProvider)));
 
             IVertexByFieldCreator floorVertexCreator = new FloorVertexCreator(heightCalculator, lengthOfFieldSide / metersPerQuad, metersPerQuad);
             IMeshUnitCreator floorMeshUnitCreator = new FloorMeshUnitCreator(bufferObjectFactory, lengthOfFieldSide / metersPerQuad);
@@ -85,7 +86,7 @@ namespace Game
                 streetCollection), 6);
 
             IVertexByFieldCreator treeCreator = new TreeVertexCreator(filter, heightCalculator,
-                new TreePrototypeProvider(vectorHelper).GetPrototype(2, 16), lengthOfFieldSide, 1.5);
+                new TreePrototypeProvider(vectorHelper).GetPrototype(4, 16), lengthOfFieldSide, 10);
             IMeshUnitCreator treeMeshUnitCreator = new TreeMeshUnitCreator(bufferObjectFactory);
             IMeshUnitByFieldLoader treeLoader = new FrameDelayUnitByFieldLoader(
                 new DelayedMeshUnitLoader(treeCreator,
@@ -102,8 +103,10 @@ namespace Game
             fog.SetColor(color);
 
             ITexture streettexture = textureCache.LoadTexture("street.bmp");
+            ITexture treetexture = textureCache.LoadTexture("tree.png");
 
             IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
+            IRenderingElement alphaRenderer = new AlphaTestRenderer((IRenderingElement)treeCollection, new AlphaTester());
 
             return () =>
             {
@@ -129,7 +132,8 @@ namespace Game
                     colorRenderer.Render();
                     textureChanger.SetTexture(streettexture.TextureId);
                     ((IRenderingElement)streetCollection).Render();
-                    ((IRenderingElement)treeCollection).Render();
+                    textureChanger.SetTexture(treetexture.TextureId);
+                    alphaRenderer.Render();
                     fog.StopFog();
 
                     ((IBufferSwapper)window).SwapBuffers();

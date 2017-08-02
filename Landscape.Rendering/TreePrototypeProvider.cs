@@ -19,7 +19,7 @@ namespace Landscape.Rendering
             {
                 vertices[i] = new float[12];
 
-                var vector = _vectorHelper.ConvertDegreeToVector(i * 22.5);
+                var vector = _vectorHelper.ConvertDegreeToVector(i * 45);
 
                 vertices[i][0] =(float) (vector.X * width / 2.0);
                 vertices[i][1] = 0f;

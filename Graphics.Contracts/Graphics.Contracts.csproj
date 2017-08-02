@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IIndexFactorProvider.cs" />
     <Compile Include="VertexBufferUnit.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="IAlphaBlender.cs" />

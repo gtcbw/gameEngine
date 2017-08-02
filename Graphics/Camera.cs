@@ -22,7 +22,7 @@ namespace Graphics
         {
             GL.MatrixMode(MatrixMode.Projection);
 
-            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_aspectRatio, 0.1f, 500.0f);
+            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_aspectRatio, 0.1f, 20.0f);
             GL.LoadMatrix(ref matrix);
 
             GL.MatrixMode(MatrixMode.Modelview);
@@ -35,7 +35,7 @@ namespace Graphics
         {
             GL.MatrixMode(MatrixMode.Projection);
 
-            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_aspectRatio, 0.15f, 100.0f);
+            Matrix4 matrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 3, (float)_aspectRatio, 0.15f, 500.0f);
             GL.LoadMatrix(ref matrix);
 
             GL.MatrixMode(MatrixMode.Modelview);
