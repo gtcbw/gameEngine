@@ -20,8 +20,8 @@ namespace Graphics
             GL.Fog(FogParameter.FogDensity, 0.5f);
             GL.Hint(HintTarget.FogHint, HintMode.Fastest);
 
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Front);
+            //GL.Enable(EnableCap.CullFace);
+            //GL.CullFace(CullFaceMode.Front);
         }
     }
 }

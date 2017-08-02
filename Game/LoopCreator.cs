@@ -71,6 +71,7 @@ namespace Game
             IBufferedMeshUnitRenderer bufferedMeshUnitRenderer = new BufferedMeshUnitRenderer();
             IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IMeshUnitCollection streetCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
+            IMeshUnitCollection treeCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
 
             IVertexByFieldCreator floorVertexCreator = new FloorVertexCreator(heightCalculator, lengthOfFieldSide / metersPerQuad, metersPerQuad);
             IMeshUnitCreator floorMeshUnitCreator = new FloorMeshUnitCreator(bufferObjectFactory, lengthOfFieldSide / metersPerQuad);
@@ -85,9 +86,14 @@ namespace Game
 
             IVertexByFieldCreator treeCreator = new TreeVertexCreator(filter, heightCalculator,
                 new TreePrototypeProvider(vectorHelper).GetPrototype(2, 8), lengthOfFieldSide, 1.5);
+            IMeshUnitCreator treeMeshUnitCreator = new TreeMeshUnitCreator(bufferObjectFactory);
+            IMeshUnitByFieldLoader treeLoader = new FrameDelayUnitByFieldLoader(
+                new DelayedMeshUnitLoader(treeCreator,
+                treeMeshUnitCreator,
+                treeCollection), 12);
 
             FieldManager fieldManager = new FieldManager(playerPositionProvider,
-                new List<IMeshUnitByFieldLoader> { floorLoader, streetLoader },
+                new List<IMeshUnitByFieldLoader> { floorLoader, streetLoader, treeLoader },
                 new FieldChangeAnalyzer(), 
                 new ActiveFieldCalculator(lengthOfFieldSide, numberOfFieldsPerAreaSide));
 

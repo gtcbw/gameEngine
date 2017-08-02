@@ -50,6 +50,7 @@
     <Compile Include="DelayedMeshUnitLoader.cs" />
     <Compile Include="PlantGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TreeMeshUnitCreator.cs" />
     <Compile Include="StreetMeshUnitCreator.cs" />
     <Compile Include="StreetVertexCreator.cs" />
     <Compile Include="TreePrototypeProvider.cs" />
