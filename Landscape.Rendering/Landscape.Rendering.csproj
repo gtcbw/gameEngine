@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoolProvider.cs" />
     <Compile Include="FieldChangeAnalyzer.cs" />
     <Compile Include="FieldManager.cs" />
     <Compile Include="FloorMeshUnitCreator.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Horizon.cs" />
     <Compile Include="DelayedMeshUnitLoader.cs" />
     <Compile Include="PlantGrid.cs" />
+    <Compile Include="PositionGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TreeMeshUnitCreator.cs" />
     <Compile Include="StreetMeshUnitCreator.cs" />

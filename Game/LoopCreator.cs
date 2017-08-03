@@ -85,8 +85,13 @@ namespace Game
                 streetMeshUnitCreator, 
                 streetCollection), 6);
 
-            IVertexByFieldCreator treeCreator = new TreeVertexCreator(filter, heightCalculator,
-                new TreePrototypeProvider(vectorHelper).GetPrototype(4, 16), lengthOfFieldSide, 10);
+            IPositionGenerator positionGenerator = new PositionGenerator(filter, 
+                new BoolProvider(new [] { false, true, false, false, true, false, true, false, false, false, true}), 
+                heightCalculator, 
+                lengthOfFieldSide, 
+                10);
+            IVertexByFieldCreator treeCreator = new TreeVertexCreator(new TreePrototypeProvider(vectorHelper)
+                .GetPrototype(4, 16), positionGenerator);
             IMeshUnitCreator treeMeshUnitCreator = new TreeMeshUnitCreator(bufferObjectFactory);
             IMeshUnitByFieldLoader treeLoader = new FrameDelayUnitByFieldLoader(
                 new DelayedMeshUnitLoader(treeCreator,

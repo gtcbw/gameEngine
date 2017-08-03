@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IBoolProvider.cs" />
     <Compile Include="IDelayedFloorLoader.cs" />
     <Compile Include="IFieldChangeAnalyzer.cs" />
     <Compile Include="IMeshUnitCollection.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Input\MousePositionDelta.cs" />
     <Compile Include="IPlayerViewRayProvider.cs" />
     <Compile Include="IPositionFilter.cs" />
+    <Compile Include="IPositionGenerator.cs" />
     <Compile Include="IVertexByFieldCreator.cs" />
     <Compile Include="ViewDirection.cs" />
     <Compile Include="IRenderingElement.cs" />
