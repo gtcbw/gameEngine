@@ -108,7 +108,7 @@ namespace Game
             fog.SetColor(color);
 
             ITexture streettexture = textureCache.LoadTexture("street.bmp");
-            ITexture treetexture = textureCache.LoadTexture("tree.png");
+            ITexture treetexture = textureCache.LoadTexture("tree.png", true);
 
             IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
             IRenderingElement alphaRenderer = new AlphaTestRenderer((IRenderingElement)treeCollection, new AlphaTester());

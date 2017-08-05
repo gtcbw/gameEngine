@@ -2,7 +2,7 @@
 {
     public interface ITextureLoader
     {
-        ITexture LoadTexture(string texturePath);
+        ITexture LoadTexture(string texturePath, bool mipmap = false);
 
         void DeleteTexture(ITexture texture);
     }

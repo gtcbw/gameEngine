@@ -22,13 +22,13 @@ namespace Engine.Framework
             _loadedTextures = new List<LoadedTexture>();
         }
 
-        ITexture ITextureLoader.LoadTexture(string texturePath)
+        ITexture ITextureLoader.LoadTexture(string texturePath, bool mipmap)
         {
             LoadedTexture loadedTexture = _loadedTextures.Find(x => x.FileName.Equals(texturePath));
 
             if (loadedTexture == null)
             {
-                ITexture texture = _textureLoader.LoadTexture(texturePath);
+                ITexture texture = _textureLoader.LoadTexture(texturePath, mipmap);
                 loadedTexture = new LoadedTexture { Texture = texture, FileName = texturePath };
                 _loadedTextures.Add(loadedTexture);
             }

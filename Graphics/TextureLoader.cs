@@ -14,7 +14,7 @@ namespace Graphics
             _textureChanger = textureChanger;
         }
 
-        public ITexture LoadTexture(string texturePath)
+        ITexture ITextureLoader.LoadTexture(string texturePath, bool mipmap)
         {
             int id = GL.GenTexture();
             
@@ -33,8 +33,14 @@ namespace Graphics
 
             bitmap.UnlockBits(bitmapData);
 
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapNearest);
+            if (mipmap)
+            {
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapNearest);
+            }
+            else
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
             Texture texture = new Texture 
