@@ -11,7 +11,7 @@ namespace Graphics
             GL.ClearDepth(1.0);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
-            GL.AlphaFunc(AlphaFunction.Greater, 0.02f);
+            GL.AlphaFunc(AlphaFunction.Greater, 0.9f);
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
             GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
@@ -20,8 +20,8 @@ namespace Graphics
             GL.Fog(FogParameter.FogDensity, 0.5f);
             GL.Hint(HintTarget.FogHint, HintMode.Fastest);
 
-            //GL.Enable(EnableCap.CullFace);
-            //GL.CullFace(CullFaceMode.Front);
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Front);
         }
     }
 }

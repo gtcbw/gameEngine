@@ -123,7 +123,6 @@ namespace Game
                     mousePositionController.MeasureMousePositionDelta();
                     playerPositionProvider.UpdatePosition();
                     fieldManager.UpdateFieldsByPlayerPosition();
-                    // calculation
 
                     //rendring 2D
                     camera.SetDefaultPerspective();
@@ -132,14 +131,13 @@ namespace Game
                     //rendering 3D
                     camera.SetInGamePerspective();
 
-                    //render floor
-                    fog.StartFog();
+                    //fog.StartFog();
                     colorRenderer.Render();
                     textureChanger.SetTexture(streettexture.TextureId);
                     ((IRenderingElement)streetCollection).Render();
                     textureChanger.SetTexture(treetexture.TextureId);
                     alphaRenderer.Render();
-                    fog.StopFog();
+                    //fog.StopFog();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }
