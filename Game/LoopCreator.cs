@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Math;
 using Math.Contracts;
 using World.Model;
+using System.Linq;
 
 namespace Game
 {
@@ -28,7 +29,7 @@ namespace Game
             FrameTimeProvider timeProvider = new FrameTimeProvider();
             IScreenClearer screenClearer = new ScreenClearer();
             ITextureChanger textureChanger = new TextureChanger();
-            ITextureLoader textureCache = new TextureCache(new TextureLoader(textureChanger));
+            ITextureLoader textureCache = new TextureCache(new TextureLoader(textureChanger, "textures"));
             BufferLoader bufferLoader = new BufferLoader(new WavFileReader());
             ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
 
@@ -52,8 +53,8 @@ namespace Game
                 vectorHelper,
                 new KeyMapper(pressedKeyDetector),
                 30,
-                50,
-                50);
+                0,
+                0);
 
             ICamera camera = new Camera(config.Resolution.AspectRatio, playerPositionProvider);
 
@@ -113,6 +114,12 @@ namespace Game
             IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
             IRenderingElement alphaRenderer = new AlphaTestRenderer((IRenderingElement)treeCollection, new AlphaTester());
 
+            //model
+            IModelLoader modelLoader = new ModelLoader("models");
+            Model box = modelLoader.LoadModel("box.mod");
+            ITexture boxtexture = textureCache.LoadTexture(box.Submodels.First().Texture);
+            //
+
             return () =>
             {
                 while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
@@ -137,6 +144,9 @@ namespace Game
                     ((IRenderingElement)streetCollection).Render();
                     textureChanger.SetTexture(treetexture.TextureId);
                     alphaRenderer.Render();
+
+                    textureChanger.SetTexture(boxtexture.TextureId);
+                    polygonRenderer.RenderPolygons(box.Submodels.First().Polygons);
                     //fog.StopFog();
 
                     ((IBufferSwapper)window).SwapBuffers();

@@ -8,10 +8,12 @@ namespace Graphics
     public sealed class TextureLoader : ITextureLoader
     {
         private ITextureChanger _textureChanger;
+        private string _folder;
 
-        public TextureLoader(ITextureChanger textureChanger)
+        public TextureLoader(ITextureChanger textureChanger, string folder)
         {
             _textureChanger = textureChanger;
+            _folder = folder;
         }
 
         ITexture ITextureLoader.LoadTexture(string texturePath, bool mipmap)
@@ -22,7 +24,7 @@ namespace Graphics
 
             bool hasAlphaChannel = texturePath.EndsWith(".png");
 
-            Bitmap bitmap = new Bitmap(texturePath);
+            Bitmap bitmap = new Bitmap($"{_folder}\\{texturePath}");
             BitmapData bitmapData;
 
             bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,

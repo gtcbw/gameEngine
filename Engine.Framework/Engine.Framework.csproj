@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -48,6 +51,7 @@
     <Compile Include="IndexFactorByViewDirectionProvider.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="MeshUnitBuilder.cs" />
+    <Compile Include="ModelLoader.cs" />
     <Compile Include="PlantGridReader.cs" />
     <Compile Include="PlayerPositionProvider.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />
@@ -72,6 +76,9 @@
       <Project>{38a22d00-9fc4-4dcb-8246-9f6cc26446fb}</Project>
       <Name>World.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

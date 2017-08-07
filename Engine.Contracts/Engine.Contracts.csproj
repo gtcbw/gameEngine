@@ -45,6 +45,7 @@
     <Compile Include="IFieldChangeAnalyzer.cs" />
     <Compile Include="IMeshUnitCollection.cs" />
     <Compile Include="IMeshUnitCreator.cs" />
+    <Compile Include="IModelLoader.cs" />
     <Compile Include="Input\IAbsoluteMousePositionProvider.cs" />
     <Compile Include="IFrameTimeProvider.cs" />
     <Compile Include="Input\IKeyMapper.cs" />
@@ -63,6 +64,8 @@
     <Compile Include="IPositionFilter.cs" />
     <Compile Include="IPositionGenerator.cs" />
     <Compile Include="IVertexByFieldCreator.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="Submodel.cs" />
     <Compile Include="ViewDirection.cs" />
     <Compile Include="IRenderingElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
