@@ -19,14 +19,29 @@ namespace Graphics
                 GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, IntPtr.Zero);
             }
 
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, unit.IndexBufferId);
+            if (unit.NormalBufferId.HasValue)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, unit.NormalBufferId.Value);
+                GL.EnableClientState(ArrayCap.NormalArray);
+                GL.NormalPointer(NormalPointerType.Float, 0, IntPtr.Zero);
+            }
 
-            GL.DrawElements(PrimitiveType.Triangles, unit.NumberOfIndices, DrawElementsType.UnsignedShort, IntPtr.Zero);
+            if (unit.IndexBufferId.HasValue)
+            {
+                GL.BindBuffer(BufferTarget.ElementArrayBuffer, unit.IndexBufferId.Value);
+
+                GL.DrawElements(PrimitiveType.Triangles, unit.NumberOfTriangleCorners, DrawElementsType.UnsignedShort, IntPtr.Zero);
+            }
+            else
+                GL.DrawArrays(PrimitiveType.Triangles, 0, unit.NumberOfTriangleCorners);
 
             GL.DisableClientState(ArrayCap.VertexArray);
 
             if (unit.TextureBufferId.HasValue)
                 GL.DisableClientState(ArrayCap.TextureCoordArray);
+
+            if (unit.NormalBufferId.HasValue)
+                GL.DisableClientState(ArrayCap.NormalArray);
         }
     }
 }

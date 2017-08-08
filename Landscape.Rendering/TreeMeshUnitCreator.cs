@@ -21,7 +21,7 @@ namespace Landscape.Rendering
             return new VertexBufferUnit
             {
                 IndexBufferId = _bufferObjectFactory.GenerateIndexBuffer(indices),
-                NumberOfIndices = indices.Length,
+                NumberOfTriangleCorners = indices.Length,
                 TextureBufferId = _bufferObjectFactory.GenerateTextureCoordBuffer(texcoords),
                 VertexBufferId = _bufferObjectFactory.GenerateVertexBuffer(vertices)
             };
@@ -30,7 +30,7 @@ namespace Landscape.Rendering
         void IMeshUnitCreator.DeleteMeshUnit(VertexBufferUnit unit)
         {
             _bufferObjectFactory.Delete(unit.VertexBufferId);
-            _bufferObjectFactory.Delete(unit.IndexBufferId);
+            _bufferObjectFactory.Delete(unit.IndexBufferId.Value);
             _bufferObjectFactory.Delete(unit.TextureBufferId.Value);
         }
 

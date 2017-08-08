@@ -28,7 +28,7 @@ namespace Landscape.Rendering
             return new VertexBufferUnit
             {
                 IndexBufferId = _indexBufferId,
-                NumberOfIndices = _numberOfIndices,
+                NumberOfTriangleCorners = _numberOfIndices,
                 TextureBufferId = _texCoordBufferId,
                 VertexBufferId = _bufferObjectFactory.GenerateVertexBuffer(vertices)
             };

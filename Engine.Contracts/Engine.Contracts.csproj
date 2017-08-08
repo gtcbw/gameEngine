@@ -64,7 +64,9 @@
     <Compile Include="IPositionFilter.cs" />
     <Compile Include="IPositionGenerator.cs" />
     <Compile Include="IVertexByFieldCreator.cs" />
+    <Compile Include="EditorModel.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="ModelRenderUnit.cs" />
     <Compile Include="Submodel.cs" />
     <Compile Include="ViewDirection.cs" />
     <Compile Include="IRenderingElement.cs" />

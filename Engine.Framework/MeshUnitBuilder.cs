@@ -53,7 +53,7 @@ namespace Engine.Framework
             return new VertexBufferUnit
             {
                 IndexBufferId = _bufferObjectFactory.GenerateIndexBuffer(indices),
-                NumberOfIndices = indices.Length,
+                NumberOfTriangleCorners = indices.Length,
                 VertexBufferId = _bufferObjectFactory.GenerateVertexBuffer(vertices)
             };
         }

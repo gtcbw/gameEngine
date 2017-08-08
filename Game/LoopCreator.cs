@@ -115,9 +115,14 @@ namespace Game
             IRenderingElement alphaRenderer = new AlphaTestRenderer((IRenderingElement)treeCollection, new AlphaTester());
 
             //model
-            IModelLoader modelLoader = new ModelLoader("models");
+            IModelLoader modelLoader = new ModelLoader("models", textureCache, bufferObjectFactory);
             Model box = modelLoader.LoadModel("box.mod");
-            ITexture boxtexture = textureCache.LoadTexture(box.Submodels.First().Texture);
+            ITexture boxtexture = box.RenderUnits.First().Texture;
+            //
+
+            //light
+            ILightCollectionProvider lightCollectionProvider = new LightCollectionProvider();
+            ILightCollection light = lightCollectionProvider.GetCollection();
             //
 
             return () =>
@@ -145,8 +150,10 @@ namespace Game
                     textureChanger.SetTexture(treetexture.TextureId);
                     alphaRenderer.Render();
 
+                    light.Enable();
                     textureChanger.SetTexture(boxtexture.TextureId);
-                    polygonRenderer.RenderPolygons(box.Submodels.First().Polygons);
+                    bufferedMeshUnitRenderer.RenderMesh(box.RenderUnits.First().VertexBufferUnit);
+                    light.Disable();
                     //fog.StopFog();
 
                     ((IBufferSwapper)window).SwapBuffers();

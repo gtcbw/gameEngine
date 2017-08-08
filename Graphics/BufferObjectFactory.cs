@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using Graphics.Contracts;
+using System;
 
 namespace Graphics
 {
@@ -32,10 +33,21 @@ namespace Graphics
             uint texCoordId;
 
             GL.GenBuffers(1, out texCoordId);
-            GL.BindBuffer(BufferTarget.TextureBuffer, texCoordId);
-            GL.BufferData(BufferTarget.TextureBuffer, texCoordArray.Length * sizeof(float), texCoordArray, BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, texCoordId);
+            GL.BufferData(BufferTarget.ArrayBuffer, texCoordArray.Length * sizeof(float), texCoordArray, BufferUsageHint.StaticDraw);
 
             return texCoordId;
+        }
+
+        uint IBufferObjectFactory.GenerateNormalBuffer(float[] normalArray)
+        {
+            uint normalId;
+
+            GL.GenBuffers(1, out normalId);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, normalId);
+            GL.BufferData(BufferTarget.ArrayBuffer, normalArray.Length * sizeof(float), normalArray, BufferUsageHint.StaticDraw);
+
+            return normalId;
         }
 
         void IBufferObjectFactory.Delete(uint bufferId)

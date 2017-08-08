@@ -29,10 +29,11 @@ namespace Graphics
                 GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, IntPtr.Zero);
             }
 
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, unit.IndexBufferId);
+            if (unit.IndexBufferId.HasValue)
+                GL.BindBuffer(BufferTarget.ElementArrayBuffer, unit.IndexBufferId.Value);
 
-            int numberOfIndices = unit.NumberOfIndices / _indexCountDivisor;
-            int offset = unit.NumberOfIndices / _indexCountDivisor * _factorProvider.GetFactor() * 2;
+            int numberOfIndices = unit.NumberOfTriangleCorners / _indexCountDivisor;
+            int offset = unit.NumberOfTriangleCorners / _indexCountDivisor * _factorProvider.GetFactor() * 2;
 
             GL.DrawElements(PrimitiveType.Triangles,
                 numberOfIndices, 

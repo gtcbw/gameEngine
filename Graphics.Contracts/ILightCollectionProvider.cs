@@ -2,6 +2,6 @@
 {
     public interface ILightCollectionProvider
     {
-        ILightCollection GetCollection(int levelId);
+        ILightCollection GetCollection();
     }
 }
