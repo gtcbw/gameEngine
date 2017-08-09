@@ -8,18 +8,18 @@ namespace Landscape.Rendering
     public sealed class FieldManager
     {
         private readonly IPlayerPositionProvider _playerPositionProvider;
-        private readonly IEnumerable<IMeshUnitByFieldLoader> _delayedLoaders;
+        private readonly IEnumerable<IFieldChangeObserver> _observers;
         private readonly IFieldChangeAnalyzer _fieldChangeAnalyzer;
         private readonly IActiveFieldCalculator _activeFieldCalculator;
         private IEnumerable<FieldCoordinates> _activeFields = new List<FieldCoordinates>();
 
         public FieldManager(IPlayerPositionProvider playerPositionProvider,
-            IEnumerable<IMeshUnitByFieldLoader> delayedFloorLoaders,
+            IEnumerable<IFieldChangeObserver> delayedFloorLoaders,
             IFieldChangeAnalyzer fieldChangeAnalyzer,
             IActiveFieldCalculator activeFieldCalculator)
         {
             _playerPositionProvider = playerPositionProvider;
-            _delayedLoaders = delayedFloorLoaders;
+            _observers = delayedFloorLoaders;
             _fieldChangeAnalyzer = fieldChangeAnalyzer;
             _activeFieldCalculator = activeFieldCalculator;
         }
@@ -32,9 +32,9 @@ namespace Landscape.Rendering
             var addedFields = _fieldChangeAnalyzer.FindAddedFields(_activeFields, allActiveFields);
             var removedFields = _fieldChangeAnalyzer.FindRemovedFields(_activeFields, allActiveFields);
 
-            foreach(IMeshUnitByFieldLoader loader in _delayedLoaders)
+            foreach(IFieldChangeObserver observer in _observers)
             {
-                loader.UpdateMesh(addedFields, removedFields);
+                observer.NotifyChangedFields(addedFields, removedFields);
             }
             
             _activeFields = allActiveFields;

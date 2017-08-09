@@ -6,7 +6,7 @@ using World.Model;
 
 namespace Landscape.Rendering
 {
-    public sealed class DelayedMeshUnitLoader : IMeshUnitByFieldLoader
+    public sealed class DelayedMeshUnitLoader : IFieldChangeObserver
     {
         private IVertexByFieldCreator _vertexByFieldCreator;
         private IMeshUnitCreator _meshUnitCreator;
@@ -31,7 +31,7 @@ namespace Landscape.Rendering
             _meshUnitCollection = floorCollection;
         }
 
-        void IMeshUnitByFieldLoader.UpdateMesh(IEnumerable<FieldCoordinates> addedFields, IEnumerable<FieldCoordinates> removedFields)
+        void IFieldChangeObserver.NotifyChangedFields(IEnumerable<FieldCoordinates> addedFields, IEnumerable<FieldCoordinates> removedFields)
         {
             foreach(FieldCoordinates field in removedFields)
             {

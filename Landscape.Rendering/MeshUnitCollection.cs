@@ -8,17 +8,23 @@ namespace Landscape.Rendering
     public sealed class MeshUnitCollection : IRenderingElement, IMeshUnitCollection
     {
         private readonly IVertexBufferUnitRenderer _bufferedMeshUnitRenderer;
+        private IFieldVisibilityDeterminator _fieldVisibilityDeterminator;
         private readonly Dictionary<int, VertexBufferUnit> _units = new Dictionary<int, VertexBufferUnit>();
 
-        public MeshUnitCollection(IVertexBufferUnitRenderer bufferedMeshUnitRenderer)
+        public MeshUnitCollection(IVertexBufferUnitRenderer bufferedMeshUnitRenderer,
+            IFieldVisibilityDeterminator fieldVisibilityDeterminator)
         {
             _bufferedMeshUnitRenderer = bufferedMeshUnitRenderer;
+            _fieldVisibilityDeterminator = fieldVisibilityDeterminator;
         }
 
         void IRenderingElement.Render()
         {
-            foreach (VertexBufferUnit floor in _units.Values)
-                _bufferedMeshUnitRenderer.RenderMesh(floor);
+            foreach (int id in _units.Keys)
+            {
+                if (_fieldVisibilityDeterminator.FieldIsVisible(id))
+                    _bufferedMeshUnitRenderer.RenderMesh(_units[id]);
+            }
         }
 
         void IMeshUnitCollection.AddMeshUnit(int id, VertexBufferUnit unit)

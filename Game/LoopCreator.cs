@@ -36,12 +36,12 @@ namespace Game
             VectorHelper vectorHelper = new VectorHelper();
 
             BitmapToHeightConverter converter = new BitmapToHeightConverter();
-            float[] heightValues = converter.ConvertBitmap("heightmap.bmp", 50);
+            float[] heightValues = converter.ConvertBitmap("heightmap.bmp", 5);
             bool[][] plantmap = new PlantGridReader().ConvertBitmapToGridByColor("plantmap.bmp", 255, 255, 255);
             IPositionFilter filter = new PlantGrid(plantmap, 10);
-            int numberOfQuadsPerSideOfArea = 500;
+            int numberOfQuadsPerSideOfArea = 150;
             int metersPerQuad = 2;
-            int numberOfFieldsPerAreaSide = 10;
+            int numberOfFieldsPerAreaSide = 3;
             int lengthOfFieldSide = 100;
 
             IHeightCalculator heightCalculator = new HeightCalculator(heightValues, numberOfQuadsPerSideOfArea, metersPerQuad);
@@ -52,9 +52,9 @@ namespace Game
                 playerViewDirectionProvider,
                 vectorHelper,
                 new KeyMapper(pressedKeyDetector),
-                30,
-                0,
-                0);
+                25,
+                150,
+                150);
 
             ICamera camera = new Camera(config.Resolution.AspectRatio, playerPositionProvider);
 
@@ -70,18 +70,20 @@ namespace Game
 
             IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
             IVertexBufferUnitRenderer bufferedMeshUnitRenderer = new VertexBufferUnitRenderer();
-            IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
-            IMeshUnitCollection streetCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
+            FieldVisibilityDeterminator fieldVisibilityDeterminator = new FieldVisibilityDeterminator(playerViewDirectionProvider);
+            IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer, fieldVisibilityDeterminator);
+            IMeshUnitCollection streetCollection = new MeshUnitCollection(bufferedMeshUnitRenderer, fieldVisibilityDeterminator);
             IMeshUnitCollection treeCollection = new MeshUnitCollection
-                (new VertexBufferUnitOffsetRenderer(8, new IndexFactorByViewDirectionProvider(playerViewDirectionProvider)));
+                (new VertexBufferUnitOffsetRenderer(8, new IndexFactorByViewDirectionProvider(playerViewDirectionProvider)),
+                fieldVisibilityDeterminator);
 
             IVertexByFieldCreator floorVertexCreator = new FloorVertexCreator(heightCalculator, lengthOfFieldSide / metersPerQuad, metersPerQuad);
             IMeshUnitCreator floorMeshUnitCreator = new FloorMeshUnitCreator(bufferObjectFactory, lengthOfFieldSide / metersPerQuad);
-            IMeshUnitByFieldLoader floorLoader = new DelayedMeshUnitLoader(floorVertexCreator, floorMeshUnitCreator, floorCollection);
+            IFieldChangeObserver floorLoader = new DelayedMeshUnitLoader(floorVertexCreator, floorMeshUnitCreator, floorCollection);
 
             IVertexByFieldCreator streetVertexCreator = new StreetVertexCreator(vectorHelper, heightCalculator, 8, lengthOfFieldSide / 2.0);
             IMeshUnitCreator streetMeshUnitCreator = new StreetMeshUnitCreator(bufferObjectFactory, 90);
-            IMeshUnitByFieldLoader streetLoader = new FrameDelayUnitByFieldLoader(
+            IFieldChangeObserver streetLoader = new FrameDelayUnitByFieldLoader(
                 new DelayedMeshUnitLoader(streetVertexCreator, 
                 streetMeshUnitCreator, 
                 streetCollection), 6);
@@ -94,13 +96,13 @@ namespace Game
             IVertexByFieldCreator treeCreator = new TreeVertexCreator(new TreePrototypeProvider(vectorHelper)
                 .GetPrototype(4, 16), positionGenerator);
             IMeshUnitCreator treeMeshUnitCreator = new TreeMeshUnitCreator(bufferObjectFactory);
-            IMeshUnitByFieldLoader treeLoader = new FrameDelayUnitByFieldLoader(
+            IFieldChangeObserver treeLoader = new FrameDelayUnitByFieldLoader(
                 new DelayedMeshUnitLoader(treeCreator,
                 treeMeshUnitCreator,
                 treeCollection), 12);
 
             FieldManager fieldManager = new FieldManager(playerPositionProvider,
-                new List<IMeshUnitByFieldLoader> { floorLoader, streetLoader, treeLoader },
+                new List<IFieldChangeObserver> { fieldVisibilityDeterminator, floorLoader, streetLoader, treeLoader },
                 new FieldChangeAnalyzer(), 
                 new ActiveFieldCalculator(lengthOfFieldSide, numberOfFieldsPerAreaSide));
 
