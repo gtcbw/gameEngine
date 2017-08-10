@@ -49,6 +49,8 @@
     <Compile Include="MeshUnitCollection.cs" />
     <Compile Include="Horizon.cs" />
     <Compile Include="DelayedMeshUnitLoader.cs" />
+    <Compile Include="ModelQueue.cs" />
+    <Compile Include="ModelQueuePusher.cs" />
     <Compile Include="PlantGrid.cs" />
     <Compile Include="PositionGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

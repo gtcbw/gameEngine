@@ -1,6 +1,6 @@
 ﻿using Graphics.Contracts;
 
-namespace Engine.Contracts
+namespace Engine.Contracts.Models
 {
     public sealed class ModelRenderUnit
     {

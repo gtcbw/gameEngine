@@ -11,8 +11,8 @@ using Engine.Contracts;
 using System.Collections.Generic;
 using Math;
 using Math.Contracts;
-using World.Model;
 using System.Linq;
+using Engine.Contracts.Models;
 
 namespace Game
 {

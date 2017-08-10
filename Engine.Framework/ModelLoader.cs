@@ -1,4 +1,4 @@
-﻿using Engine.Contracts;
+﻿using Engine.Contracts.Models;
 using Graphics.Contracts;
 using Newtonsoft.Json;
 using System.Collections.Generic;

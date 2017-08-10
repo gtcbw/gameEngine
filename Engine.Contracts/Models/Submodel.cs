@@ -1,7 +1,7 @@
 ﻿using Graphics.Contracts;
 using System.Collections.Generic;
 
-namespace Engine.Contracts
+namespace Engine.Contracts.Models
 {
     public sealed class Submodel
     {
