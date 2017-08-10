@@ -115,8 +115,8 @@ namespace Game
             IRenderingElement alphaRenderer = new AlphaTestRenderer((IRenderingElement)treeCollection, new AlphaTester());
 
             //model
-            IModelLoader modelLoader = new ModelLoader("models", textureCache, bufferObjectFactory);
-            Model box = modelLoader.LoadModel("box.mod");
+            IModelRepository modelLoader = new ModelRepository("models", textureCache, bufferObjectFactory);
+            Model box = modelLoader.Load("box.mod");
             ITexture boxtexture = box.RenderUnits.First().Texture;
             //
 

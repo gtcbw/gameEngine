@@ -52,7 +52,8 @@
     <Compile Include="IndexFactorByViewDirectionProvider.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="MeshUnitBuilder.cs" />
-    <Compile Include="ModelLoader.cs" />
+    <Compile Include="ModelCache.cs" />
+    <Compile Include="ModelRepository.cs" />
     <Compile Include="PlantGridReader.cs" />
     <Compile Include="PlayerPositionProvider.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />

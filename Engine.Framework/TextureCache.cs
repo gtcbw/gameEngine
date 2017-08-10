@@ -10,16 +10,17 @@ namespace Engine.Framework
             public ITexture Texture { set; get; }
 
             public string FileName { set; get; }
+
+            public int Counter { set; get; }
         }
 
         private ITextureLoader _textureLoader;
 
-        private List<LoadedTexture> _loadedTextures;
+        private List<LoadedTexture> _loadedTextures = new List<LoadedTexture>();
 
         public TextureCache(ITextureLoader textureLoader)
         {
             _textureLoader = textureLoader;
-            _loadedTextures = new List<LoadedTexture>();
         }
 
         ITexture ITextureLoader.LoadTexture(string texturePath, bool mipmap)
@@ -29,16 +30,22 @@ namespace Engine.Framework
             if (loadedTexture == null)
             {
                 ITexture texture = _textureLoader.LoadTexture(texturePath, mipmap);
-                loadedTexture = new LoadedTexture { Texture = texture, FileName = texturePath };
+                loadedTexture = new LoadedTexture { Texture = texture, FileName = texturePath, Counter = 1 };
                 _loadedTextures.Add(loadedTexture);
             }
+            else
+                loadedTexture.Counter++;
 
             return loadedTexture.Texture;
         }
 
         void ITextureLoader.DeleteTexture(ITexture texture)
         {
-            _textureLoader.DeleteTexture(texture);
+            LoadedTexture loadedTexture = _loadedTextures.Find(x => x.Texture.TextureId == texture.TextureId);
+            loadedTexture.Counter--;
+
+            if (loadedTexture.Counter < 1)
+                _textureLoader.DeleteTexture(texture);
         }
     }
 }

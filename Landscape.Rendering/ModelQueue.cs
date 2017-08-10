@@ -9,19 +9,47 @@ namespace Landscape.Rendering
 {
     public sealed class ModelQueue : IModelQueue
     {
+        private IModelRepository _modelRepository;
+        private Dictionary<int, List<ModelLocation>> _queuedModels = new Dictionary<int, List<ModelLocation>>();
+
+        public ModelQueue(IModelRepository modelRepository)
+        {
+            _modelRepository = modelRepository;
+        }
+
         void IModelQueue.QueueModel(int fieldId, ModelLocation modelLocation)
         {
-            throw new NotImplementedException();
+            if (_queuedModels.Keys.Contains(fieldId))
+                _queuedModels[fieldId].Add(modelLocation);
+            else
+                _queuedModels.Add(fieldId, new List<ModelLocation> { modelLocation });
         }
 
         void IModelQueue.RemoveModels(int fieldId)
         {
-            throw new NotImplementedException();
+            if (_queuedModels.Keys.Contains(fieldId))
+                _queuedModels.Remove(fieldId);
+
+            //dfjgfgjfhgjfhfj
         }
 
         void IModelQueue.UnqueueNextModel()
         {
-            throw new NotImplementedException();
+            if (!_queuedModels.Keys.Any())
+                return;
+
+            int key = _queuedModels.Keys.First();
+            List<ModelLocation> fieldQueue = _queuedModels[key];
+            ModelLocation modelLocation = fieldQueue.First();
+
+            Model model = _modelRepository.Load(modelLocation.Filename);
+
+            //TODO ddgfgfgfg
+
+            fieldQueue.Remove(modelLocation);
+
+            if (!fieldQueue.Any())
+                _queuedModels.Remove(key);
         }
     }
 }

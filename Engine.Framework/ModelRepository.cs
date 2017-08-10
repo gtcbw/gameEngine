@@ -6,13 +6,13 @@ using System.IO;
 
 namespace Engine.Framework
 {
-    public sealed class ModelLoader : IModelLoader
+    public sealed class ModelRepository : IModelRepository
     {
         private string _folder;
         private ITextureLoader _textureLoader;
         private IBufferObjectFactory _bufferObjectFactory;
 
-        public ModelLoader(string folder, 
+        public ModelRepository(string folder, 
             ITextureLoader textureLoader,
             IBufferObjectFactory bufferObjectFactory)
         {
@@ -21,9 +21,9 @@ namespace Engine.Framework
             _bufferObjectFactory = bufferObjectFactory;
         }
 
-        Model IModelLoader.LoadModel(string filename)
+        Model IModelRepository.Load(string filename)
         {
-            Model model = new Model { RenderUnits = new List<ModelRenderUnit>() };
+            Model model = new Model { RenderUnits = new List<ModelRenderUnit>(), FileName = filename };
 
             EditorModel editorModel = JsonConvert.DeserializeObject<EditorModel>(File.ReadAllText($"{_folder}\\{filename}"));
 
@@ -38,6 +38,18 @@ namespace Engine.Framework
             }
 
             return model;
+        }
+
+        void IModelRepository.Delete(Model model)
+        {
+            foreach (ModelRenderUnit submodel in model.RenderUnits)
+            {
+                _textureLoader.DeleteTexture(submodel.Texture);
+                _bufferObjectFactory.Delete(submodel.VertexBufferUnit.NormalBufferId.Value);
+                _bufferObjectFactory.Delete(submodel.VertexBufferUnit.VertexBufferId);
+                _bufferObjectFactory.Delete(submodel.VertexBufferUnit.TextureBufferId.Value);
+            }
+
         }
 
         private VertexBufferUnit ConvertSubmodelToBufferUnit(Submodel submodel)

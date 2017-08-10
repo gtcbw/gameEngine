@@ -48,7 +48,7 @@
     <Compile Include="IFieldChangeAnalyzer.cs" />
     <Compile Include="IMeshUnitCollection.cs" />
     <Compile Include="IMeshUnitCreator.cs" />
-    <Compile Include="Models\IModelLoader.cs" />
+    <Compile Include="Models\IModelRepository.cs" />
     <Compile Include="Input\IAbsoluteMousePositionProvider.cs" />
     <Compile Include="IFrameTimeProvider.cs" />
     <Compile Include="Input\IKeyMapper.cs" />
