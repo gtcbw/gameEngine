@@ -25,29 +25,29 @@ namespace Math
             if (x < 0 || z < 0 || z >= _numberOfFieldsPerAreaSide || x >= _numberOfFieldsPerAreaSide)
                 return result;
 
-            result.Add(new FieldCoordinates { X = x, Z = z, RelativeID = 4 });
+            result.Add(new FieldCoordinates { X = x, Z = z });
 
             if (x > 0)
-                result.Add(new FieldCoordinates { X = x - 1, Z = z, RelativeID = 3 });
+                result.Add(new FieldCoordinates { X = x - 1, Z = z });
             if (x < _numberOfFieldsPerAreaSide - 1)
-                result.Add(new FieldCoordinates { X = x + 1, Z = z, RelativeID = 5 });
+                result.Add(new FieldCoordinates { X = x + 1, Z = z });
 
             if (z > 0)
             {
-                result.Add(new FieldCoordinates { X = x, Z = z - 1, RelativeID = 1 });
+                result.Add(new FieldCoordinates { X = x, Z = z - 1 });
                 if (x > 0)
-                    result.Add(new FieldCoordinates { X = x - 1, Z = z - 1, RelativeID = 0 });
+                    result.Add(new FieldCoordinates { X = x - 1, Z = z - 1 });
                 if (x < _numberOfFieldsPerAreaSide - 1)
-                    result.Add(new FieldCoordinates { X = x + 1, Z = z - 1, RelativeID = 2 });
+                    result.Add(new FieldCoordinates { X = x + 1, Z = z - 1 });
             }
 
             if (z < _numberOfFieldsPerAreaSide - 1)
             {
-                result.Add(new FieldCoordinates { X = x, Z = z + 1, RelativeID = 7 });
+                result.Add(new FieldCoordinates { X = x, Z = z + 1 });
                 if (x > 0)
-                    result.Add(new FieldCoordinates { X = x - 1, Z = z + 1, RelativeID = 6 });
+                    result.Add(new FieldCoordinates { X = x - 1, Z = z + 1 });
                 if (x < _numberOfFieldsPerAreaSide - 1)
-                    result.Add(new FieldCoordinates { X = x + 1, Z = z + 1, RelativeID = 8 });
+                    result.Add(new FieldCoordinates { X = x + 1, Z = z + 1 });
             }
 
             result.ForEach(field => field.ID = field.X + (field.Z * _numberOfFieldsPerAreaSide));

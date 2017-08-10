@@ -46,7 +46,6 @@
     <Compile Include="IBoolProvider.cs" />
     <Compile Include="IFieldChangeObserver.cs" />
     <Compile Include="IFieldChangeAnalyzer.cs" />
-    <Compile Include="IFieldVisibilityDeterminator.cs" />
     <Compile Include="IMeshUnitCollection.cs" />
     <Compile Include="IMeshUnitCreator.cs" />
     <Compile Include="Models\IModelLoader.cs" />
