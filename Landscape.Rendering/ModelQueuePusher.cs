@@ -1,10 +1,6 @@
 ﻿using Engine.Contracts;
 using Engine.Contracts.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using World.Model;
 
 namespace Landscape.Rendering
@@ -21,7 +17,8 @@ namespace Landscape.Rendering
             _modelQueue = modelQueue;
         }
 
-        void IFieldChangeObserver.NotifyChangedFields(IEnumerable<FieldCoordinates> addedFields, IEnumerable<FieldCoordinates> removedFields)
+        void IFieldChangeObserver.NotifyChangedFields(IEnumerable<FieldCoordinates> addedFields, 
+            IEnumerable<FieldCoordinates> removedFields)
         {
             foreach (FieldCoordinates field in addedFields)
             {
@@ -37,6 +34,8 @@ namespace Landscape.Rendering
             {
                 _modelQueue.RemoveModels(field.ID);
             }
+
+            _modelQueue.UnqueueNextModel();
         }
     }
 }

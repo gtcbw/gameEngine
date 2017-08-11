@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IModelContainer.cs" />
     <Compile Include="Models\IFieldModelLoader.cs" />
     <Compile Include="Models\IModelQueue.cs" />
     <Compile Include="Models\ModelLocation.cs" />

@@ -1,20 +1,21 @@
-﻿using Engine.Contracts.Models;
-using System;
+﻿using Engine.Contracts;
+using Engine.Contracts.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Landscape.Rendering
 {
     public sealed class ModelQueue : IModelQueue
     {
         private IModelRepository _modelRepository;
+        private IModelContainer _modelContainer;
         private Dictionary<int, List<ModelLocation>> _queuedModels = new Dictionary<int, List<ModelLocation>>();
 
-        public ModelQueue(IModelRepository modelRepository)
+        public ModelQueue(IModelRepository modelRepository,
+            IModelContainer modelContainer)
         {
             _modelRepository = modelRepository;
+            _modelContainer = modelContainer;
         }
 
         void IModelQueue.QueueModel(int fieldId, ModelLocation modelLocation)
@@ -30,7 +31,7 @@ namespace Landscape.Rendering
             if (_queuedModels.Keys.Contains(fieldId))
                 _queuedModels.Remove(fieldId);
 
-            //dfjgfgjfhgjfhfj
+            _modelContainer.RemoveModels(fieldId);
         }
 
         void IModelQueue.UnqueueNextModel()
@@ -44,7 +45,7 @@ namespace Landscape.Rendering
 
             Model model = _modelRepository.Load(modelLocation.Filename);
 
-            //TODO ddgfgfgfg
+            _modelContainer.AddModel(key, model);
 
             fieldQueue.Remove(modelLocation);
 
