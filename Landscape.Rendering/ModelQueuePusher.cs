@@ -22,11 +22,11 @@ namespace Landscape.Rendering
         {
             foreach (FieldCoordinates field in addedFields)
             {
-                var modelList = _fieldModelLoader.LoadModelsForField();
+                var modelList = _fieldModelLoader.LoadModelsForField(field.Z, field.X);
 
-                foreach (ModelLocation modelLocation in modelList)
+                foreach (ModelInstanceDescription modelInstance in modelList)
                 {
-                    _modelQueue.QueueModel(field.ID, modelLocation);
+                    _modelQueue.QueueModel(field.ID, modelInstance);
                 }
             }
 

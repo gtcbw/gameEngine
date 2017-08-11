@@ -11,15 +11,18 @@ namespace Landscape.Rendering
         private IModelRepository _modelRepository;
         private ITextureChanger _textureChanger;
         private IVertexBufferUnitRenderer _vertexBufferUnitRenderer;
+        private IWorldTranslator _worldTranslator;
         private Dictionary<int, List<Model>> _models = new Dictionary<int, List<Model>>();
 
         public ModelContainer(IModelRepository modelRepository,
             ITextureChanger textureChanger,
-            IVertexBufferUnitRenderer vertexBufferUnitRenderer)
+            IVertexBufferUnitRenderer vertexBufferUnitRenderer,
+            IWorldTranslator worldTranslator)
         {
             _modelRepository = modelRepository;
             _textureChanger = textureChanger;
             _vertexBufferUnitRenderer = vertexBufferUnitRenderer;
+            _worldTranslator = worldTranslator;
         }
 
         void IModelContainer.AddModel(int fieldId, Model model)
@@ -51,11 +54,15 @@ namespace Landscape.Rendering
             {
                 foreach(Model model in _models[key])
                 {
+                    _worldTranslator.Store();
+                    _worldTranslator.TranslateWorld(model.Position.X, model.Position.Y, model.Position.Z);
+
                     foreach (ModelRenderUnit unit in model.RenderUnits)
                     {
                         _textureChanger.SetTexture(unit.Texture.TextureId);
                         _vertexBufferUnitRenderer.RenderMesh(unit.VertexBufferUnit);
                     }
+                    _worldTranslator.Reset();
                 }
             }
         }

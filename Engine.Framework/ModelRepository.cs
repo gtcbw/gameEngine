@@ -21,21 +21,22 @@ namespace Engine.Framework
             _bufferObjectFactory = bufferObjectFactory;
         }
 
-        Model IModelRepository.Load(string filename)
+        Model IModelRepository.Load(ModelInstanceDescription modelInstance)
         {
-            Model model = new Model { RenderUnits = new List<ModelRenderUnit>(), FileName = filename };
+            Model model = new Model { RenderUnits = new List<ModelRenderUnit>(), FileName = modelInstance.Filename };
 
-            EditorModel editorModel = JsonConvert.DeserializeObject<EditorModel>(File.ReadAllText($"{_folder}\\{filename}"));
+            EditorModel editorModel = JsonConvert.DeserializeObject<EditorModel>(File.ReadAllText($"{_folder}\\{modelInstance.Filename}"));
 
             foreach(Submodel submodel in editorModel.Submodels)
             {
                 ModelRenderUnit unit = new ModelRenderUnit();
                 unit.Texture = _textureLoader.LoadTexture(submodel.Texture);
-
                 unit.VertexBufferUnit = ConvertSubmodelToBufferUnit(submodel);
 
                 model.RenderUnits.Add(unit);
             }
+
+            model.Position = modelInstance.Position;
 
             return model;
         }

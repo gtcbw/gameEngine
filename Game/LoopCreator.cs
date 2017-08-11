@@ -99,8 +99,16 @@ namespace Game
                 treeMeshUnitCreator,
                 treeCollection), 12);
 
+            //model
+            IModelRepository modelLoader = new ModelRepository("models", textureCache, bufferObjectFactory);
+            ModelContainer modelContainer = new ModelContainer(modelLoader, textureChanger, bufferedMeshUnitRenderer, worldTranslator);
+            ModelQueue modelQueue = new ModelQueue(modelLoader, modelContainer);
+            IFieldModelLoader fieldModelLoader = new FieldModelLoader(heightCalculator);
+            IFieldChangeObserver modelQueuePusher = new FrameDelayUnitByFieldLoader(new ModelQueuePusher(fieldModelLoader, modelQueue), 18);
+
+
             FieldManager fieldManager = new FieldManager(playerPositionProvider,
-                new List<IFieldChangeObserver> { floorLoader, streetLoader, treeLoader },
+                new List<IFieldChangeObserver> { floorLoader, streetLoader, treeLoader, modelQueuePusher },
                 new FieldChangeAnalyzer(),
                 new ActiveFieldCalculator(lengthOfFieldSide, numberOfFieldsPerAreaSide));
 
@@ -113,12 +121,6 @@ namespace Game
 
             IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
             IRenderingElement alphaRenderer = new AlphaTestRenderer((IRenderingElement)treeCollection, new AlphaTester());
-
-            //model
-            IModelRepository modelLoader = new ModelRepository("models", textureCache, bufferObjectFactory);
-            Model box = modelLoader.Load("box.mod");
-            ITexture boxtexture = box.RenderUnits.First().Texture;
-            //
 
             //light
             ILightCollectionProvider lightCollectionProvider = new LightCollectionProvider();
@@ -151,8 +153,7 @@ namespace Game
                     alphaRenderer.Render();
 
                     light.Enable();
-                    textureChanger.SetTexture(boxtexture.TextureId);
-                    bufferedMeshUnitRenderer.RenderMesh(box.RenderUnits.First().VertexBufferUnit);
+                    ((IRenderingElement)modelContainer).Render();
                     light.Disable();
                     //fog.StopFog();
 

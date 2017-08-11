@@ -2,7 +2,7 @@
 {
     public interface IModelQueue
     {
-        void QueueModel(int fieldId, ModelLocation modelLocation);
+        void QueueModel(int fieldId, ModelInstanceDescription modelInstance);
         void UnqueueNextModel();
         void RemoveModels(int fieldId);
     }

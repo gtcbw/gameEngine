@@ -17,15 +17,18 @@ namespace Engine.Framework
             _heightCalculator = heightCalculator;
         }
 
-        IEnumerable<ModelLocation> IFieldModelLoader.LoadModelsForField()
+        IEnumerable<ModelInstanceDescription> IFieldModelLoader.LoadModelsForField(int rowZ, int rowX)
         {
-            return new List<ModelLocation>
+            return new List<ModelInstanceDescription>
             {
-                new ModelLocation { Filename = "box.json", Position = new World.Model.Position
+                new ModelInstanceDescription
                 {
-                    X = 150,
-                    Y = _heightCalculator.CalculateHeight(150, 150),
-                    Z = 150 }
+                    Filename = "box.mod", Position = new World.Model.Position
+                    {
+                        X = 50 + (rowX * 100),
+                        Y = _heightCalculator.CalculateHeight(50 + (rowX * 100), 50 +  + (rowZ * 100)),
+                        Z = 50 +  + (rowZ * 100)
+                    }
                 }
             };
         }

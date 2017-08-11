@@ -9,7 +9,7 @@ namespace Landscape.Rendering
     {
         private IModelRepository _modelRepository;
         private IModelContainer _modelContainer;
-        private Dictionary<int, List<ModelLocation>> _queuedModels = new Dictionary<int, List<ModelLocation>>();
+        private Dictionary<int, List<ModelInstanceDescription>> _queuedModels = new Dictionary<int, List<ModelInstanceDescription>>();
 
         public ModelQueue(IModelRepository modelRepository,
             IModelContainer modelContainer)
@@ -18,12 +18,12 @@ namespace Landscape.Rendering
             _modelContainer = modelContainer;
         }
 
-        void IModelQueue.QueueModel(int fieldId, ModelLocation modelLocation)
+        void IModelQueue.QueueModel(int fieldId, ModelInstanceDescription modelInstance)
         {
             if (_queuedModels.Keys.Contains(fieldId))
-                _queuedModels[fieldId].Add(modelLocation);
+                _queuedModels[fieldId].Add(modelInstance);
             else
-                _queuedModels.Add(fieldId, new List<ModelLocation> { modelLocation });
+                _queuedModels.Add(fieldId, new List<ModelInstanceDescription> { modelInstance });
         }
 
         void IModelQueue.RemoveModels(int fieldId)
@@ -40,14 +40,14 @@ namespace Landscape.Rendering
                 return;
 
             int key = _queuedModels.Keys.First();
-            List<ModelLocation> fieldQueue = _queuedModels[key];
-            ModelLocation modelLocation = fieldQueue.First();
+            List<ModelInstanceDescription> fieldQueue = _queuedModels[key];
+            ModelInstanceDescription modelInstance = fieldQueue.First();
 
-            Model model = _modelRepository.Load(modelLocation.Filename);
+            Model model = _modelRepository.Load(modelInstance);
 
             _modelContainer.AddModel(key, model);
 
-            fieldQueue.Remove(modelLocation);
+            fieldQueue.Remove(modelInstance);
 
             if (!fieldQueue.Any())
                 _queuedModels.Remove(key);

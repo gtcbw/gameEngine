@@ -19,13 +19,13 @@ namespace Engine.Framework
             _modelRepository = modelRepository;
         }
 
-        Model IModelRepository.Load(string filename)
+        Model IModelRepository.Load(ModelInstanceDescription modelInstance)
         {
-            LoadedModel loadedModel = _loadedModels.Find(x => x.Model.FileName.Equals(filename));
+            LoadedModel loadedModel = _loadedModels.Find(x => x.Model.FileName.Equals(modelInstance.Filename));
 
             if (loadedModel == null)
             {
-                Model model = _modelRepository.Load(filename);
+                Model model = _modelRepository.Load(modelInstance);
                 loadedModel = new LoadedModel { Model = model, Counter = 1 };
                 _loadedModels.Add(loadedModel);
             }

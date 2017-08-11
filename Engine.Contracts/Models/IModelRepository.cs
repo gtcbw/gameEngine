@@ -2,7 +2,7 @@
 {
     public interface IModelRepository
     {
-        Model Load(string filename);
+        Model Load(ModelInstanceDescription modelInstance);
 
         void Delete(Model model);
     }

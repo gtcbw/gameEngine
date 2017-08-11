@@ -44,8 +44,11 @@ namespace Engine.Framework
             LoadedTexture loadedTexture = _loadedTextures.Find(x => x.Texture.TextureId == texture.TextureId);
             loadedTexture.Counter--;
 
-            if (loadedTexture.Counter < 1)
-                _textureLoader.DeleteTexture(texture);
+            if (loadedTexture.Counter > 0)
+                return;
+
+            _textureLoader.DeleteTexture(texture);
+            _loadedTextures.Remove(loadedTexture);
         }
     }
 }

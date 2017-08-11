@@ -4,6 +4,6 @@ namespace Engine.Contracts.Models
 {
     public interface IFieldModelLoader
     {
-        IEnumerable<ModelLocation> LoadModelsForField();
+        IEnumerable<ModelInstanceDescription> LoadModelsForField(int rowZ, int rowX);
     }
 }
