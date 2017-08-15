@@ -4,6 +4,6 @@ namespace Math.Contracts
 {
     public interface IIntersectionCalculator
     {
-        Position RayHitsTriangle(Ray ray, Position corner1, Position corner2, Position corner3);
+        Position RayHitsTriangle(double[] orig, double[] dir, double[] vert0, double[] vert1, double[] vert2);
     }
 }

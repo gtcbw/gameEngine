@@ -42,7 +42,8 @@
   <ItemGroup>
     <Compile Include="ActiveFieldCalculator.cs" />
     <Compile Include="HeightCalculator.cs" />
-    <Compile Include="IntersectionCalculator.cs" />
+    <Compile Include="IntersectionCalculatorWithoutFaceCulling.cs" />
+    <Compile Include="IntersectionCalculatorWithFaceCulling.cs" />
     <Compile Include="ObtuseAngleTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VectorHelper.cs" />
