@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Math.Contracts;
 using World.Model;
 
 namespace Math
 {
-    public sealed class IntersectionCalculator
+    public sealed class IntersectionCalculator : IIntersectionCalculator
     {
-        public Position RayHitsTriangle(Ray ray, Position corner1, Position corner2, Position corner3)
+        Position IIntersectionCalculator.RayHitsTriangle(Ray ray, Position corner1, Position corner2, Position corner3)
         {
             double[] orig = new double[3] { ray.StartPosition.X, ray.StartPosition.Y, ray.StartPosition.Z };
             double[] dir = new double[3] { ray.Direction.X, ray.Direction.Y, ray.Direction.Z };
@@ -18,8 +14,7 @@ namespace Math
             double[] vert2 = new double[3] { corner3.X, corner3.Y, corner3.Z };
             double[] result = new double[3];
 
-            //if (intersect_triangle_with_culling(orig, dir, vert0, vert1, vert2, result) == 1)
-            if (intersect_triangle_without_culling(orig, dir, vert0, vert1, vert2, result) == 1)
+            if (IntersectTriangleWithoutFaceCulling(orig, dir, vert0, vert1, vert2, result) == 1)
                 return new Position
                 {
                     X = vert0[0] + result[1] * (vert1[0] - vert0[0]) + result[2] * (vert2[0] - vert0[0]),
@@ -51,10 +46,9 @@ namespace Math
 
         private double EPSILON = 0.000001;
 
-        private int intersect_triangle_with_culling(double[] orig, double[] dir,
+        private int IntersectTriangleWithFaceCulling(double[] orig, double[] dir,
                    double[] vert0, double[] vert1, double[] vert2,
                    double[] result)
-        //double* t, double* u, double* v)
         {
             double[] edge1 = new double[3];
             double[] edge2 = new double[3];
@@ -95,19 +89,18 @@ namespace Math
                 return 0;
 
             /* calculate t, scale parameters, ray intersects triangle */
-            result[0] = DOT(edge2, qvec);
+            //result[0] = DOT(edge2, qvec);
             inv_det = 1.0 / det;
-            result[0] *= inv_det;
+            //result[0] *= inv_det;
             result[1] *= inv_det;
             result[2] *= inv_det;
 
             return 1;
         }
 
-        private int intersect_triangle_without_culling(double[] orig, double[] dir,
+        private int IntersectTriangleWithoutFaceCulling(double[] orig, double[] dir,
            double[] vert0, double[] vert1, double[] vert2,
            double[] result)
-        //double* t, double* u, double* v)
         {
             double[] edge1 = new double[3];
             double[] edge2 = new double[3];
@@ -151,7 +144,7 @@ namespace Math
                 return 0;
 
             /* calculate t, ray intersects triangle */
-            result[0] = DOT(edge2, qvec) * inv_det;
+            //result[0] = DOT(edge2, qvec) * inv_det;
             //#endif
             return 1;
         }
