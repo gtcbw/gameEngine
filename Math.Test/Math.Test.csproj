@@ -51,6 +51,7 @@
     <Compile Include="ActiveFieldCalculatorTest.cs" />
     <Compile Include="HeightCalculatorTest.cs" />
     <Compile Include="IntersectionCalculatorTest.cs" />
+    <Compile Include="ObtuseAngleTesterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VectorHelperTest.cs" />
   </ItemGroup>

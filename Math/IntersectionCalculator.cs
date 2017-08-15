@@ -1,5 +1,6 @@
 ﻿using Math.Contracts;
 using World.Model;
+using System.Runtime.CompilerServices;
 
 namespace Math
 {
@@ -25,6 +26,7 @@ namespace Math
             return null;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void CROSS(double[] dest, double[] v1, double[] v2)
         {
             dest[0] = v1[1] * v2[2] - v1[2] * v2[1];
@@ -32,11 +34,13 @@ namespace Math
             dest[2] = v1[0] * v2[1] - v1[1] * v2[0];
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private double DOT(double []v1, double []v2)
         {
             return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SUB(double[] dest, double[] v1, double[] v2)
         {
             dest[0] = v1[0] - v2[0];
@@ -44,7 +48,7 @@ namespace Math
             dest[2] = v1[2] - v2[2];
         }
 
-        private double EPSILON = 0.000001;
+        private const double EPSILON = 0.000001;
 
         private int IntersectTriangleWithFaceCulling(double[] orig, double[] dir,
                    double[] vert0, double[] vert1, double[] vert2,
