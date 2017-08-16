@@ -10,5 +10,7 @@ namespace Engine.Contracts.Models
         public string FileName { set; get; }
 
         public List<ModelRenderUnit> RenderUnits { set; get; }
+
+        public ComplexShape CollisionModel { set; get; }
     }
 }
