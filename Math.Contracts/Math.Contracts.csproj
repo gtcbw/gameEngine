@@ -43,6 +43,7 @@
     <Compile Include="IActiveFieldCalculator.cs" />
     <Compile Include="IHeightCalculator.cs" />
     <Compile Include="IIntersectionCalculator.cs" />
+    <Compile Include="IObtuseAngleTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IVectorHelper.cs" />
   </ItemGroup>

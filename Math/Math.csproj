@@ -46,6 +46,7 @@
     <Compile Include="IntersectionCalculatorWithFaceCulling.cs" />
     <Compile Include="ObtuseAngleTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RayWithFacesTester.cs" />
     <Compile Include="VectorHelper.cs" />
   </ItemGroup>
   <ItemGroup>
