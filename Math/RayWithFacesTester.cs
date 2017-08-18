@@ -3,7 +3,7 @@ using World.Model;
 
 namespace Math
 {
-    public sealed class RayWithFacesTester
+    public sealed class RayWithFacesTester : IRayWithFacesTester
     {
         private IIntersectionCalculator _intersectionCalculator;
         private IObtuseAngleTester _obtuseAngleTester;
@@ -15,30 +15,17 @@ namespace Math
             _obtuseAngleTester = obtuseAngleTester;
         }
 
-        public Position SearchCollision(Ray ray, Face[] faces)
+        Position IRayWithFacesTester.SearchCollision(double[] rayStartPosition, double[] rayDirection, Face[] faces)
         {
             Position collisionPosition = null;
 
-            double[] rayStartPosition = new double[] 
-            {
-                 ray.StartPosition.X,
-                 ray.StartPosition.Y,
-                 ray.StartPosition.Z
-            };
-            double[] rayDirection = new double[]
-           {
-               ray.Direction.X,
-               ray.Direction.Y,
-               ray.Direction.Z
-           };
-
             foreach (Face face in faces)
             {
-                double[] vector = new double[] 
+                double[] vector = new double[]
                 {
-                    face.Triangles[0].Corner1[0] - ray.StartPosition.X,
-                    face.Triangles[1].Corner1[1] - ray.StartPosition.Y,
-                    face.Triangles[2].Corner1[2] - ray.StartPosition.Z,
+                    rayStartPosition[0] - face.Triangles[0].Corner1[0],
+                    rayStartPosition[1] - face.Triangles[0].Corner1[1],
+                    rayStartPosition[2] - face.Triangles[0].Corner1[2]
                 };
                 if (!_obtuseAngleTester.AngleIsObtuse(face.Normal, vector))
                 {

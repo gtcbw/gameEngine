@@ -67,7 +67,6 @@ namespace Math
             /* if determinant is near zero, ray lies in plane of triangle */
             det = DOT(edge1, pvec);
 
-
             //#else                    /* the non-culling branch */
             if (det > -EPSILON && det < EPSILON)
                 return 0;

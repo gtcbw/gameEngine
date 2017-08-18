@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Math.Contracts;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Math.Test
 {
@@ -8,7 +9,7 @@ namespace Math.Test
         [TestMethod]
         public void AngleIsObtuse()
         {
-            ObtuseAngleTester obtuseAngleTester = new ObtuseAngleTester();
+            IObtuseAngleTester obtuseAngleTester = new ObtuseAngleTester();
 
             double[] vector1 = new double[3] { 0, 1, 0};
             double[] vector2 = new double[3] { 0, -0.9, 0.1 };
@@ -21,7 +22,7 @@ namespace Math.Test
         [TestMethod]
         public void AngleIsNotObtuse()
         {
-            ObtuseAngleTester obtuseAngleTester = new ObtuseAngleTester();
+            IObtuseAngleTester obtuseAngleTester = new ObtuseAngleTester();
 
             double[] vector1 = new double[3] { 0, 1, 0 };
             double[] vector2 = new double[3] { 0, 0.9, 0.1 };
