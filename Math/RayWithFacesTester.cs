@@ -7,12 +7,15 @@ namespace Math
     {
         private IIntersectionCalculator _intersectionCalculator;
         private IObtuseAngleTester _obtuseAngleTester;
+        private readonly IPositionDistanceTester _positionDistanceTester;
 
         public RayWithFacesTester(IIntersectionCalculator intersectionCalculator, 
-            IObtuseAngleTester obtuseAngleTester)
+            IObtuseAngleTester obtuseAngleTester,
+            IPositionDistanceTester positionDistanceTester)
         {
             _intersectionCalculator = intersectionCalculator;
             _obtuseAngleTester = obtuseAngleTester;
+            _positionDistanceTester = positionDistanceTester;
         }
 
         Position IRayWithFacesTester.SearchCollision(double[] rayStartPosition, double[] rayDirection, Face[] faces)
@@ -37,20 +40,8 @@ namespace Math
                         {
                             if (collisionPosition == null)
                                 collisionPosition = position;
-                               
-                            else
-                            {
-                                double squareDistance = ((collisionPosition.X - rayStartPosition[0]) * (collisionPosition.X - rayStartPosition[0])) +
-                                    ((collisionPosition.Y - rayStartPosition[1]) * (collisionPosition.Y - rayStartPosition[1])) +
-                                    ((collisionPosition.Z - rayStartPosition[2]) * (collisionPosition.Z - rayStartPosition[2]));
-
-                                double squareDistanceNew = ((position.X - rayStartPosition[0]) * (position.X - rayStartPosition[0])) +
-                                    ((position.Y - rayStartPosition[1]) * (position.Y - rayStartPosition[1])) +
-                                    ((position.Z - rayStartPosition[2]) * (position.Z - rayStartPosition[2]));
-
-                                if (squareDistanceNew < squareDistance)
-                                    collisionPosition = position;
-                            }
+                            else if (_positionDistanceTester.FirstPositionIsNearerToPoint(position, collisionPosition, rayStartPosition))
+                                collisionPosition = position;
                         }
                     }
                 }

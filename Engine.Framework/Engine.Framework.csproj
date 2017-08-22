@@ -58,6 +58,8 @@
     <Compile Include="PlayerPositionProvider.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RayWithModelsTester.cs" />
+    <Compile Include="RayWithWorldTester.cs" />
     <Compile Include="SurfaceRectangleBuilder.cs" />
     <Compile Include="TextureCache.cs" />
   </ItemGroup>

@@ -10,7 +10,7 @@ namespace Math.Test
         [TestMethod]
         public void CollisionIsFoundCorrectly()
         {
-            IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(new IntersectionCalculatorWithoutFaceCulling(), new ObtuseAngleTester());
+            IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(new IntersectionCalculatorWithoutFaceCulling(), new ObtuseAngleTester(), new PositionDistanceTester());
 
             Face[] faces = new Face[]
             {

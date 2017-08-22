@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComplexShape.cs" />
+    <Compile Include="ComplexShapeInstance.cs" />
     <Compile Include="Face.cs" />
     <Compile Include="FieldCoordinates.cs" />
     <Compile Include="Position.cs" />

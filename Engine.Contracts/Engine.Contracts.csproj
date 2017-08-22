@@ -43,6 +43,7 @@
     <Compile Include="IModelContainer.cs" />
     <Compile Include="Models\IFieldModelLoader.cs" />
     <Compile Include="Models\IModelQueue.cs" />
+    <Compile Include="Models\IRayWithModelsTester.cs" />
     <Compile Include="Models\ModelInstanceDescription.cs" />
     <Compile Include="IBoolProvider.cs" />
     <Compile Include="IFieldChangeObserver.cs" />
