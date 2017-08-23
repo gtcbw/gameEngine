@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Engine.Contracts.Models;
 using Graphics.Contracts;
+using World.Model;
 
 namespace Landscape.Rendering
 {
-    public sealed class ModelContainer : IModelContainer, IRenderingElement
+    public sealed class ModelContainer : IModelContainer, IRenderingElement, IComplexShapeProvider
     {
         private IModelRepository _modelRepository;
         private ITextureChanger _textureChanger;
@@ -31,6 +32,20 @@ namespace Landscape.Rendering
                 _models[fieldId].Add(model);
             else
                 _models.Add(fieldId, new List<Model> { model });
+        }
+
+        IEnumerable<ComplexShapeInstance> IComplexShapeProvider.GetComplexShapes()
+        {
+            List<ComplexShapeInstance> shapes = new List<ComplexShapeInstance>();
+
+            foreach(List<Model> models in _models.Values)
+            {
+                foreach(Model model in models)
+                {
+                    shapes.Add(new ComplexShapeInstance { ComplexShape = model.CollisionModel, Position = model.Position });
+                }
+            }
+            return shapes;
         }
 
         void IModelContainer.RemoveModels(int fieldId)

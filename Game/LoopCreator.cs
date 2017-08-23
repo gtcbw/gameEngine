@@ -127,6 +127,17 @@ namespace Game
             ILightCollection light = lightCollectionProvider.GetCollection();
             //
 
+            //ray test
+            IRayWithMapTester rayWithMapTester = new RayWithMapTester(heightCalculator, 120);
+            IPositionDistanceTester positionDistanceTester = new PositionDistanceTester();
+            IIntersectionCalculator intersectionCalculator = new IntersectionCalculatorWithoutFaceCulling();
+            IObtuseAngleTester obtuseAngleTester = new ObtuseAngleTester();
+            IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(intersectionCalculator, obtuseAngleTester, positionDistanceTester);
+            IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester);
+            RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
+            RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerPositionProvider, mouseButtonEventProvider);
+            //
+
             return () =>
             {
                 while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
@@ -156,6 +167,8 @@ namespace Game
                     ((IRenderingElement)modelContainer).Render();
                     light.Disable();
                     //fog.StopFog();
+
+                    rayTrigger.DoStuff();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }
