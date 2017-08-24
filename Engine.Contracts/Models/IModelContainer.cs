@@ -1,6 +1,4 @@
-﻿using Engine.Contracts.Models;
-
-namespace Engine.Contracts
+﻿namespace Engine.Contracts.Models
 {
     public interface IModelContainer
     {

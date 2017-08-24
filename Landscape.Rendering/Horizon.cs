@@ -1,5 +1,4 @@
 ﻿using Engine.Contracts;
-using Engine.Contracts.Input;
 using Graphics.Contracts;
 using System.Collections.Generic;
 

@@ -48,6 +48,9 @@
     <Compile Include="AlphaTestRenderer.cs" />
     <Compile Include="ColorRenderer.cs" />
     <Compile Include="FieldModelLoader.cs" />
+    <Compile Include="FontMapper.cs" />
+    <Compile Include="FontRenderer.cs" />
+    <Compile Include="FrameCounter.cs" />
     <Compile Include="FrameTimeProvider.cs" />
     <Compile Include="IndexFactorByViewDirectionProvider.cs" />
     <Compile Include="KeyMapper.cs" />

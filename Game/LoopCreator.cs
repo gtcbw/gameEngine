@@ -21,6 +21,7 @@ namespace Game
         internal static Action BuildLoop(Configuration config)
         {
             Window window = new Window(config.Resolution.X, config.Resolution.Y);
+            window.VSync =  OpenTK.VSyncMode.Off;
 
             PlayerViewDirectionProvider playerViewDirectionProvider = new PlayerViewDirectionProvider(config.InvertMouse, config.MouseSensitivity, 80.0);
             IMousePositionController mousePositionController = new MousePositionController(window.Mouse, playerViewDirectionProvider);
@@ -32,7 +33,9 @@ namespace Game
             ITextureLoader textureCache = new TextureCache(new TextureLoader(textureChanger, "textures"));
             BufferLoader bufferLoader = new BufferLoader(new WavFileReader());
             ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
+            SurfaceRectangleBuilder surfaceRectangleBuilder = new SurfaceRectangleBuilder();
 
+           
             VectorHelper vectorHelper = new VectorHelper();
 
             BitmapToHeightConverter converter = new BitmapToHeightConverter();
@@ -60,7 +63,7 @@ namespace Game
 
             // environment rendring
             ITexture horizontexture = textureCache.LoadTexture("horizon.bmp");
-            IEnumerable<Polygon> polygons = new SurfaceRectangleBuilder().CreateRectangle(-1, 0, 4, 1);
+            IEnumerable<Polygon> polygons = surfaceRectangleBuilder.CreateRectangle(-1, 0, 4, 1);
             IPolygonRenderer polygonRenderer = new PolygonRenderer();
             ITextureTranslator textureTranslator = new TextureTranslator();
             IWorldTranslator worldTranslator = new WorldTranslator();
@@ -138,6 +141,10 @@ namespace Game
             RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerPositionProvider, mouseButtonEventProvider);
             //
 
+            IFontMapper fontMapper = new FontMapper(textureCache, "font");
+            IFontRenderer fontRenderer = new FontRenderer(surfaceRectangleBuilder.CreateRectangle(0, 0, 0.025f, 0.025f), polygonRenderer, worldTranslator, textureChanger, 0.03);
+            FrameCounter frameCounter = new FrameCounter(fontMapper, fontRenderer);
+
             return () =>
             {
                 while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
@@ -152,6 +159,7 @@ namespace Game
                     //rendring 2D
                     camera.SetDefaultPerspective();
                     horizon.Render();
+                    frameCounter.MeasureAndRenderFramesPerSecond();
 
                     //rendering 3D
                     camera.SetInGamePerspective();
