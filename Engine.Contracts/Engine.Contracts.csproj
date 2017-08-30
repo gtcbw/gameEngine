@@ -42,6 +42,9 @@
   <ItemGroup>
     <Compile Include="IFontMapper.cs" />
     <Compile Include="IFontRenderer.cs" />
+    <Compile Include="IGameTimeProvider.cs" />
+    <Compile Include="IParticleContainer.cs" />
+    <Compile Include="Material.cs" />
     <Compile Include="Models\IModelContainer.cs" />
     <Compile Include="Models\IComplexShapeProvider.cs" />
     <Compile Include="Models\IFieldModelLoader.cs" />

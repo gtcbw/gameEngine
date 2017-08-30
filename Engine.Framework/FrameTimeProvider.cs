@@ -4,10 +4,11 @@ using System.Threading;
 
 namespace Engine.Framework
 {
-    public sealed class FrameTimeProvider : IFrameTimeProvider
+    public sealed class FrameTimeProvider : IFrameTimeProvider, IGameTimeProvider
     {
         private Stopwatch _stopwatch;
         private double _timeOfCurrentFrame;
+        private double _totalTime;
 
         public FrameTimeProvider()
         {
@@ -40,6 +41,13 @@ namespace Engine.Framework
             _stopwatch.Restart();
 
             _timeOfCurrentFrame = timeInSeconds;
+
+            _totalTime += _timeOfCurrentFrame;
+        }
+
+        double IGameTimeProvider.GetTotalTime()
+        {
+            return _totalTime;
         }
     }
 }

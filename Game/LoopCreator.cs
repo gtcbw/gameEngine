@@ -138,7 +138,8 @@ namespace Game
             IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(intersectionCalculator, obtuseAngleTester, positionDistanceTester);
             IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester);
             RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
-            RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerPositionProvider, mouseButtonEventProvider);
+            ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, polygons);
+            RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerPositionProvider, mouseButtonEventProvider, particleContainer);
             //
 
             IFontMapper fontMapper = new FontMapper(textureCache, "font");
@@ -174,6 +175,8 @@ namespace Game
                     light.Enable();
                     ((IRenderingElement)modelContainer).Render();
                     light.Disable();
+
+                    ((IRenderingElement)particleContainer).Render();
                     //fog.StopFog();
 
                     rayTrigger.DoStuff();

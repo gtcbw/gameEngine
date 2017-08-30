@@ -57,6 +57,7 @@
     <Compile Include="MeshUnitBuilder.cs" />
     <Compile Include="ModelCache.cs" />
     <Compile Include="ModelRepository.cs" />
+    <Compile Include="ParticleContainer.cs" />
     <Compile Include="PlantGridReader.cs" />
     <Compile Include="PlayerPositionProvider.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />

@@ -14,14 +14,17 @@ namespace Engine.Framework
         private readonly RayWithWorldTester _rayWithWorldTester;
         private readonly IPlayerViewRayProvider _playerViewRayProvider;
         private readonly IMouseButtonEventProvider _mouseButtonEventProvider;
+        private readonly IParticleContainer _particleContainer;
 
         public RayTrigger(RayWithWorldTester rayWithWorldTester,
             IPlayerViewRayProvider playerViewRayProvider,
-            IMouseButtonEventProvider mouseButtonEventProvider)
+            IMouseButtonEventProvider mouseButtonEventProvider,
+            IParticleContainer particleContainer)
         {
             _rayWithWorldTester = rayWithWorldTester;
             _playerViewRayProvider = playerViewRayProvider;
             _mouseButtonEventProvider = mouseButtonEventProvider;
+            _particleContainer = particleContainer;
         }
 
         public void DoStuff()
@@ -33,7 +36,7 @@ namespace Engine.Framework
 
             if (position != null)
             {
-
+                _particleContainer.AddParticleExplosion(position, Material.Standard);
             }
         }
     }
