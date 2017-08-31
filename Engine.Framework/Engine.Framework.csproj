@@ -61,12 +61,14 @@
     <Compile Include="PlantGridReader.cs" />
     <Compile Include="PlayerPositionProvider.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />
+    <Compile Include="PolygonListRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RayTrigger.cs" />
     <Compile Include="RayWithModelsTester.cs" />
     <Compile Include="RayWithWorldTester.cs" />
     <Compile Include="SurfaceRectangleBuilder.cs" />
     <Compile Include="TextureCache.cs" />
+    <Compile Include="TextureRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine.Contracts\Engine.Contracts.csproj">

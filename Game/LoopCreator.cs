@@ -138,13 +138,20 @@ namespace Game
             IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(intersectionCalculator, obtuseAngleTester, positionDistanceTester);
             IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester);
             RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
-            ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, polygons, playerViewDirectionProvider, worldRotator);
+            ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, 
+                surfaceRectangleBuilder.CreateRectangle(0.2, 0, 0.6f, 0.6f, z:0), playerViewDirectionProvider, worldRotator);
             RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerPositionProvider, mouseButtonEventProvider, particleContainer);
             //
 
             IFontMapper fontMapper = new FontMapper(textureCache, "font");
             IFontRenderer fontRenderer = new FontRenderer(surfaceRectangleBuilder.CreateRectangle(0, 0, 0.025f, 0.025f), polygonRenderer, worldTranslator, textureChanger, 0.03);
             FrameCounter frameCounter = new FrameCounter(fontMapper, fontRenderer);
+
+
+            //target cross
+            ITexture cross = textureCache.LoadTexture("cross.png");
+            IEnumerable<Polygon> crossShape = surfaceRectangleBuilder.CreateRectangle(0.45, 0.45, 0.1f, 0.1f);
+            IRenderingElement layerAlphaRenderer = new AlphaTestRenderer(new TextureRenderer(new PolygonListRenderer(crossShape, polygonRenderer), cross, textureChanger), new AlphaTester());
 
             return () =>
             {
@@ -157,7 +164,7 @@ namespace Game
                     playerPositionProvider.UpdatePosition();
                     fieldManager.UpdateFieldsByPlayerPosition();
 
-                    //rendring 2D
+                    //rendering 2D
                     camera.SetDefaultPerspective();
                     horizon.Render();
                     frameCounter.MeasureAndRenderFramesPerSecond();
@@ -180,6 +187,10 @@ namespace Game
                     //fog.StopFog();
 
                     rayTrigger.DoStuff();
+
+                    //rendering final 2D layer
+                    camera.SetDefaultPerspective();
+                    layerAlphaRenderer.Render();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }
