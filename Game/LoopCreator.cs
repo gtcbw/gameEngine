@@ -138,7 +138,7 @@ namespace Game
             IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(intersectionCalculator, obtuseAngleTester, positionDistanceTester);
             IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester);
             RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
-            ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, polygons);
+            ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, polygons, playerViewDirectionProvider, worldRotator);
             RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerPositionProvider, mouseButtonEventProvider, particleContainer);
             //
 

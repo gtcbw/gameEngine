@@ -27,13 +27,17 @@ namespace Engine.Framework
         private readonly ITexture _texture;
         private readonly IPolygonRenderer _polygonRenderer;
         private readonly IEnumerable<Polygon> _polygons;
+        private readonly IPlayerViewDirectionProvider _playerViewDirectionProvider;
+        private readonly IWorldRotator _worldRotator;
 
         public ParticleContainer(IGameTimeProvider gameTimeProvider,
             IWorldTranslator worldTranslator,
             ITextureChanger textureChanger,
             ITexture texture,
             IPolygonRenderer polygonRenderer,
-            IEnumerable<Polygon> polygons)
+            IEnumerable<Polygon> polygons,
+            IPlayerViewDirectionProvider playerViewDirectionProvider,
+            IWorldRotator worldRotator)
         {
             _gameTimeProvider = gameTimeProvider;
             _worldTranslator = worldTranslator;
@@ -41,6 +45,8 @@ namespace Engine.Framework
             _texture = texture;
             _polygonRenderer = polygonRenderer;
             _polygons = polygons;
+            _playerViewDirectionProvider = playerViewDirectionProvider;
+            _worldRotator = worldRotator;
         }
 
         void IParticleContainer.AddParticleExplosion(Position position, Material material)
@@ -54,6 +60,7 @@ namespace Engine.Framework
             {
                 _worldTranslator.Store();
                 _worldTranslator.TranslateWorld(particleDefinition.Position.X, particleDefinition.Position.Y, particleDefinition.Position.Z);
+                _worldRotator.RotateY(270 - _playerViewDirectionProvider.GetViewDirection().DegreeXZ);
                 _textureChanger.SetTexture(_texture.TextureId);
                 _polygonRenderer.RenderPolygons(_polygons);
                 _worldTranslator.Reset();
