@@ -2,6 +2,6 @@
 {
     public interface IObtuseAngleTester
     {
-        bool AngleIsObtuse(double[] vector1, double[] vector2);
+        bool AngleIsOver90Degree(double[] vector1, double[] vector2);
     }
 }

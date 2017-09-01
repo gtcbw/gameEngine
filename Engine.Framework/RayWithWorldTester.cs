@@ -26,12 +26,13 @@ namespace Engine.Framework
 
         public Position Test(Ray ray)
         {
-            var position =_rayWithMapTester.FindCollisionWithMap(ray);
+            Position position = _rayWithMapTester.FindCollisionWithMap(ray);
             double maxDistance = 120;
 
             if (position != null)
             {
                 maxDistance = System.Math.Sqrt((ray.StartPosition.X - position.X) * (ray.StartPosition.X - position.X)
+                     + (ray.StartPosition.Y - position.Y) * (ray.StartPosition.Y - position.Y)
                     + (ray.StartPosition.Z - position.Z) * (ray.StartPosition.Z - position.Z));
             }
 
@@ -41,6 +42,7 @@ namespace Engine.Framework
             if (modelCollisionPosition != null)
             {
                 double newmaxDistance = System.Math.Sqrt((ray.StartPosition.X - modelCollisionPosition.X) * (ray.StartPosition.X - modelCollisionPosition.X)
+                    + (ray.StartPosition.Y - modelCollisionPosition.Y) * (ray.StartPosition.Y - modelCollisionPosition.Y)
                     + (ray.StartPosition.Z - modelCollisionPosition.Z) * (ray.StartPosition.Z - modelCollisionPosition.Z));
 
                 if (newmaxDistance < maxDistance)

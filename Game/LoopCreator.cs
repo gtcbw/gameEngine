@@ -133,10 +133,10 @@ namespace Game
             //ray test
             IRayWithMapTester rayWithMapTester = new RayWithMapTester(heightCalculator, 120);
             IPositionDistanceTester positionDistanceTester = new PositionDistanceTester();
-            IIntersectionCalculator intersectionCalculator = new IntersectionCalculatorWithoutFaceCulling();
+            IIntersectionCalculator intersectionCalculator = new IntersectionCalculatorWithFaceCulling();
             IObtuseAngleTester obtuseAngleTester = new ObtuseAngleTester();
             IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(intersectionCalculator, obtuseAngleTester, positionDistanceTester);
-            IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester);
+            IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester, obtuseAngleTester);
             RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
             ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, 
                 surfaceRectangleBuilder.CreateRectangle(0.2, 0, 0.6f, 0.6f, z:0), playerViewDirectionProvider, worldRotator);

@@ -30,11 +30,14 @@ namespace Math
                     rayStartPosition[1] - face.Triangles[0].Corner1[1],
                     rayStartPosition[2] - face.Triangles[0].Corner1[2]
                 };
-                if (!_obtuseAngleTester.AngleIsObtuse(face.Normal, vector))
+                if (!_obtuseAngleTester.AngleIsOver90Degree(face.Normal, vector))
                 {
                     for(int i = 0; i<face.Triangles.Length; i++)
                     {
-                        Position position = _intersectionCalculator.RayHitsTriangle(rayStartPosition, rayDirection, face.Triangles[i].Corner1, face.Triangles[i].Corner2, face.Triangles[i].Corner3);
+                        Position position = _intersectionCalculator.RayHitsTriangle(rayStartPosition, rayDirection, 
+                            face.Triangles[i].Corner2,
+                            face.Triangles[i].Corner1,
+                            face.Triangles[i].Corner3);
 
                         if (position != null)
                         {

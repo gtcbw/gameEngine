@@ -9,12 +9,15 @@ namespace Engine.Framework
     {
         private IRayWithFacesTester _rayWithFacesTester;
         private readonly IPositionDistanceTester _positionDistanceTester;
+        private readonly IObtuseAngleTester _obtuseAngleTester;
 
         public RayWithModelsTester(IRayWithFacesTester rayWithFacesTester,
-            IPositionDistanceTester positionDistanceTester)
+            IPositionDistanceTester positionDistanceTester,
+            IObtuseAngleTester obtuseAngleTester)
         {
             _rayWithFacesTester = rayWithFacesTester;
             _positionDistanceTester = positionDistanceTester;
+            _obtuseAngleTester = obtuseAngleTester;
         }
 
         Position IRayWithModelsTester.TestRayWithModels(IEnumerable<ComplexShapeInstance> models, Ray ray, double maxDistance)
@@ -30,18 +33,31 @@ namespace Engine.Framework
                 if (squareDistance > maxSquareDistance)
                     continue;
 
+                double[] rayDirection = new double[]
+                {
+                    ray.Direction.X,
+                    ray.Direction.Y,
+                    ray.Direction.Z
+                };
+
+                if (squareDistance > instance.ComplexShape.RadiusXZ * instance.ComplexShape.RadiusXZ)
+                {
+                    double[] rayToModelCenter = new double[]
+                   {
+                        instance.Position.X - ray.StartPosition.X,
+                        instance.Position.Y - ray.StartPosition.Y,
+                        instance.Position.Z - ray.StartPosition.Z
+                   };
+
+                    if (_obtuseAngleTester.AngleIsOver90Degree(rayDirection, rayToModelCenter))
+                        continue;
+                }
 
                 double[] rayStartPosition = new double[] 
                 {
                     ray.StartPosition.X - instance.Position.X,
                     ray.StartPosition.Y - instance.Position.Y,
                     ray.StartPosition.Z - instance.Position.Z
-                };
-                double[] rayDirection = new double[] 
-                {
-                    ray.Direction.X,
-                    ray.Direction.Y,
-                    ray.Direction.Z
                 };
 
                 Position position = _rayWithFacesTester.SearchCollision(rayStartPosition, rayDirection, instance.ComplexShape.Faces);

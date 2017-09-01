@@ -3,8 +3,6 @@ using Graphics.Contracts;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using World.Model;
-using System;
 
 namespace Engine.Framework
 {
@@ -25,10 +23,9 @@ namespace Engine.Framework
 
         Model IModelRepository.Load(ModelInstanceDescription modelInstance)
         {
-            Model model = new Model { RenderUnits = new List<ModelRenderUnit>(), FileName = modelInstance.Filename, CollisionModel = new ComplexShape() };
+            Model model = new Model { RenderUnits = new List<ModelRenderUnit>(), FileName = modelInstance.Filename };
 
             EditorModel editorModel = JsonConvert.DeserializeObject<EditorModel>(File.ReadAllText($"{_folder}\\{modelInstance.Filename}"));
-            List<Face> faces = new List<Face>();
 
             foreach(Submodel submodel in editorModel.Submodels)
             {
@@ -37,12 +34,10 @@ namespace Engine.Framework
                 unit.VertexBufferUnit = ConvertSubmodelToBufferUnit(submodel);
 
                 model.RenderUnits.Add(unit);
-
-                AddFaces(submodel.Polygons, faces);
             }
 
             model.Position = modelInstance.Position;
-            model.CollisionModel.Faces = faces.ToArray();
+            model.CollisionModel = editorModel.CollisionModel;
 
             return model;
         }
@@ -56,57 +51,6 @@ namespace Engine.Framework
                 _bufferObjectFactory.Delete(submodel.VertexBufferUnit.VertexBufferId);
                 _bufferObjectFactory.Delete(submodel.VertexBufferUnit.TextureBufferId.Value);
             }
-        }
-
-        private void AddFaces(List<Polygon> polygons, List<Face> faces)
-        {
-            Normal lastNormal = null;
-
-            Face lastFace = null;
-
-            List<Triangle> triangles = new List<Triangle>();
-
-            foreach (Polygon polygon in polygons)
-            {
-                Triangle triangle = BuildTriangle(polygon.Vertices);
-                if (lastNormal != null && lastNormal.X == polygon.Normal.X && lastNormal.Y == polygon.Normal.Y && lastNormal.Z == polygon.Normal.Z)
-                {
-                    triangles.Add(triangle);
-                }
-                else
-                {
-                    if (lastFace != null)
-                    {
-                        lastFace.Triangles = triangles.ToArray();
-                        faces.Add(lastFace);
-                    }
-                    triangles.Clear();
-                    triangles.Add(triangle);
-                    lastNormal = polygon.Normal;
-                    lastFace = new Face { Normal = new double[] { lastNormal.X, lastNormal.Y, lastNormal.Z } };
-                }
-            }
-
-            lastFace.Triangles = triangles.ToArray();
-            faces.Add(lastFace);
-        }
-
-        private Triangle BuildTriangle(IEnumerable<Vertex> vertices)
-        {
-            Triangle triangle = new Triangle();
-            int corner = 1;
-            foreach(Vertex vertex in vertices)
-            {
-                if (corner == 1)
-                    triangle.Corner1 = new double[] { vertex.Position.X, vertex.Position.Y, vertex.Position.Z };
-                if (corner == 2)
-                    triangle.Corner2 = new double[] { vertex.Position.X, vertex.Position.Y, vertex.Position.Z };
-                if (corner == 3)
-                    triangle.Corner3 = new double[] { vertex.Position.X, vertex.Position.Y, vertex.Position.Z };
-
-                corner++;
-            }
-            return triangle;
         }
 
         private VertexBufferUnit ConvertSubmodelToBufferUnit(Submodel submodel)
