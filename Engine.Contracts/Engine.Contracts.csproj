@@ -45,6 +45,7 @@
     <Compile Include="IGameTimeProvider.cs" />
     <Compile Include="IParticleContainer.cs" />
     <Compile Include="Material.cs" />
+    <Compile Include="Models\ICuboidWithModelsTester.cs" />
     <Compile Include="Models\IModelContainer.cs" />
     <Compile Include="Models\IComplexShapeProvider.cs" />
     <Compile Include="Models\IFieldModelLoader.cs" />

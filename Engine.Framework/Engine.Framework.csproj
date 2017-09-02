@@ -47,6 +47,8 @@
     <Compile Include="BitmapToHeightConverter.cs" />
     <Compile Include="AlphaTestRenderer.cs" />
     <Compile Include="ColorRenderer.cs" />
+    <Compile Include="CuboidWithModelsTester.cs" />
+    <Compile Include="CuboidWithWorldTester.cs" />
     <Compile Include="FieldModelLoader.cs" />
     <Compile Include="FontMapper.cs" />
     <Compile Include="FontRenderer.cs" />
