@@ -139,7 +139,7 @@ namespace Game
             IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester, obtuseAngleTester);
             RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
             ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, 
-                surfaceRectangleBuilder.CreateRectangle(0.2, 0, 0.6f, 0.6f, z:0), playerViewDirectionProvider, worldRotator);
+                surfaceRectangleBuilder.CreateRectangle(0.2, 0.5, 0.6f, 0.6f, z:0), playerViewDirectionProvider, worldRotator);
             RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerPositionProvider, mouseButtonEventProvider, particleContainer);
             //
 
@@ -153,6 +153,7 @@ namespace Game
             IEnumerable<Polygon> crossShape = surfaceRectangleBuilder.CreateRectangle(0.45, 0.45, 0.1f, 0.1f);
             IRenderingElement layerAlphaRenderer = new AlphaTestRenderer(new TextureRenderer(new PolygonListRenderer(crossShape, polygonRenderer), cross, textureChanger), new AlphaTester());
 
+            ScreenshotMaker screenshotMaker = new ScreenshotMaker("C:\\screenshots\\", 60, 0.05, config.Resolution.X, config.Resolution.Y, pressedKeyDetector, timeProvider);
             return () =>
             {
                 while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
@@ -191,6 +192,9 @@ namespace Game
                     //rendering final 2D layer
                     camera.SetDefaultPerspective();
                     layerAlphaRenderer.Render();
+
+                    // screenshot
+                    screenshotMaker.ExecuteLogic();
 
                     ((IBufferSwapper)window).SwapBuffers();
                 }

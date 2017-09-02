@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveFieldCalculator.cs" />
+    <Compile Include="CuboidCollisionTester.cs" />
     <Compile Include="HeightCalculator.cs" />
     <Compile Include="IntersectionCalculatorWithoutFaceCulling.cs" />
     <Compile Include="IntersectionCalculatorWithFaceCulling.cs" />
