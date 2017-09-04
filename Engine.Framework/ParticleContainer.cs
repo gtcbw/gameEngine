@@ -15,8 +15,6 @@ namespace Engine.Framework
         {
             public Position Position { set; get; }
 
-            public Material Material { set; get; }
-
             public double StartTime { set; get; }
         }
 
@@ -49,9 +47,9 @@ namespace Engine.Framework
             _worldRotator = worldRotator;
         }
 
-        void IParticleContainer.AddParticleExplosion(Position position, Material material)
+        void IParticleContainer.AddParticleExplosion(Position position)
         {
-            _particles.Add(new ParticleDefinition { Position = position, Material = material, StartTime = _gameTimeProvider.GetTotalTime() });
+            _particles.Add(new ParticleDefinition { Position = position, StartTime = _gameTimeProvider.GetTotalTime() });
         }
 
         void IRenderingElement.Render()

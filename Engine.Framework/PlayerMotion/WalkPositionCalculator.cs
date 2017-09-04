@@ -1,63 +1,42 @@
 ﻿using Engine.Contracts;
 using Engine.Contracts.Input;
+using Engine.Contracts.PlayerMotion;
 using Math.Contracts;
 using World.Model;
 
-namespace Engine.Framework
+namespace Engine.Framework.PlayerMotion
 {
-    public sealed class PlayerPositionProvider : IPlayerPositionProvider, IPlayerViewRayProvider
+    public sealed class WalkPositionCalculator : IWalkPositionCalculator
     {
         private readonly IPressedKeyDetector _pressedKeyDetector;
         private readonly IHeightCalculator _heightCalculator;
         private readonly IFrameTimeProvider _frameTimeProvider;
-        private readonly IPlayerViewDirectionProvider _playerViewDirectionProvider;
         private readonly IVectorHelper _vectorHelper;
         private readonly IKeyMapper _keyMapper;
-        private readonly double _height = 1.8;
         private readonly double _metersPerSecond;
 
-        private Position _position;
-        private Ray _ray = new Ray();
-
-        public PlayerPositionProvider(IPressedKeyDetector pressedKeyDetector,
-            IHeightCalculator heightCalculator, 
+        public WalkPositionCalculator(IHeightCalculator heightCalculator,
             IFrameTimeProvider frameTimeProvider,
-            IPlayerViewDirectionProvider playerViewDirectionProvider,
             IVectorHelper vectorHelper,
             IKeyMapper keyMapper,
-            double metersPerSecond,
-            double startX,
-            double startZ)
+            double metersPerSecond)
         {
-            _pressedKeyDetector = pressedKeyDetector;
             _frameTimeProvider = frameTimeProvider;
             _heightCalculator = heightCalculator;
-            _playerViewDirectionProvider = playerViewDirectionProvider;
             _vectorHelper = vectorHelper;
             _keyMapper = keyMapper;
             _metersPerSecond = metersPerSecond;
-            _position = new Position { X = startX, Z = startZ };
         }
 
-        public void UpdatePosition()
+        Position IWalkPositionCalculator.CalculateNextPosition(Position currentPosition, Vector2D viewVectorXZ)
         {
-            ViewDirection direction = _playerViewDirectionProvider.GetViewDirection();
+            Position position = new Position { X = currentPosition.X, Y = currentPosition.Y, Z = currentPosition.Z };
 
-            Vector2D vectorXZ = _vectorHelper.ConvertDegreeToVector(direction.DegreeXZ);
-            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(direction.DegreeY);
+            MovePosition(position, viewVectorXZ);
 
-            _ray.Direction = new Vector
-            {
-                X = vectorXZ.X * vectorY.X,
-                Z = vectorXZ.Z * vectorY.X,
-                Y = vectorY.Z
-            };
+            position.Y = _heightCalculator.CalculateHeight(position.X, position.Z);
 
-            MovePosition(_position, vectorXZ);
-
-            _position.Y = _heightCalculator.CalculateHeight(_position.X, _position.Z);
-
-            _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
+            return position;
         }
 
         private void MovePosition(Position position, Vector2D viewDirection)
@@ -65,7 +44,7 @@ namespace Engine.Framework
             MovementInstruction instruction = _keyMapper.GetMappedKeys();
 
             Vector2D forwardMovement = null;
-            Vector2D sidewardMovement = null;          
+            Vector2D sidewardMovement = null;
 
             if (instruction.WalkForward)
             {
@@ -109,16 +88,6 @@ namespace Engine.Framework
 
             position.X += movementVector.X * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * _metersPerSecond;
             position.Z += movementVector.Z * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * _metersPerSecond;
-        }
-
-        Position IPlayerPositionProvider.GetPlayerPosition()
-        {
-            return _position;
-        }
-
-        Ray IPlayerViewRayProvider.GetPlayerViewRay()
-        {
-            return _ray;
         }
     }
 }

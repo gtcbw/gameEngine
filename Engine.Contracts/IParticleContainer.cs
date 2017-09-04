@@ -4,6 +4,6 @@ namespace Engine.Contracts
 {
     public interface IParticleContainer
     {
-        void AddParticleExplosion(Position position, Material material);
+        void AddParticleExplosion(Position position);
     }
 }

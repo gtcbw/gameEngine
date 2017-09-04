@@ -1,10 +1,5 @@
 ﻿using Engine.Contracts;
 using Engine.Contracts.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using World.Model;
 
 namespace Engine.Framework
@@ -36,7 +31,7 @@ namespace Engine.Framework
 
             if (position != null)
             {
-                _particleContainer.AddParticleExplosion(position, Material.Standard);
+                _particleContainer.AddParticleExplosion(position);
             }
         }
     }

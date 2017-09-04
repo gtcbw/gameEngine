@@ -27,9 +27,9 @@ namespace Engine.Framework
 
             double timeInSeconds = (double)(ticks / Stopwatch.Frequency);
 
-            if (timeInSeconds < 0.006)
+            if (timeInSeconds < 0.004)
             {
-                int sleepTime = 6 - (int)(timeInSeconds * 1000);
+                int sleepTime = 4 - (int)(timeInSeconds * 1000);
 
                 _stopwatch.Restart();
                 Thread.Sleep(sleepTime);

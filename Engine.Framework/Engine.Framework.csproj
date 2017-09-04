@@ -61,7 +61,8 @@
     <Compile Include="ModelRepository.cs" />
     <Compile Include="ParticleContainer.cs" />
     <Compile Include="PlantGridReader.cs" />
-    <Compile Include="PlayerPositionProvider.cs" />
+    <Compile Include="PlayerMotion\PlayerMotionManager.cs" />
+    <Compile Include="PlayerMotion\WalkPositionCalculator.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />
     <Compile Include="PolygonListRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="SurfaceRectangleBuilder.cs" />
     <Compile Include="TextureCache.cs" />
     <Compile Include="TextureRenderer.cs" />
+    <Compile Include="VehicleProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine.Contracts\Engine.Contracts.csproj">

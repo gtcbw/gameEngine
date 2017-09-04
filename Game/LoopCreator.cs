@@ -13,6 +13,7 @@ using Math;
 using Math.Contracts;
 using System.Linq;
 using Engine.Contracts.Models;
+using Engine.Framework.PlayerMotion;
 
 namespace Game
 {
@@ -47,32 +48,32 @@ namespace Game
             int numberOfFieldsPerAreaSide = 3;
             int lengthOfFieldSide = 100;
 
-            IHeightCalculator heightCalculator = new HeightCalculator(heightValues, numberOfQuadsPerSideOfArea, metersPerQuad);
-
-            PlayerPositionProvider playerPositionProvider = new PlayerPositionProvider(pressedKeyDetector, 
-                heightCalculator, 
-                timeProvider, 
-                playerViewDirectionProvider,
-                vectorHelper,
-                new KeyMapper(pressedKeyDetector),
-                25,
-                100.3,
-                100.3);
-
-            ICamera camera = new Camera(config.Resolution.AspectRatio, playerPositionProvider);
-
-            // environment rendring
-            ITexture horizontexture = textureCache.LoadTexture("horizon.bmp");
-            IEnumerable<Polygon> polygons = surfaceRectangleBuilder.CreateRectangle(-1, 0, 4, 1);
             IPolygonRenderer polygonRenderer = new PolygonRenderer();
             ITextureTranslator textureTranslator = new TextureTranslator();
             IWorldTranslator worldTranslator = new WorldTranslator();
             IWorldRotator worldRotator = new WorldRotator();
+            IHeightCalculator heightCalculator = new HeightCalculator(heightValues, numberOfQuadsPerSideOfArea, metersPerQuad);
+            IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
+            IModelRepository modelLoader = new ModelRepository("models", textureCache, bufferObjectFactory);
+            IVertexBufferUnitRenderer bufferedMeshUnitRenderer = new VertexBufferUnitRenderer();
+            ModelContainer modelContainer = new ModelContainer(modelLoader, textureChanger, bufferedMeshUnitRenderer, worldTranslator);
+            ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester()), modelContainer);
+            PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerViewDirectionProvider,
+                vectorHelper,
+                new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, new KeyMapper(pressedKeyDetector), 3),
+                cuboidWithWorldTester,
+                100,
+                100);
+
+            ICamera camera = new Camera(config.Resolution.AspectRatio, playerMotionManager);
+
+            // environment rendring
+            ITexture horizontexture = textureCache.LoadTexture("horizon.bmp");
+            IEnumerable<Polygon> polygons = surfaceRectangleBuilder.CreateRectangle(-1, 0, 4, 1);
+            
             IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerViewDirectionProvider, textureTranslator, worldTranslator);
             IColorSetter colorSetter = new ColorSetter();
 
-            IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
-            IVertexBufferUnitRenderer bufferedMeshUnitRenderer = new VertexBufferUnitRenderer();
             IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IMeshUnitCollection streetCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IMeshUnitCollection treeCollection = new MeshUnitCollection
@@ -103,14 +104,12 @@ namespace Game
                 treeCollection), 12);
 
             //model
-            IModelRepository modelLoader = new ModelRepository("models", textureCache, bufferObjectFactory);
-            ModelContainer modelContainer = new ModelContainer(modelLoader, textureChanger, bufferedMeshUnitRenderer, worldTranslator);
             ModelQueue modelQueue = new ModelQueue(modelLoader, modelContainer);
             IFieldModelLoader fieldModelLoader = new FieldModelLoader(heightCalculator);
             IFieldChangeObserver modelQueuePusher = new FrameDelayUnitByFieldLoader(new ModelQueuePusher(fieldModelLoader, modelQueue), 18);
 
 
-            FieldManager fieldManager = new FieldManager(playerPositionProvider,
+            FieldManager fieldManager = new FieldManager(playerMotionManager,
                 new List<IFieldChangeObserver> { floorLoader, streetLoader, treeLoader, modelQueuePusher },
                 new FieldChangeAnalyzer(),
                 new ActiveFieldCalculator(lengthOfFieldSide, numberOfFieldsPerAreaSide));
@@ -140,7 +139,7 @@ namespace Game
             RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
             ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, 
                 surfaceRectangleBuilder.CreateRectangle(0.2, 0.5, 0.6f, 0.6f, z:0), playerViewDirectionProvider, worldRotator);
-            RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerPositionProvider, mouseButtonEventProvider, particleContainer);
+            RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerMotionManager, mouseButtonEventProvider, particleContainer);
             //
 
             IFontMapper fontMapper = new FontMapper(textureCache, "font");
@@ -162,7 +161,7 @@ namespace Game
 
                     timeProvider.MeasureTimeSinceLastFrame();
                     mousePositionController.MeasureMousePositionDelta();
-                    playerPositionProvider.UpdatePosition();
+                    playerMotionManager.CalculatePlayerMotion();
                     fieldManager.UpdateFieldsByPlayerPosition();
 
                     //rendering 2D

@@ -3,7 +3,7 @@ using World.Model;
 
 namespace Engine.Framework
 {
-    public sealed class CuboidWithWorldTester
+    public sealed class CuboidWithWorldTester : ICuboidWithWorldTester
     {
         private readonly ICuboidWithModelsTester _cuboidWithModelsTester;
         private readonly IComplexShapeProvider _complexShapeProvider;
@@ -15,8 +15,9 @@ namespace Engine.Framework
             _complexShapeProvider = complexShapeProvider;
         }
 
-        public bool CuboidCollidesWithWorld(Cuboid cuboid, Position position)
+        bool ICuboidWithWorldTester.ElementCollidesWithWorld(Position position, double sideLength, double height)
         {
+            Cuboid cuboid = new Cuboid { Center = new Position(), SideLengthX = sideLength, SideLengthZ = sideLength, SideLengthY = height };
             return _cuboidWithModelsTester.CuboidCollides(_complexShapeProvider.GetComplexShapes(), cuboid, position);
         }
     }
