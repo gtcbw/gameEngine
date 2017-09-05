@@ -43,6 +43,7 @@
     <Compile Include="IFontMapper.cs" />
     <Compile Include="IFontRenderer.cs" />
     <Compile Include="IGameTimeProvider.cs" />
+    <Compile Include="Input\IPressedKeyEncapsulator.cs" />
     <Compile Include="IParticleContainer.cs" />
     <Compile Include="IVehicleProvider.cs" />
     <Compile Include="Models\ICuboidWithModelsTester.cs" />
@@ -81,7 +82,9 @@
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\ModelRenderUnit.cs" />
     <Compile Include="Models\Submodel.cs" />
+    <Compile Include="PlayerMotion\IVehicleMotionCalculator.cs" />
     <Compile Include="PlayerMotion\IWalkPositionCalculator.cs" />
+    <Compile Include="PlayerMotion\VehicleMotion.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="ViewDirection.cs" />
     <Compile Include="IRenderingElement.cs" />

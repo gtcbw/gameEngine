@@ -62,9 +62,11 @@
     <Compile Include="ParticleContainer.cs" />
     <Compile Include="PlantGridReader.cs" />
     <Compile Include="PlayerMotion\PlayerMotionManager.cs" />
+    <Compile Include="PlayerMotion\VehicleMotionCalculator.cs" />
     <Compile Include="PlayerMotion\WalkPositionCalculator.cs" />
     <Compile Include="PlayerViewDirectionProvider.cs" />
     <Compile Include="PolygonListRenderer.cs" />
+    <Compile Include="PressedKeyEncapsulator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RayTrigger.cs" />
     <Compile Include="RayWithModelsTester.cs" />

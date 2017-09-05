@@ -62,6 +62,8 @@ namespace Game
                 vectorHelper,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, new KeyMapper(pressedKeyDetector), 3),
                 cuboidWithWorldTester,
+                new PressedKeyEncapsulator(Keys.Enter, pressedKeyDetector),
+                new VehicleMotionCalculator(),
                 100,
                 100);
 
