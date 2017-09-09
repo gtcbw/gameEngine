@@ -12,7 +12,7 @@ using World.Model;
 
 namespace Engine.Framework.PlayerMotion
 {
-    public sealed class PlayerMotionManager : IPlayerPositionProvider, IPlayerViewRayProvider
+    public sealed class PlayerMotionManager : IPlayerPositionProvider, IPlayerViewRayProvider, IPlayerViewDirectionProvider
     {
         private enum MotionModus
         {
@@ -20,25 +20,26 @@ namespace Engine.Framework.PlayerMotion
             Drive = 1
         }
 
-        private IPlayerViewDirectionProvider _playerViewDirectionProvider;
         private IVectorHelper _vectorHelper;
         private readonly IWalkPositionCalculator _walkPositionCalculator;
         private readonly ICuboidWithWorldTester _cuboidWithWorldTester;
         private readonly IPressedKeyEncapsulator _enteredVehicleKey;
         private readonly IVehicleMotionCalculator _vehicleMotionCalculator;
+        private readonly IMousePositionController _mousePositionController;
         private Position _position;
         private Ray _ray = new Ray();
+        ViewDirection _direction;
         private double _height = 1.8;
         private double _playerSideLength = 0.6;
         private MotionModus _motionModus;
         private VehicleMotion _lastVehicleMotion;
 
-        public PlayerMotionManager(IPlayerViewDirectionProvider playerViewDirectionProvider,
-            IVectorHelper vectorHelper,
+        public PlayerMotionManager(IVectorHelper vectorHelper,
             IWalkPositionCalculator walkPositionCalculator,
             ICuboidWithWorldTester cuboidWithWorldTester,
             IPressedKeyEncapsulator enteredVehicleKey,
             IVehicleMotionCalculator vehicleMotionCalculator,
+            IMousePositionController mousePositionController,
             double startX,
             double startZ)
         {
@@ -47,7 +48,7 @@ namespace Engine.Framework.PlayerMotion
             _cuboidWithWorldTester = cuboidWithWorldTester;
             _enteredVehicleKey = enteredVehicleKey;
             _vehicleMotionCalculator = vehicleMotionCalculator;
-            _playerViewDirectionProvider = playerViewDirectionProvider;
+            _mousePositionController = mousePositionController;
             _position = new Position { X = startX, Z = startZ };
         }
 
@@ -84,9 +85,9 @@ namespace Engine.Framework.PlayerMotion
 
         private void CalculateWalkPosition()
         {
-            ViewDirection direction = _playerViewDirectionProvider.GetViewDirection();
-            Vector2D vectorXZ = _vectorHelper.ConvertDegreeToVector(direction.DegreeXZ);
-            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(direction.DegreeY);
+            CalculateViewDirection();
+            Vector2D vectorXZ = _vectorHelper.ConvertDegreeToVector(_direction.DegreeXZ);
+            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(_direction.DegreeY);
 
             Position position = _walkPositionCalculator.CalculateNextPosition(_position, vectorXZ);
 
@@ -102,6 +103,31 @@ namespace Engine.Framework.PlayerMotion
                 Y = vectorY.Z
             };
             _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
+        }
+
+        private double _viewDegreeXZ;
+        private double _viewDegreeY;
+        private double _maxDegreeY = 70;
+
+        private void CalculateViewDirection()
+        {
+            MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
+
+           _viewDegreeXZ += mousePositionDelta.PositionDeltaX;
+
+           _viewDegreeY += mousePositionDelta.PositionDeltaY;
+
+            if (_viewDegreeXZ > 360.0)
+                _viewDegreeXZ -= 360.0;
+            else if (_viewDegreeXZ < 0.0)
+                _viewDegreeXZ += 360.0;
+
+            if (_viewDegreeY > _maxDegreeY)
+                _viewDegreeY = _maxDegreeY;
+            else if (_viewDegreeY < -_maxDegreeY)
+                _viewDegreeY = -_maxDegreeY;
+
+            _direction = new ViewDirection { DegreeXZ = _viewDegreeXZ, DegreeY = _viewDegreeY };
         }
 
         private void CalculateDrivePosition()
@@ -127,6 +153,11 @@ namespace Engine.Framework.PlayerMotion
                 Y = vectorY.Z
             };
             _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
+        }
+
+        ViewDirection IPlayerViewDirectionProvider.GetViewDirection()
+        {
+            return _direction;
         }
     }
 }

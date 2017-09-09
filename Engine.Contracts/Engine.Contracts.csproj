@@ -65,7 +65,6 @@
     <Compile Include="Input\IKeyMapper.cs" />
     <Compile Include="Input\IMouseButtonEventProvider.cs" />
     <Compile Include="Input\IMousePositionController.cs" />
-    <Compile Include="Input\IMousePositionDeltaObserver.cs" />
     <Compile Include="Input\MovementInstruction.cs" />
     <Compile Include="IPlayerPositionProvider.cs" />
     <Compile Include="IPlayerViewDirectionProvider.cs" />

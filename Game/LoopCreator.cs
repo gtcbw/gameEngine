@@ -24,8 +24,7 @@ namespace Game
             Window window = new Window(config.Resolution.X, config.Resolution.Y);
             window.VSync =  OpenTK.VSyncMode.Off;
 
-            PlayerViewDirectionProvider playerViewDirectionProvider = new PlayerViewDirectionProvider(config.InvertMouse, config.MouseSensitivity, 80.0);
-            IMousePositionController mousePositionController = new MousePositionController(window.Mouse, playerViewDirectionProvider);
+            IMousePositionController mousePositionController = new MousePositionController(window.Mouse, config.InvertMouse, config.MouseSensitivity);
             IMouseButtonEventProvider mouseButtonEventProvider = new MouseButtonEventProvider(window.Mouse);
             IPressedKeyDetector pressedKeyDetector = new PressedKeyDetector(window.Keyboard);
             FrameTimeProvider timeProvider = new FrameTimeProvider();
@@ -58,12 +57,13 @@ namespace Game
             IVertexBufferUnitRenderer bufferedMeshUnitRenderer = new VertexBufferUnitRenderer();
             ModelContainer modelContainer = new ModelContainer(modelLoader, textureChanger, bufferedMeshUnitRenderer, worldTranslator);
             ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester()), modelContainer);
-            PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerViewDirectionProvider,
+            PlayerMotionManager playerMotionManager = new PlayerMotionManager(
                 vectorHelper,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, new KeyMapper(pressedKeyDetector), 3),
                 cuboidWithWorldTester,
                 new PressedKeyEncapsulator(Keys.Enter, pressedKeyDetector),
                 new VehicleMotionCalculator(),
+                mousePositionController,
                 100,
                 100);
 
@@ -73,13 +73,13 @@ namespace Game
             ITexture horizontexture = textureCache.LoadTexture("horizon.bmp");
             IEnumerable<Polygon> polygons = surfaceRectangleBuilder.CreateRectangle(-1, 0, 4, 1);
             
-            IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerViewDirectionProvider, textureTranslator, worldTranslator);
+            IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerMotionManager, textureTranslator, worldTranslator);
             IColorSetter colorSetter = new ColorSetter();
 
             IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IMeshUnitCollection streetCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IMeshUnitCollection treeCollection = new MeshUnitCollection
-                (new VertexBufferUnitOffsetRenderer(8, new IndexFactorByViewDirectionProvider(playerViewDirectionProvider)));
+                (new VertexBufferUnitOffsetRenderer(8, new IndexFactorByViewDirectionProvider(playerMotionManager)));
 
             IVertexByFieldCreator floorVertexCreator = new FloorVertexCreator(heightCalculator, lengthOfFieldSide / metersPerQuad, metersPerQuad);
             IMeshUnitCreator floorMeshUnitCreator = new FloorMeshUnitCreator(bufferObjectFactory, lengthOfFieldSide / metersPerQuad);
@@ -140,7 +140,7 @@ namespace Game
             IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester, obtuseAngleTester);
             RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
             ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, 
-                surfaceRectangleBuilder.CreateRectangle(0.2, 0.5, 0.6f, 0.6f, z:0), playerViewDirectionProvider, worldRotator);
+                surfaceRectangleBuilder.CreateRectangle(0.2, 0.5, 0.6f, 0.6f, z:0), playerMotionManager, worldRotator);
             RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerMotionManager, mouseButtonEventProvider, particleContainer);
             //
 
@@ -162,7 +162,6 @@ namespace Game
                     screenClearer.CleanScreen();
 
                     timeProvider.MeasureTimeSinceLastFrame();
-                    mousePositionController.MeasureMousePositionDelta();
                     playerMotionManager.CalculatePlayerMotion();
                     fieldManager.UpdateFieldsByPlayerPosition();
 
