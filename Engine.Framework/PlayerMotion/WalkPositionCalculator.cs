@@ -8,7 +8,6 @@ namespace Engine.Framework.PlayerMotion
 {
     public sealed class WalkPositionCalculator : IWalkPositionCalculator
     {
-        private readonly IPressedKeyDetector _pressedKeyDetector;
         private readonly IHeightCalculator _heightCalculator;
         private readonly IFrameTimeProvider _frameTimeProvider;
         private readonly IVectorHelper _vectorHelper;
@@ -30,7 +29,7 @@ namespace Engine.Framework.PlayerMotion
 
         Position IWalkPositionCalculator.CalculateNextPosition(Position currentPosition, Vector2D viewVectorXZ)
         {
-            Position position = new Position { X = currentPosition.X, Y = currentPosition.Y, Z = currentPosition.Z };
+            Position position = new Position { X = currentPosition.X, Z = currentPosition.Z };
 
             MovePosition(position, viewVectorXZ);
 

@@ -26,6 +26,9 @@ namespace Engine.Framework.PlayerMotion
         private readonly IPressedKeyEncapsulator _enteredVehicleKey;
         private readonly IVehicleMotionCalculator _vehicleMotionCalculator;
         private readonly IMousePositionController _mousePositionController;
+        private readonly IKeyMapper _keyMapper;
+        private readonly IHeightCalculator _heightCalculator;
+        private readonly IFrameTimeProvider _frameTimeProvider;
         private Position _position;
         private Ray _ray = new Ray();
         ViewDirection _direction;
@@ -40,6 +43,9 @@ namespace Engine.Framework.PlayerMotion
             IPressedKeyEncapsulator enteredVehicleKey,
             IVehicleMotionCalculator vehicleMotionCalculator,
             IMousePositionController mousePositionController,
+            IKeyMapper keyMapper,
+            IHeightCalculator heightCalculator,
+            IFrameTimeProvider frameTimeProvider,
             double startX,
             double startZ)
         {
@@ -49,6 +55,9 @@ namespace Engine.Framework.PlayerMotion
             _enteredVehicleKey = enteredVehicleKey;
             _vehicleMotionCalculator = vehicleMotionCalculator;
             _mousePositionController = mousePositionController;
+            _keyMapper = keyMapper;
+            _heightCalculator = heightCalculator;
+            _frameTimeProvider = frameTimeProvider;
             _position = new Position { X = startX, Z = startZ };
         }
 
@@ -60,6 +69,11 @@ namespace Engine.Framework.PlayerMotion
         Ray IPlayerViewRayProvider.GetPlayerViewRay()
         {
             return _ray;
+        }
+
+        ViewDirection IPlayerViewDirectionProvider.GetViewDirection()
+        {
+            return _direction;
         }
 
         public void CalculatePlayerMotion()
@@ -85,7 +99,7 @@ namespace Engine.Framework.PlayerMotion
 
         private void CalculateWalkPosition()
         {
-            CalculateViewDirection();
+            CalculateWalkViewDirection();
             Vector2D vectorXZ = _vectorHelper.ConvertDegreeToVector(_direction.DegreeXZ);
             Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(_direction.DegreeY);
 
@@ -108,8 +122,7 @@ namespace Engine.Framework.PlayerMotion
         private double _viewDegreeXZ;
         private double _viewDegreeY;
         private double _maxDegreeY = 70;
-
-        private void CalculateViewDirection()
+        private void CalculateWalkViewDirection()
         {
             MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
 
@@ -130,34 +143,96 @@ namespace Engine.Framework.PlayerMotion
             _direction = new ViewDirection { DegreeXZ = _viewDegreeXZ, DegreeY = _viewDegreeY };
         }
 
+        private double _relativeDriveDegreeXZ;
+        private double _driveDegreeY;
+        private double _driveMainDegreeXZ;
+        private double _steeringWheelAngle;
+        private double _drivingSpeed;
+        private double _accelerationPerSecond = 15;
+        private double _maxSpeed = 60;
+        private void CalculateDriveViewDirection()
+        {
+            MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
+
+            _relativeDriveDegreeXZ += mousePositionDelta.PositionDeltaX;
+
+            _driveDegreeY += mousePositionDelta.PositionDeltaY;
+
+            if (_relativeDriveDegreeXZ > 90.0)
+                _relativeDriveDegreeXZ = 90.0;
+            else if (_relativeDriveDegreeXZ < -90.0)
+                _relativeDriveDegreeXZ = -90.0;
+
+            if (_driveDegreeY > _maxDegreeY)
+                _driveDegreeY = _maxDegreeY;
+            else if (_driveDegreeY < 0)
+                _driveDegreeY = 0;
+
+            _direction = new ViewDirection { DegreeXZ = _driveMainDegreeXZ + _relativeDriveDegreeXZ, DegreeY = _driveDegreeY };
+        }
+
         private void CalculateDrivePosition()
         {
-            if (_lastVehicleMotion == null)
+            var keys = _keyMapper.GetMappedKeys();
+
+            if (keys.StrafeLeft)
             {
-                _lastVehicleMotion = new VehicleMotion { Position = _position, Speed = 0.0, SteeringWheelAngle = 0.0, MainDegreeXZ = 0.0 };
+                _steeringWheelAngle -= 15 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+                if (_steeringWheelAngle < -25)
+                    _steeringWheelAngle = -25;
+            }
+            else if(keys.StrafeRight)
+            {
+                _steeringWheelAngle += 15 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+                if (_steeringWheelAngle > 25)
+                    _steeringWheelAngle = 25;
             }
 
-            _lastVehicleMotion = _vehicleMotionCalculator.CalculateNextVehicleMotion(_lastVehicleMotion);
-
-            if (!_cuboidWithWorldTester.ElementCollidesWithWorld(_lastVehicleMotion.Position, 1.2, _height))
+            if (keys.WalkForward)
             {
-                _position = _lastVehicleMotion.Position;
+                _drivingSpeed += _accelerationPerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+                if (_drivingSpeed > _maxSpeed)
+                    _drivingSpeed = _maxSpeed;
             }
-            Vector2D vectorXZ = _vectorHelper.ConvertDegreeToVector(_lastVehicleMotion.MainDegreeXZ);
-            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(0.0);
+            else if (keys.WalkBackward)
+            {
+                _drivingSpeed -= _accelerationPerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+                if (_drivingSpeed < -_maxSpeed / 2.0)
+                    _drivingSpeed = -_maxSpeed / 2.0;
+            }
+
+            _driveMainDegreeXZ += _steeringWheelAngle * _drivingSpeed / 10.0 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+
+            CalculateDriveViewDirection();
+
+            //if (_lastVehicleMotion == null)
+            //{
+            //    _lastVehicleMotion = new VehicleMotion { Position = _position, Speed = 0.0, SteeringWheelAngle = 0.0, MainDegreeXZ = 0.0 };
+            //}
+
+            //_lastVehicleMotion = _vehicleMotionCalculator.CalculateNextVehicleMotion(_lastVehicleMotion);
+            Vector2D movementVector = _vectorHelper.ConvertDegreeToVector(_driveMainDegreeXZ);
+            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(_direction.DegreeY);
+
+            Position position = new Position { X = _position.X, Z = _position.Z };
+            position.X += movementVector.X * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * _drivingSpeed;
+            position.Z += movementVector.Z * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * _drivingSpeed;
+            position.Y = _heightCalculator.CalculateHeight(position.X, position.Z);
+
+            if (!_cuboidWithWorldTester.ElementCollidesWithWorld(position, _playerSideLength, _height))
+            {
+                _position = position;
+            }
+
+            Vector2D viewVectorXZ = _vectorHelper.ConvertDegreeToVector(_direction.DegreeXZ);
 
             _ray.Direction = new Vector
             {
-                X = vectorXZ.X * vectorY.X,
-                Z = vectorXZ.Z * vectorY.X,
+                X = viewVectorXZ.X * vectorY.X,
+                Z = viewVectorXZ.Z * vectorY.X,
                 Y = vectorY.Z
             };
             _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
-        }
-
-        ViewDirection IPlayerViewDirectionProvider.GetViewDirection()
-        {
-            return _direction;
         }
     }
 }

@@ -59,11 +59,14 @@ namespace Game
             ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester()), modelContainer);
             PlayerMotionManager playerMotionManager = new PlayerMotionManager(
                 vectorHelper,
-                new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, new KeyMapper(pressedKeyDetector), 3),
+                new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, new KeyMapper(pressedKeyDetector), 30),
                 cuboidWithWorldTester,
                 new PressedKeyEncapsulator(Keys.Enter, pressedKeyDetector),
                 new VehicleMotionCalculator(),
                 mousePositionController,
+                new KeyMapper(pressedKeyDetector),
+                heightCalculator,
+                timeProvider,
                 100,
                 100);
 
