@@ -150,6 +150,8 @@ namespace Engine.Framework.PlayerMotion
         private double _drivingSpeed;
         private double _accelerationPerSecond = 15;
         private double _maxSpeed = 60;
+        private double _maxSteeringWheelAngle = 25;
+        private double _steeringAnglePerSecond = 15;
         private void CalculateDriveViewDirection()
         {
             MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
@@ -177,15 +179,30 @@ namespace Engine.Framework.PlayerMotion
 
             if (keys.StrafeLeft)
             {
-                _steeringWheelAngle -= 15 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
-                if (_steeringWheelAngle < -25)
-                    _steeringWheelAngle = -25;
+                _steeringWheelAngle -= _steeringAnglePerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+                if (_steeringWheelAngle < -_maxSteeringWheelAngle)
+                    _steeringWheelAngle = -_maxSteeringWheelAngle;
             }
             else if(keys.StrafeRight)
             {
-                _steeringWheelAngle += 15 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
-                if (_steeringWheelAngle > 25)
-                    _steeringWheelAngle = 25;
+                _steeringWheelAngle += _steeringAnglePerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+                if (_steeringWheelAngle > _maxSteeringWheelAngle)
+                    _steeringWheelAngle = _maxSteeringWheelAngle;
+            }
+            else
+            {
+                if (_steeringWheelAngle > 0)
+                {
+                    _steeringWheelAngle -= _steeringAnglePerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+                    if (_steeringWheelAngle < 0)
+                        _steeringWheelAngle = 0;
+                }
+                else if (_steeringWheelAngle < 0)
+                {
+                    _steeringWheelAngle += _steeringAnglePerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+                    if (_steeringWheelAngle > 0)
+                        _steeringWheelAngle = 0;
+                }
             }
 
             if (keys.WalkForward)
