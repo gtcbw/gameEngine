@@ -217,6 +217,21 @@ namespace Engine.Framework.PlayerMotion
                 if (_drivingSpeed < -_maxSpeed / 2.0)
                     _drivingSpeed = -_maxSpeed / 2.0;
             }
+            else
+            {
+                if (_drivingSpeed > 0)
+                {
+                    _drivingSpeed -= _accelerationPerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() / 4.0;
+                    if (_drivingSpeed < 0)
+                        _drivingSpeed = 0;
+                }
+                else if (_drivingSpeed < 0)
+                {
+                    _drivingSpeed += _accelerationPerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() / 4.0;
+                    if (_drivingSpeed > 0)
+                        _drivingSpeed = 0;
+                }
+            }
 
             _driveMainDegreeXZ += _steeringWheelAngle * _drivingSpeed / 10.0 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
 
