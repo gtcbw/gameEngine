@@ -11,24 +11,30 @@ namespace Engine.Framework.PlayerMotion
         private readonly IHeightCalculator _heightCalculator;
         private readonly IFrameTimeProvider _frameTimeProvider;
         private readonly IVectorHelper _vectorHelper;
+        private readonly IMousePositionController _mousePositionController;
         private readonly IKeyMapper _keyMapper;
         private readonly double _metersPerSecond;
+        private double _maxDegreeY = 70;
 
         public WalkPositionCalculator(IHeightCalculator heightCalculator,
             IFrameTimeProvider frameTimeProvider,
             IVectorHelper vectorHelper,
+            IMousePositionController mousePositionController,
             IKeyMapper keyMapper,
             double metersPerSecond)
         {
             _frameTimeProvider = frameTimeProvider;
             _heightCalculator = heightCalculator;
             _vectorHelper = vectorHelper;
+            _mousePositionController = mousePositionController;
             _keyMapper = keyMapper;
             _metersPerSecond = metersPerSecond;
         }
 
         Position IWalkPositionCalculator.CalculateNextPosition(Position currentPosition, Vector2D viewVectorXZ)
         {
+            MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
+
             Position position = new Position { X = currentPosition.X, Z = currentPosition.Z };
 
             MovePosition(position, viewVectorXZ);

@@ -97,6 +97,42 @@ namespace Engine.Framework.PlayerMotion
             
         }
 
+        private void CalculateDrivePosition()
+        {
+            if (_lastVehicleMotion == null)
+            {
+                _lastVehicleMotion = new VehicleMotion
+                {
+                    Position = _position,
+                    Speed = 0.0,
+                    SteeringWheelAngle = 0.0,
+                    MainDegreeXZ = 0.0,
+                    DriveDegreeY = 0,
+                    RelativeDriveDegreeXZ = 0
+                };
+            }
+
+            VehicleMotion vehicleMotion = _vehicleMotionCalculator.CalculateNextVehicleMotion(_lastVehicleMotion);
+
+            if (!_cuboidWithWorldTester.ElementCollidesWithWorld(vehicleMotion.Position, _playerSideLength, _height))
+            {
+                _position = vehicleMotion.Position;
+                _lastVehicleMotion = vehicleMotion;
+            }
+
+            _direction = new ViewDirection { DegreeXZ = _lastVehicleMotion.MainDegreeXZ + _lastVehicleMotion.RelativeDriveDegreeXZ, DegreeY = _lastVehicleMotion.DriveDegreeY };
+            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(_lastVehicleMotion.DriveDegreeY);
+            Vector2D viewVectorXZ = _vectorHelper.ConvertDegreeToVector(_direction.DegreeXZ);
+
+            _ray.Direction = new Vector
+            {
+                X = viewVectorXZ.X * vectorY.X,
+                Z = viewVectorXZ.Z * vectorY.X,
+                Y = vectorY.Z
+            };
+            _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
+        }
+
         private void CalculateWalkPosition()
         {
             CalculateWalkViewDirection();
@@ -141,130 +177,6 @@ namespace Engine.Framework.PlayerMotion
                 _viewDegreeY = -_maxDegreeY;
 
             _direction = new ViewDirection { DegreeXZ = _viewDegreeXZ, DegreeY = _viewDegreeY };
-        }
-
-        private double _relativeDriveDegreeXZ;
-        private double _driveDegreeY;
-        private double _driveMainDegreeXZ;
-        private double _steeringWheelAngle;
-        private double _drivingSpeed;
-        private double _accelerationPerSecond = 15;
-        private double _maxSpeed = 60;
-        private double _maxSteeringWheelAngle = 25;
-        private double _steeringAnglePerSecond = 15;
-        private void CalculateDriveViewDirection()
-        {
-            MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
-
-            _relativeDriveDegreeXZ += mousePositionDelta.PositionDeltaX;
-
-            _driveDegreeY += mousePositionDelta.PositionDeltaY;
-
-            if (_relativeDriveDegreeXZ > 90.0)
-                _relativeDriveDegreeXZ = 90.0;
-            else if (_relativeDriveDegreeXZ < -90.0)
-                _relativeDriveDegreeXZ = -90.0;
-
-            if (_driveDegreeY > _maxDegreeY)
-                _driveDegreeY = _maxDegreeY;
-            else if (_driveDegreeY < 0)
-                _driveDegreeY = 0;
-
-            _direction = new ViewDirection { DegreeXZ = _driveMainDegreeXZ + _relativeDriveDegreeXZ, DegreeY = _driveDegreeY };
-        }
-
-        private void CalculateDrivePosition()
-        {
-            var keys = _keyMapper.GetMappedKeys();
-
-            if (keys.StrafeLeft)
-            {
-                _steeringWheelAngle -= _steeringAnglePerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
-                if (_steeringWheelAngle < -_maxSteeringWheelAngle)
-                    _steeringWheelAngle = -_maxSteeringWheelAngle;
-            }
-            else if(keys.StrafeRight)
-            {
-                _steeringWheelAngle += _steeringAnglePerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
-                if (_steeringWheelAngle > _maxSteeringWheelAngle)
-                    _steeringWheelAngle = _maxSteeringWheelAngle;
-            }
-            else
-            {
-                if (_steeringWheelAngle > 0)
-                {
-                    _steeringWheelAngle -= _steeringAnglePerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
-                    if (_steeringWheelAngle < 0)
-                        _steeringWheelAngle = 0;
-                }
-                else if (_steeringWheelAngle < 0)
-                {
-                    _steeringWheelAngle += _steeringAnglePerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
-                    if (_steeringWheelAngle > 0)
-                        _steeringWheelAngle = 0;
-                }
-            }
-
-            if (keys.WalkForward)
-            {
-                _drivingSpeed += _accelerationPerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
-                if (_drivingSpeed > _maxSpeed)
-                    _drivingSpeed = _maxSpeed;
-            }
-            else if (keys.WalkBackward)
-            {
-                _drivingSpeed -= _accelerationPerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
-                if (_drivingSpeed < -_maxSpeed / 2.0)
-                    _drivingSpeed = -_maxSpeed / 2.0;
-            }
-            else
-            {
-                if (_drivingSpeed > 0)
-                {
-                    _drivingSpeed -= _accelerationPerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() / 4.0;
-                    if (_drivingSpeed < 0)
-                        _drivingSpeed = 0;
-                }
-                else if (_drivingSpeed < 0)
-                {
-                    _drivingSpeed += _accelerationPerSecond * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() / 4.0;
-                    if (_drivingSpeed > 0)
-                        _drivingSpeed = 0;
-                }
-            }
-
-            _driveMainDegreeXZ += _steeringWheelAngle * _drivingSpeed / 10.0 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
-
-            CalculateDriveViewDirection();
-
-            //if (_lastVehicleMotion == null)
-            //{
-            //    _lastVehicleMotion = new VehicleMotion { Position = _position, Speed = 0.0, SteeringWheelAngle = 0.0, MainDegreeXZ = 0.0 };
-            //}
-
-            //_lastVehicleMotion = _vehicleMotionCalculator.CalculateNextVehicleMotion(_lastVehicleMotion);
-            Vector2D movementVector = _vectorHelper.ConvertDegreeToVector(_driveMainDegreeXZ);
-            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(_direction.DegreeY);
-
-            Position position = new Position { X = _position.X, Z = _position.Z };
-            position.X += movementVector.X * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * _drivingSpeed;
-            position.Z += movementVector.Z * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * _drivingSpeed;
-            position.Y = _heightCalculator.CalculateHeight(position.X, position.Z);
-
-            if (!_cuboidWithWorldTester.ElementCollidesWithWorld(position, _playerSideLength, _height))
-            {
-                _position = position;
-            }
-
-            Vector2D viewVectorXZ = _vectorHelper.ConvertDegreeToVector(_direction.DegreeXZ);
-
-            _ray.Direction = new Vector
-            {
-                X = viewVectorXZ.X * vectorY.X,
-                Z = viewVectorXZ.Z * vectorY.X,
-                Y = vectorY.Z
-            };
-            _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
         }
     }
 }

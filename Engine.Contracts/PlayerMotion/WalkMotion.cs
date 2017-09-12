@@ -2,17 +2,11 @@
 
 namespace Engine.Contracts.PlayerMotion
 {
-    public sealed class VehicleMotion
+    public sealed class WalkMotion
     {
         public Position Position { set; get; }
 
-        public double Speed { set; get; }
-
         public double MainDegreeXZ { set; get; }
-
-        public double SteeringWheelAngle { set; get; }
-
-        public double RelativeDriveDegreeXZ { set; get; }
 
         public double DriveDegreeY { set; get; }
     }
