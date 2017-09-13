@@ -31,17 +31,41 @@ namespace Engine.Framework.PlayerMotion
             _metersPerSecond = metersPerSecond;
         }
 
-        Position IWalkPositionCalculator.CalculateNextPosition(Position currentPosition, Vector2D viewVectorXZ)
+        WalkMotion IWalkPositionCalculator.CalculateNextPosition(WalkMotion lastWalkMotion)
+        {
+            WalkMotion walkMotion = new WalkMotion
+            {
+                Position = new Position { X = lastWalkMotion.Position.X, Z = lastWalkMotion.Position.Z },
+                DegreeXZ = lastWalkMotion.DegreeXZ,
+                DegreeY = lastWalkMotion.DegreeY
+            };
+
+            CalculateWalkViewDirection(walkMotion);
+
+            walkMotion.VectorXZ = _vectorHelper.ConvertDegreeToVector(walkMotion.DegreeXZ);
+            MovePosition(walkMotion.Position, walkMotion.VectorXZ);
+
+            walkMotion.Position.Y = _heightCalculator.CalculateHeight(walkMotion.Position.X, walkMotion.Position.Z);
+
+            return walkMotion;
+        }
+        private void CalculateWalkViewDirection(WalkMotion walkMotion)
         {
             MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
 
-            Position position = new Position { X = currentPosition.X, Z = currentPosition.Z };
+            walkMotion.DegreeXZ += mousePositionDelta.PositionDeltaX;
 
-            MovePosition(position, viewVectorXZ);
+            walkMotion.DegreeY += mousePositionDelta.PositionDeltaY;
 
-            position.Y = _heightCalculator.CalculateHeight(position.X, position.Z);
+            if (walkMotion.DegreeXZ > 360.0)
+                walkMotion.DegreeXZ -= 360.0;
+            else if (walkMotion.DegreeXZ < 0.0)
+                walkMotion.DegreeXZ += 360.0;
 
-            return position;
+            if (walkMotion.DegreeY > _maxDegreeY)
+                walkMotion.DegreeY = _maxDegreeY;
+            else if (walkMotion.DegreeY < -_maxDegreeY)
+                walkMotion.DegreeY = -_maxDegreeY;
         }
 
         private void MovePosition(Position position, Vector2D viewDirection)

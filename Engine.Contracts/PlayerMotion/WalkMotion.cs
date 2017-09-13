@@ -6,8 +6,10 @@ namespace Engine.Contracts.PlayerMotion
     {
         public Position Position { set; get; }
 
-        public double MainDegreeXZ { set; get; }
+        public double DegreeXZ { set; get; }
 
-        public double DriveDegreeY { set; get; }
+        public double DegreeY { set; get; }
+
+        public Vector2D VectorXZ { set; get; }
     }
 }

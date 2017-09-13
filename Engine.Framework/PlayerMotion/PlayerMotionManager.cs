@@ -36,6 +36,7 @@ namespace Engine.Framework.PlayerMotion
         private double _playerSideLength = 0.6;
         private MotionModus _motionModus;
         private VehicleMotion _lastVehicleMotion;
+        private WalkMotion _lastWalkMotion;
 
         public PlayerMotionManager(IVectorHelper vectorHelper,
             IWalkPositionCalculator walkPositionCalculator,
@@ -83,7 +84,10 @@ namespace Engine.Framework.PlayerMotion
                 case MotionModus.Walk:
                     CalculateWalkPosition();
                     if (_enteredVehicleKey.KeyWasPressedOnce())
+                    {
                         _motionModus = MotionModus.Drive;
+                        _lastWalkMotion = null;
+                    }
                     return;
                 case MotionModus.Drive:
                     CalculateDrivePosition();
@@ -94,7 +98,6 @@ namespace Engine.Framework.PlayerMotion
                     }
                     return;
             }
-            
         }
 
         private void CalculateDrivePosition()
@@ -135,48 +138,32 @@ namespace Engine.Framework.PlayerMotion
 
         private void CalculateWalkPosition()
         {
-            CalculateWalkViewDirection();
-            Vector2D vectorXZ = _vectorHelper.ConvertDegreeToVector(_direction.DegreeXZ);
-            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(_direction.DegreeY);
-
-            Position position = _walkPositionCalculator.CalculateNextPosition(_position, vectorXZ);
-
-            if (!_cuboidWithWorldTester.ElementCollidesWithWorld(position, _playerSideLength, _height))
+            if (_lastWalkMotion == null)
             {
-                _position = position;
+                _lastWalkMotion = new WalkMotion
+                {
+                    Position = _position
+                };
             }
 
+            WalkMotion walkMotion = _walkPositionCalculator.CalculateNextPosition(_lastWalkMotion);
+
+            if (!_cuboidWithWorldTester.ElementCollidesWithWorld(walkMotion.Position, _playerSideLength, _height))
+            {
+                _position = walkMotion.Position;
+                _lastWalkMotion = walkMotion;
+            }
+
+            _direction = new ViewDirection { DegreeXZ = walkMotion.DegreeXZ, DegreeY = walkMotion.DegreeY };
+
+            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(walkMotion.DegreeY);
             _ray.Direction = new Vector
             {
-                X = vectorXZ.X * vectorY.X,
-                Z = vectorXZ.Z * vectorY.X,
+                X = walkMotion.VectorXZ.X * vectorY.X,
+                Z = walkMotion.VectorXZ.Z * vectorY.X,
                 Y = vectorY.Z
             };
             _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
-        }
-
-        private double _viewDegreeXZ;
-        private double _viewDegreeY;
-        private double _maxDegreeY = 70;
-        private void CalculateWalkViewDirection()
-        {
-            MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
-
-           _viewDegreeXZ += mousePositionDelta.PositionDeltaX;
-
-           _viewDegreeY += mousePositionDelta.PositionDeltaY;
-
-            if (_viewDegreeXZ > 360.0)
-                _viewDegreeXZ -= 360.0;
-            else if (_viewDegreeXZ < 0.0)
-                _viewDegreeXZ += 360.0;
-
-            if (_viewDegreeY > _maxDegreeY)
-                _viewDegreeY = _maxDegreeY;
-            else if (_viewDegreeY < -_maxDegreeY)
-                _viewDegreeY = -_maxDegreeY;
-
-            _direction = new ViewDirection { DegreeXZ = _viewDegreeXZ, DegreeY = _viewDegreeY };
         }
     }
 }
