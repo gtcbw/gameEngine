@@ -17,7 +17,8 @@ namespace Engine.Framework.PlayerMotion
         private enum MotionModus
         {
             Walk = 0,
-            Drive = 1
+            Drive = 1,
+            Rebound = 2
         }
 
         private IVectorHelper _vectorHelper;
@@ -25,6 +26,7 @@ namespace Engine.Framework.PlayerMotion
         private readonly ICuboidWithWorldTester _cuboidWithWorldTester;
         private readonly IPressedKeyEncapsulator _enteredVehicleKey;
         private readonly IVehicleMotionCalculator _vehicleMotionCalculator;
+        private readonly IReboundMotionCalculator _reboundMotionCalculator;
         private readonly IMousePositionController _mousePositionController;
         private readonly IKeyMapper _keyMapper;
         private readonly IHeightCalculator _heightCalculator;
@@ -37,12 +39,14 @@ namespace Engine.Framework.PlayerMotion
         private MotionModus _motionModus;
         private VehicleMotion _lastVehicleMotion;
         private WalkMotion _lastWalkMotion;
+        private ReboundMotion _lastReboundMotion;
 
         public PlayerMotionManager(IVectorHelper vectorHelper,
             IWalkPositionCalculator walkPositionCalculator,
             ICuboidWithWorldTester cuboidWithWorldTester,
             IPressedKeyEncapsulator enteredVehicleKey,
             IVehicleMotionCalculator vehicleMotionCalculator,
+            IReboundMotionCalculator reboundMotionCalculator,
             IMousePositionController mousePositionController,
             IKeyMapper keyMapper,
             IHeightCalculator heightCalculator,
@@ -55,6 +59,7 @@ namespace Engine.Framework.PlayerMotion
             _cuboidWithWorldTester = cuboidWithWorldTester;
             _enteredVehicleKey = enteredVehicleKey;
             _vehicleMotionCalculator = vehicleMotionCalculator;
+            _reboundMotionCalculator = reboundMotionCalculator;
             _mousePositionController = mousePositionController;
             _keyMapper = keyMapper;
             _heightCalculator = heightCalculator;
@@ -97,7 +102,19 @@ namespace Engine.Framework.PlayerMotion
                         _lastVehicleMotion = null;
                     }
                     return;
+                case MotionModus.Rebound:
+                    CalculateReboundPosition();
+                    return; 
             }
+        }
+
+        private void CalculateReboundPosition()
+        {
+            ReboundMotion reboundMotion = _reboundMotionCalculator.CalculateNextReboundMotion(_lastReboundMotion);
+            _lastReboundMotion = reboundMotion;
+
+            Vector2D viewVectorXZ = _vectorHelper.ConvertDegreeToVector(reboundMotion.MainViewDegreeXZ + reboundMotion.RelativeViewDegreeXZ);
+            SetMotionFields(reboundMotion.MainViewDegreeXZ + reboundMotion.RelativeViewDegreeXZ, reboundMotion.ViewDegreeY, viewVectorXZ);
         }
 
         private void CalculateDrivePosition()
@@ -110,7 +127,7 @@ namespace Engine.Framework.PlayerMotion
                     Speed = 0.0,
                     SteeringWheelAngle = 0.0,
                     MainDegreeXZ = 0.0,
-                    DriveDegreeY = 0,
+                    ViewDegreeY = 0,
                     RelativeDriveDegreeXZ = 0
                 };
             }
@@ -122,18 +139,24 @@ namespace Engine.Framework.PlayerMotion
                 _position = vehicleMotion.Position;
                 _lastVehicleMotion = vehicleMotion;
             }
-
-            _direction = new ViewDirection { DegreeXZ = _lastVehicleMotion.MainDegreeXZ + _lastVehicleMotion.RelativeDriveDegreeXZ, DegreeY = _lastVehicleMotion.DriveDegreeY };
-            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(_lastVehicleMotion.DriveDegreeY);
-            Vector2D viewVectorXZ = _vectorHelper.ConvertDegreeToVector(_direction.DegreeXZ);
-
-            _ray.Direction = new Vector
+            else
             {
-                X = viewVectorXZ.X * vectorY.X,
-                Z = viewVectorXZ.Z * vectorY.X,
-                Y = vectorY.Z
-            };
-            _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
+                _motionModus = MotionModus.Rebound;
+                _lastReboundMotion = new ReboundMotion
+                {
+                    Speed = _lastVehicleMotion.Speed,
+                    Position = _lastVehicleMotion.Position,
+                    ViewDegreeY = _lastVehicleMotion.ViewDegreeY,
+                    MainViewDegreeXZ = _lastVehicleMotion.MainDegreeXZ,
+                    RelativeViewDegreeXZ = _lastVehicleMotion.RelativeDriveDegreeXZ,
+                    MovementDegree = _lastVehicleMotion.MainDegreeXZ - 180
+                };
+
+                if (_lastReboundMotion.MovementDegree < 0)
+                    _lastReboundMotion.MovementDegree += 360;
+            }
+            Vector2D viewVectorXZ = _vectorHelper.ConvertDegreeToVector(_lastVehicleMotion.MainDegreeXZ + _lastVehicleMotion.RelativeDriveDegreeXZ);
+            SetMotionFields(_lastVehicleMotion.MainDegreeXZ + _lastVehicleMotion.RelativeDriveDegreeXZ, _lastVehicleMotion.ViewDegreeY, viewVectorXZ);
         }
 
         private void CalculateWalkPosition()
@@ -154,13 +177,17 @@ namespace Engine.Framework.PlayerMotion
                 _lastWalkMotion = walkMotion;
             }
 
-            _direction = new ViewDirection { DegreeXZ = walkMotion.DegreeXZ, DegreeY = walkMotion.DegreeY };
+            SetMotionFields(walkMotion.DegreeXZ, walkMotion.DegreeY, walkMotion.VectorXZ);
+        }
 
-            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(walkMotion.DegreeY);
+        private void SetMotionFields(double degreeXZ, double degreeY, Vector2D vectorXZ)
+        {
+            _direction = new ViewDirection { DegreeXZ = degreeXZ, DegreeY = degreeY };
+            Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(degreeY);
             _ray.Direction = new Vector
             {
-                X = walkMotion.VectorXZ.X * vectorY.X,
-                Z = walkMotion.VectorXZ.Z * vectorY.X,
+                X = vectorXZ.X * vectorY.X,
+                Z = vectorXZ.Z * vectorY.X,
                 Y = vectorY.Z
             };
             _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };

@@ -63,6 +63,7 @@ namespace Game
                 cuboidWithWorldTester,
                 new PressedKeyEncapsulator(Keys.Enter, pressedKeyDetector),
                 new VehicleMotionCalculator(vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), heightCalculator, timeProvider),
+                new ReboundCalculator(vectorHelper, mousePositionController, heightCalculator, timeProvider),
                 mousePositionController,
                 new KeyMapper(pressedKeyDetector),
                 heightCalculator,

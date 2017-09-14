@@ -39,7 +39,7 @@ namespace Engine.Framework.PlayerMotion
                 SteeringWheelAngle = currentVehicleMotion.SteeringWheelAngle,
                 Speed = currentVehicleMotion.Speed,
                 MainDegreeXZ = currentVehicleMotion.MainDegreeXZ,
-                DriveDegreeY = currentVehicleMotion.DriveDegreeY,
+                ViewDegreeY = currentVehicleMotion.ViewDegreeY,
                 RelativeDriveDegreeXZ = currentVehicleMotion.RelativeDriveDegreeXZ
             };
 
@@ -107,17 +107,17 @@ namespace Engine.Framework.PlayerMotion
 
             vehicleMotion.RelativeDriveDegreeXZ += mousePositionDelta.PositionDeltaX;
 
-            vehicleMotion.DriveDegreeY += mousePositionDelta.PositionDeltaY;
+            vehicleMotion.ViewDegreeY += mousePositionDelta.PositionDeltaY;
 
             if (vehicleMotion.RelativeDriveDegreeXZ > 90.0)
                 vehicleMotion.RelativeDriveDegreeXZ = 90.0;
             else if (vehicleMotion.RelativeDriveDegreeXZ < -90.0)
                 vehicleMotion.RelativeDriveDegreeXZ = -90.0;
 
-            if (vehicleMotion.DriveDegreeY > _maxDegreeY)
-                vehicleMotion.DriveDegreeY = _maxDegreeY;
-            else if (vehicleMotion.DriveDegreeY < 0)
-                vehicleMotion.DriveDegreeY = 0;
+            if (vehicleMotion.ViewDegreeY > _maxDegreeY)
+                vehicleMotion.ViewDegreeY = _maxDegreeY;
+            else if (vehicleMotion.ViewDegreeY < 0)
+                vehicleMotion.ViewDegreeY = 0;
 
             Vector2D movementVector = _vectorHelper.ConvertDegreeToVector(vehicleMotion.MainDegreeXZ);
             
