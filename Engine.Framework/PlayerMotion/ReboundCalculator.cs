@@ -2,11 +2,6 @@
 using Engine.Contracts.Input;
 using Engine.Contracts.PlayerMotion;
 using Math.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using World.Model;
 
 namespace Engine.Framework.PlayerMotion
@@ -17,6 +12,7 @@ namespace Engine.Framework.PlayerMotion
         private IMousePositionController _mousePositionController;
         private IHeightCalculator _heightCalculator;
         private IFrameTimeProvider _frameTimeProvider;
+        private double _maxSpeed = 150;
 
         public ReboundCalculator(IVectorHelper vectorHelper,
             IMousePositionController mousePositionController,
@@ -39,6 +35,16 @@ namespace Engine.Framework.PlayerMotion
                 ViewDegreeY = currentReboundMotion.ViewDegreeY,
                 RelativeViewDegreeXZ = currentReboundMotion.RelativeViewDegreeXZ
             };
+
+            reboundMotion.Speed -= reboundMotion.Speed * 0.8 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
+
+            if (reboundMotion.Speed < 0.1)
+                reboundMotion.Speed = 0;
+
+            reboundMotion.MainViewDegreeXZ += 1000 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * reboundMotion.Speed / _maxSpeed;
+
+            if (reboundMotion.MainViewDegreeXZ > 360)
+                reboundMotion.MainViewDegreeXZ -= 360;
 
             Vector2D movementVector = _vectorHelper.ConvertDegreeToVector(reboundMotion.MovementDegree);
 

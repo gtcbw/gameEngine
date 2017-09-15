@@ -18,7 +18,10 @@ namespace Engine.Framework.PlayerMotion
         {
             Walk = 0,
             Drive = 1,
-            Rebound = 2
+            Rebound = 2,
+            ClimbUp = 3,
+            ClimbDown = 4,
+            FullBreak = 5
         }
 
         private IVectorHelper _vectorHelper;
@@ -104,6 +107,12 @@ namespace Engine.Framework.PlayerMotion
                     return;
                 case MotionModus.Rebound:
                     CalculateReboundPosition();
+                    if (_lastReboundMotion.Speed < 2)
+                    {
+                        _motionModus = MotionModus.Drive;
+                        _lastVehicleMotion = Convert(_lastReboundMotion);
+                        _lastReboundMotion = null;
+                    }
                     return; 
             }
         }
@@ -111,26 +120,27 @@ namespace Engine.Framework.PlayerMotion
         private void CalculateReboundPosition()
         {
             ReboundMotion reboundMotion = _reboundMotionCalculator.CalculateNextReboundMotion(_lastReboundMotion);
+
+            if (!_cuboidWithWorldTester.ElementCollidesWithWorld(reboundMotion.Position, _playerSideLength, _height))
+            {
+                _position = reboundMotion.Position;
+            }
+            else
+            {
+                reboundMotion.Position = _position;
+                reboundMotion.MovementDegree += 90.0;
+                if (reboundMotion.MovementDegree > 359)
+                    reboundMotion.MovementDegree -= 360;
+            }
             _lastReboundMotion = reboundMotion;
 
-            Vector2D viewVectorXZ = _vectorHelper.ConvertDegreeToVector(reboundMotion.MainViewDegreeXZ + reboundMotion.RelativeViewDegreeXZ);
-            SetMotionFields(reboundMotion.MainViewDegreeXZ + reboundMotion.RelativeViewDegreeXZ, reboundMotion.ViewDegreeY, viewVectorXZ);
+            SetMotionFields(reboundMotion.MainViewDegreeXZ + reboundMotion.RelativeViewDegreeXZ, reboundMotion.ViewDegreeY);
         }
 
         private void CalculateDrivePosition()
         {
             if (_lastVehicleMotion == null)
-            {
-                _lastVehicleMotion = new VehicleMotion
-                {
-                    Position = _position,
-                    Speed = 0.0,
-                    SteeringWheelAngle = 0.0,
-                    MainDegreeXZ = 0.0,
-                    ViewDegreeY = 0,
-                    RelativeDriveDegreeXZ = 0
-                };
-            }
+                _lastVehicleMotion = new VehicleMotion{ Position = _position };
 
             VehicleMotion vehicleMotion = _vehicleMotionCalculator.CalculateNextVehicleMotion(_lastVehicleMotion);
 
@@ -138,36 +148,20 @@ namespace Engine.Framework.PlayerMotion
             {
                 _position = vehicleMotion.Position;
                 _lastVehicleMotion = vehicleMotion;
+                SetMotionFields(_lastVehicleMotion.MainDegreeXZ + _lastVehicleMotion.RelativeDriveDegreeXZ, _lastVehicleMotion.ViewDegreeY);
             }
             else
             {
                 _motionModus = MotionModus.Rebound;
-                _lastReboundMotion = new ReboundMotion
-                {
-                    Speed = _lastVehicleMotion.Speed,
-                    Position = _lastVehicleMotion.Position,
-                    ViewDegreeY = _lastVehicleMotion.ViewDegreeY,
-                    MainViewDegreeXZ = _lastVehicleMotion.MainDegreeXZ,
-                    RelativeViewDegreeXZ = _lastVehicleMotion.RelativeDriveDegreeXZ,
-                    MovementDegree = _lastVehicleMotion.MainDegreeXZ - 180
-                };
-
-                if (_lastReboundMotion.MovementDegree < 0)
-                    _lastReboundMotion.MovementDegree += 360;
+                _lastReboundMotion = Convert(_lastVehicleMotion);
+                _lastVehicleMotion = null;
             }
-            Vector2D viewVectorXZ = _vectorHelper.ConvertDegreeToVector(_lastVehicleMotion.MainDegreeXZ + _lastVehicleMotion.RelativeDriveDegreeXZ);
-            SetMotionFields(_lastVehicleMotion.MainDegreeXZ + _lastVehicleMotion.RelativeDriveDegreeXZ, _lastVehicleMotion.ViewDegreeY, viewVectorXZ);
         }
 
         private void CalculateWalkPosition()
         {
             if (_lastWalkMotion == null)
-            {
-                _lastWalkMotion = new WalkMotion
-                {
-                    Position = _position
-                };
-            }
+                _lastWalkMotion = new WalkMotion{ Position = _position };
 
             WalkMotion walkMotion = _walkPositionCalculator.CalculateNextPosition(_lastWalkMotion);
 
@@ -180,8 +174,11 @@ namespace Engine.Framework.PlayerMotion
             SetMotionFields(walkMotion.DegreeXZ, walkMotion.DegreeY, walkMotion.VectorXZ);
         }
 
-        private void SetMotionFields(double degreeXZ, double degreeY, Vector2D vectorXZ)
+        private void SetMotionFields(double degreeXZ, double degreeY, Vector2D vectorXZ = null)
         {
+            if (vectorXZ == null)
+                vectorXZ = _vectorHelper.ConvertDegreeToVector(degreeXZ);
+
             _direction = new ViewDirection { DegreeXZ = degreeXZ, DegreeY = degreeY };
             Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(degreeY);
             _ray.Direction = new Vector
@@ -191,6 +188,37 @@ namespace Engine.Framework.PlayerMotion
                 Y = vectorY.Z
             };
             _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
+        }
+
+        private VehicleMotion Convert(ReboundMotion reboundMotion)
+        {
+            return new VehicleMotion
+            {
+                Speed = reboundMotion.Speed,
+                Position = reboundMotion.Position,
+                ViewDegreeY = reboundMotion.ViewDegreeY,
+                MainDegreeXZ = reboundMotion.MainViewDegreeXZ,
+                RelativeDriveDegreeXZ = reboundMotion.RelativeViewDegreeXZ,
+                SteeringWheelAngle = 0
+            };
+        }
+
+        private ReboundMotion Convert(VehicleMotion vehicleMotion)
+        {
+            var reboundMotion = new ReboundMotion
+            {
+                Speed = vehicleMotion.Speed,
+                Position = vehicleMotion.Position,
+                ViewDegreeY = vehicleMotion.ViewDegreeY,
+                MainViewDegreeXZ = vehicleMotion.MainDegreeXZ,
+                RelativeViewDegreeXZ = vehicleMotion.RelativeDriveDegreeXZ,
+                MovementDegree = vehicleMotion.MainDegreeXZ - 180
+            };
+
+            if (reboundMotion.MovementDegree < 0)
+                reboundMotion.MovementDegree += 360;
+
+            return reboundMotion;
         }
     }
 }
