@@ -45,6 +45,7 @@
     <Compile Include="IGameTimeProvider.cs" />
     <Compile Include="Input\IPressedKeyEncapsulator.cs" />
     <Compile Include="IParticleContainer.cs" />
+    <Compile Include="IPercentProvider.cs" />
     <Compile Include="IVehicleProvider.cs" />
     <Compile Include="Models\ICuboidWithModelsTester.cs" />
     <Compile Include="Models\ICuboidWithWorldTester.cs" />
@@ -82,6 +83,8 @@
     <Compile Include="Models\ModelRenderUnit.cs" />
     <Compile Include="Models\Submodel.cs" />
     <Compile Include="PlayerMotion\IReboundMotionCalculator.cs" />
+    <Compile Include="PlayerMotion\IVehicleClimber.cs" />
+    <Compile Include="PlayerMotion\IVehicleFinder.cs" />
     <Compile Include="PlayerMotion\IVehicleMotionCalculator.cs" />
     <Compile Include="PlayerMotion\IWalkPositionCalculator.cs" />
     <Compile Include="PlayerMotion\ReboundMotion.cs" />

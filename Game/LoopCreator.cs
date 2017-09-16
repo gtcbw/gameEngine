@@ -68,6 +68,8 @@ namespace Game
                 new KeyMapper(pressedKeyDetector),
                 heightCalculator,
                 timeProvider,
+                new VehicleFinder(new VehicleProvider()),
+                new VehicleClimber(new PercentProvider(timeProvider, 2.0)),
                 100,
                 100);
 

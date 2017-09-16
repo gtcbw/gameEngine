@@ -4,6 +4,8 @@ namespace Engine.Contracts
 {
     public sealed class Vehicle
     {
-        public Cuboid Cuboid { set; get; }
+        public Position Position { set; get; }
+
+        //public Cuboid Cuboid { set; get; }
     }
 }

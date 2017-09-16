@@ -60,9 +60,11 @@
     <Compile Include="ModelCache.cs" />
     <Compile Include="ModelRepository.cs" />
     <Compile Include="ParticleContainer.cs" />
+    <Compile Include="PercentProvider.cs" />
     <Compile Include="PlantGridReader.cs" />
     <Compile Include="PlayerMotion\PlayerMotionManager.cs" />
     <Compile Include="PlayerMotion\ReboundCalculator.cs" />
+    <Compile Include="PlayerMotion\VehicleClimber.cs" />
     <Compile Include="PlayerMotion\VehicleMotionCalculator.cs" />
     <Compile Include="PlayerMotion\WalkPositionCalculator.cs" />
     <Compile Include="PolygonListRenderer.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="SurfaceRectangleBuilder.cs" />
     <Compile Include="TextureCache.cs" />
     <Compile Include="TextureRenderer.cs" />
+    <Compile Include="VehicleFinder.cs" />
     <Compile Include="VehicleProvider.cs" />
   </ItemGroup>
   <ItemGroup>
