@@ -69,7 +69,7 @@ namespace Game
                 heightCalculator,
                 timeProvider,
                 new VehicleFinder(new VehicleProvider()),
-                new VehicleClimber(new PercentProvider(timeProvider, 2.0)),
+                new VehicleClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.4), new PercentProvider(timeProvider, 0.6)),
                 100,
                 100);
 

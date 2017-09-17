@@ -43,7 +43,7 @@ namespace Engine.Framework.PlayerMotion
 
             reboundMotion.MainViewDegreeXZ += 1000 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * reboundMotion.Speed / _maxSpeed;
 
-            if (reboundMotion.MainViewDegreeXZ > 360)
+            while (reboundMotion.MainViewDegreeXZ > 360)
                 reboundMotion.MainViewDegreeXZ -= 360;
 
             Vector2D movementVector = _vectorHelper.ConvertDegreeToVector(reboundMotion.MovementDegree);

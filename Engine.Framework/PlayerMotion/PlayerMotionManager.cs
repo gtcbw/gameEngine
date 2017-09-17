@@ -105,7 +105,7 @@ namespace Engine.Framework.PlayerMotion
                         if (_vehicle == null)
                             return;
                         _motionModus = MotionModus.ClimbUp;
-                        _vehicleClimber.InitClimbUp(_position.Clone(), _vehicle.Position.Clone());
+                        _vehicleClimber.InitClimbUp(_position.Clone(), _direction.DegreeXZ, _direction.DegreeY, _vehicle.Position.Clone(), _vehicle.DegreeXZ, 0.0);
                         _lastWalkMotion = null;
                     }
                     return;
@@ -137,7 +137,7 @@ namespace Engine.Framework.PlayerMotion
             var motion = _vehicleClimber.GetClimbUpPosition();
             _position = motion.Position;
 
-            _ray.StartPosition = new Position { X = _position.X, Y = _position.Y + _height, Z = _position.Z };
+            SetMotionFields(motion.DegreeXZ, motion.DegreeY);
 
             if (motion.Done) 
                 _motionModus = MotionModus.Drive;
