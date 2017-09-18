@@ -64,7 +64,8 @@
     <Compile Include="PlantGridReader.cs" />
     <Compile Include="PlayerMotion\PlayerMotionManager.cs" />
     <Compile Include="PlayerMotion\ReboundCalculator.cs" />
-    <Compile Include="PlayerMotion\VehicleClimber.cs" />
+    <Compile Include="PlayerMotion\VehicleDownClimber.cs" />
+    <Compile Include="PlayerMotion\VehicleUpClimber.cs" />
     <Compile Include="PlayerMotion\VehicleMotionCalculator.cs" />
     <Compile Include="PlayerMotion\WalkPositionCalculator.cs" />
     <Compile Include="PolygonListRenderer.cs" />

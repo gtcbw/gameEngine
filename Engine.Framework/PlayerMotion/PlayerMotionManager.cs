@@ -21,7 +21,7 @@ namespace Engine.Framework.PlayerMotion
             Rebound = 2,
             ClimbUp = 3,
             ClimbDown = 4,
-            FullBreak = 5
+            FullBrake = 5
         }
 
         private IVectorHelper _vectorHelper;
@@ -35,7 +35,8 @@ namespace Engine.Framework.PlayerMotion
         private readonly IHeightCalculator _heightCalculator;
         private readonly IFrameTimeProvider _frameTimeProvider;
         private readonly IVehicleFinder _vehicleFinder;
-        private readonly IVehicleClimber _vehicleClimber;
+        private readonly IVehicleClimber _vehicleUpClimber;
+        private readonly IVehicleClimber _vehicleDownClimber;
         private Position _position;
         private Ray _ray = new Ray();
         ViewDirection _direction;
@@ -59,7 +60,8 @@ namespace Engine.Framework.PlayerMotion
             IHeightCalculator heightCalculator,
             IFrameTimeProvider frameTimeProvider,
             IVehicleFinder vehicleFinder,
-            IVehicleClimber vehicleClimber,
+            IVehicleClimber vehicleUpClimber,
+            IVehicleClimber vehicleDownClimber,
             double startX,
             double startZ)
         {
@@ -74,7 +76,8 @@ namespace Engine.Framework.PlayerMotion
             _heightCalculator = heightCalculator;
             _frameTimeProvider = frameTimeProvider;
             _vehicleFinder = vehicleFinder;
-            _vehicleClimber = vehicleClimber;
+            _vehicleUpClimber = vehicleUpClimber;
+            _vehicleDownClimber = vehicleDownClimber;
             _position = new Position { X = startX, Z = startZ };
         }
 
@@ -100,25 +103,21 @@ namespace Engine.Framework.PlayerMotion
                 case MotionModus.Walk:
                     CalculateWalkPosition();
                     if (_enteredVehicleKey.KeyWasPressedOnce())
-                    {
-                        _vehicle = _vehicleFinder.FindNearestVehicle(_position);
-                        if (_vehicle == null)
-                            return;
-                        _motionModus = MotionModus.ClimbUp;
-                        _vehicleClimber.InitClimbUp(_position.Clone(), _direction.DegreeXZ, _direction.DegreeY, _vehicle.Position.Clone(), _vehicle.DegreeXZ, 0.0);
-                        _lastWalkMotion = null;
-                    }
+                        EnterVehicle();
                     return;
                 case MotionModus.ClimbUp:
                     ClimbUp();
                     return;
+                case MotionModus.ClimbDown:
+                    ClimbDown();
+                    return;
+                case MotionModus.FullBrake:
+                    Brake();
+                    return;
                 case MotionModus.Drive:
                     CalculateDrivePosition();
                     if (_enteredVehicleKey.KeyWasPressedOnce())
-                    {
-                        _motionModus = MotionModus.Walk;
-                        _lastVehicleMotion = null;
-                    }
+                        ExitVehicle();
                     return;
                 case MotionModus.Rebound:
                     CalculateReboundPosition();
@@ -132,9 +131,64 @@ namespace Engine.Framework.PlayerMotion
             }
         }
 
+
+
+        private void EnterVehicle()
+        {
+            _vehicle = _vehicleFinder.FindNearestVehicle(_position);
+            if (_vehicle == null)
+                return;
+            _motionModus = MotionModus.ClimbUp;
+            _vehicleUpClimber.InitClimb(_position.Clone(), _direction.DegreeXZ, _direction.DegreeY, _vehicle.Position.Clone(), _vehicle.DegreeXZ, 0.0);
+            _lastWalkMotion = null;
+        }
+
+        private void Brake()
+        {
+            _lastVehicleMotion.Speed -= _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * 30;
+
+            if (_lastVehicleMotion.Speed < 0)
+                _lastVehicleMotion.Speed = 0;
+
+            CalculateDrivePosition();
+
+            if (_lastVehicleMotion.Speed < 0.5)
+                InitClimbDown();
+        }
+
+        private void ExitVehicle()
+        {
+            if (_lastVehicleMotion.Speed > 0.5)
+            {
+                _motionModus = MotionModus.FullBrake;
+                return;
+            }
+            InitClimbDown();
+        }
+
+        private void InitClimbDown()
+        {
+            _motionModus = MotionModus.ClimbDown;
+            Position playerPosition = _position.Clone();
+            playerPosition.X += 1.5;
+            _vehicleDownClimber.InitClimb(_position.Clone(), _direction.DegreeXZ, _direction.DegreeY, playerPosition, _direction.DegreeXZ, 0.0);
+            _lastVehicleMotion = null;
+        }
+
+        private void ClimbDown()
+        {
+            var motion = _vehicleDownClimber.GetClimbPosition();
+            _position = motion.Position;
+
+            SetMotionFields(motion.DegreeXZ, motion.DegreeY);
+
+            if (motion.Done)
+                _motionModus = MotionModus.Walk;
+        }
+
         private void ClimbUp()
         {
-            var motion = _vehicleClimber.GetClimbUpPosition();
+            var motion = _vehicleUpClimber.GetClimbPosition();
             _position = motion.Position;
 
             SetMotionFields(motion.DegreeXZ, motion.DegreeY);
@@ -187,7 +241,12 @@ namespace Engine.Framework.PlayerMotion
         private void CalculateWalkPosition()
         {
             if (_lastWalkMotion == null)
-                _lastWalkMotion = new WalkMotion{ Position = _position };
+                _lastWalkMotion = new WalkMotion
+                {
+                    Position = _position,
+                    DegreeXZ = _direction?.DegreeXZ ?? 0,
+                    DegreeY = _direction?.DegreeY ?? 0
+                };
 
             WalkMotion walkMotion = _walkPositionCalculator.CalculateNextPosition(_lastWalkMotion);
 
