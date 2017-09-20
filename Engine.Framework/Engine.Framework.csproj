@@ -62,6 +62,7 @@
     <Compile Include="ParticleContainer.cs" />
     <Compile Include="PercentProvider.cs" />
     <Compile Include="PlantGridReader.cs" />
+    <Compile Include="PlayerMotion\PlayerMotionEncapsulator.cs" />
     <Compile Include="PlayerMotion\PlayerMotionManager.cs" />
     <Compile Include="PlayerMotion\ReboundCalculator.cs" />
     <Compile Include="PlayerMotion\VehicleDownClimber.cs" />

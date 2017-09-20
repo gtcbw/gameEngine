@@ -1,4 +1,5 @@
 ﻿using Engine.Contracts;
+using Engine.Contracts.PlayerMotion;
 using Graphics.Contracts;
 using System.Collections.Generic;
 

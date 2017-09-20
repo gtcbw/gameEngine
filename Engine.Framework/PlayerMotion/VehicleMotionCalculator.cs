@@ -103,6 +103,11 @@ namespace Engine.Framework.PlayerMotion
 
             vehicleMotion.MainDegreeXZ += vehicleMotion.SteeringWheelAngle * vehicleMotion.Speed / 10.0 * _frameTimeProvider.GetTimeInSecondsSinceLastFrame();
 
+            if (vehicleMotion.MainDegreeXZ > 360.0)
+                vehicleMotion.MainDegreeXZ -= 360.0;
+            else if (vehicleMotion.MainDegreeXZ < 0.0)
+                vehicleMotion.MainDegreeXZ += 360.0;
+
             MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
 
             vehicleMotion.RelativeDriveDegreeXZ += mousePositionDelta.PositionDeltaX;

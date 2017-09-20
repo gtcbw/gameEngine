@@ -57,7 +57,10 @@ namespace Game
             IVertexBufferUnitRenderer bufferedMeshUnitRenderer = new VertexBufferUnitRenderer();
             ModelContainer modelContainer = new ModelContainer(modelLoader, textureChanger, bufferedMeshUnitRenderer, worldTranslator);
             ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester()), modelContainer);
-            PlayerMotionManager playerMotionManager = new PlayerMotionManager(
+
+            PlayerMotionEncapsulator playerMotionEncapsulator = new PlayerMotionEncapsulator(vectorHelper, new World.Model.Position { X = 100, Y = 0, Z = 100 });
+
+            PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerMotionEncapsulator,
                 vectorHelper,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), 30),
                 cuboidWithWorldTester,
@@ -70,23 +73,21 @@ namespace Game
                 timeProvider,
                 new VehicleFinder(new VehicleProvider()),
                 new VehicleUpClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.4), new PercentProvider(timeProvider, 0.6)),
-                new VehicleDownClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.6)),
-                100,
-                100);
+                new VehicleDownClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.6)));
 
-            ICamera camera = new Camera(config.Resolution.AspectRatio, playerMotionManager);
+            ICamera camera = new Camera(config.Resolution.AspectRatio, playerMotionEncapsulator);
 
             // environment rendring
             ITexture horizontexture = textureCache.LoadTexture("horizon.bmp");
             IEnumerable<Polygon> polygons = surfaceRectangleBuilder.CreateRectangle(-1, 0, 4, 1);
             
-            IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerMotionManager, textureTranslator, worldTranslator);
+            IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerMotionEncapsulator, textureTranslator, worldTranslator);
             IColorSetter colorSetter = new ColorSetter();
 
             IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IMeshUnitCollection streetCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
             IMeshUnitCollection treeCollection = new MeshUnitCollection
-                (new VertexBufferUnitOffsetRenderer(8, new IndexFactorByViewDirectionProvider(playerMotionManager)));
+                (new VertexBufferUnitOffsetRenderer(8, new IndexFactorByViewDirectionProvider(playerMotionEncapsulator)));
 
             IVertexByFieldCreator floorVertexCreator = new FloorVertexCreator(heightCalculator, lengthOfFieldSide / metersPerQuad, metersPerQuad);
             IMeshUnitCreator floorMeshUnitCreator = new FloorMeshUnitCreator(bufferObjectFactory, lengthOfFieldSide / metersPerQuad);
@@ -118,7 +119,7 @@ namespace Game
             IFieldChangeObserver modelQueuePusher = new FrameDelayUnitByFieldLoader(new ModelQueuePusher(fieldModelLoader, modelQueue), 18);
 
 
-            FieldManager fieldManager = new FieldManager(playerMotionManager,
+            FieldManager fieldManager = new FieldManager(playerMotionEncapsulator,
                 new List<IFieldChangeObserver> { floorLoader, streetLoader, treeLoader, modelQueuePusher },
                 new FieldChangeAnalyzer(),
                 new ActiveFieldCalculator(lengthOfFieldSide, numberOfFieldsPerAreaSide));
@@ -147,8 +148,8 @@ namespace Game
             IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester, obtuseAngleTester);
             RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
             ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, 
-                surfaceRectangleBuilder.CreateRectangle(0.2, 0.5, 0.6f, 0.6f, z:0), playerMotionManager, worldRotator);
-            RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerMotionManager, mouseButtonEventProvider, particleContainer);
+                surfaceRectangleBuilder.CreateRectangle(0.2, 0.5, 0.6f, 0.6f, z:0), playerMotionEncapsulator, worldRotator);
+            RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerMotionEncapsulator, mouseButtonEventProvider, particleContainer);
             //
 
             IFontMapper fontMapper = new FontMapper(textureCache, "font");

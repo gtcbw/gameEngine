@@ -1,5 +1,6 @@
 ﻿using Engine.Contracts;
 using Engine.Contracts.Input;
+using Engine.Contracts.PlayerMotion;
 using World.Model;
 
 namespace Engine.Framework

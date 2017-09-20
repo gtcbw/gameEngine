@@ -1,6 +1,6 @@
 ﻿using World.Model;
 
-namespace Engine.Contracts
+namespace Engine.Contracts.PlayerMotion
 {
     public interface IPlayerViewRayProvider
     {

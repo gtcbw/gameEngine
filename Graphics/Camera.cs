@@ -2,8 +2,8 @@
 using Graphics.Contracts;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Engine.Contracts;
 using World.Model;
+using Engine.Contracts.PlayerMotion;
 
 namespace Graphics
 {
