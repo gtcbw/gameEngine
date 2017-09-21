@@ -61,15 +61,11 @@ namespace Game
             PlayerMotionEncapsulator playerMotionEncapsulator = new PlayerMotionEncapsulator(vectorHelper, new World.Model.Position { X = 100, Y = 0, Z = 100 });
 
             PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerMotionEncapsulator,
-                vectorHelper,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), 30),
                 cuboidWithWorldTester,
                 new PressedKeyEncapsulator(Keys.Enter, pressedKeyDetector),
                 new VehicleMotionCalculator(vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), heightCalculator, timeProvider),
                 new ReboundCalculator(vectorHelper, mousePositionController, heightCalculator, timeProvider),
-                mousePositionController,
-                new KeyMapper(pressedKeyDetector),
-                heightCalculator,
                 timeProvider,
                 new VehicleFinder(new VehicleProvider()),
                 new VehicleUpClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.4), new PercentProvider(timeProvider, 0.6)),

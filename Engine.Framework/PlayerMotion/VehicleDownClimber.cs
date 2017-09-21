@@ -53,7 +53,7 @@ namespace Engine.Framework.PlayerMotion
                 interpolatedDegreeY = _degreeYVehicle * (1.0 - percentY) + _degreeYPlayer * percentY;
             }
             else
-                interpolatedDegreeY = _degreeYVehicle;
+                interpolatedDegreeY = _degreeYPlayer;
 
             return new ClimbMotion
             {

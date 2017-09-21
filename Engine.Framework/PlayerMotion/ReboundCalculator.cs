@@ -13,6 +13,7 @@ namespace Engine.Framework.PlayerMotion
         private IHeightCalculator _heightCalculator;
         private IFrameTimeProvider _frameTimeProvider;
         private double _maxSpeed = 150;
+        private double _maxDegreeY = 70;
 
         public ReboundCalculator(IVectorHelper vectorHelper,
             IMousePositionController mousePositionController,
@@ -52,6 +53,22 @@ namespace Engine.Framework.PlayerMotion
             reboundMotion.Position.X += movementVector.X * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * reboundMotion.Speed;
             reboundMotion.Position.Z += movementVector.Z * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * reboundMotion.Speed;
             reboundMotion.Position.Y = _heightCalculator.CalculateHeight(reboundMotion.Position.X, reboundMotion.Position.Z);
+
+            MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
+
+            reboundMotion.RelativeViewDegreeXZ += mousePositionDelta.PositionDeltaX;
+
+            reboundMotion.ViewDegreeY += mousePositionDelta.PositionDeltaY;
+
+            if (reboundMotion.RelativeViewDegreeXZ > 90.0)
+                reboundMotion.RelativeViewDegreeXZ = 90.0;
+            else if (reboundMotion.RelativeViewDegreeXZ < -90.0)
+                reboundMotion.RelativeViewDegreeXZ = -90.0;
+
+            if (reboundMotion.ViewDegreeY > _maxDegreeY)
+                reboundMotion.ViewDegreeY = _maxDegreeY;
+            else if (reboundMotion.ViewDegreeY < 0)
+                reboundMotion.ViewDegreeY = 0;
 
             return reboundMotion;
         }

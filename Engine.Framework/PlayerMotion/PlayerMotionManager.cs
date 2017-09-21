@@ -2,7 +2,6 @@
 using Engine.Contracts.Input;
 using Engine.Contracts.Models;
 using Engine.Contracts.PlayerMotion;
-using Math.Contracts;
 using World.Model;
 
 namespace Engine.Framework.PlayerMotion
@@ -20,15 +19,11 @@ namespace Engine.Framework.PlayerMotion
         }
 
         private readonly IPlayerMotionEncapsulator _playerMotionEncapsulator;
-        private IVectorHelper _vectorHelper;
         private readonly IWalkPositionCalculator _walkPositionCalculator;
         private readonly ICuboidWithWorldTester _cuboidWithWorldTester;
         private readonly IPressedKeyEncapsulator _enteredVehicleKey;
         private readonly IVehicleMotionCalculator _vehicleMotionCalculator;
         private readonly IReboundMotionCalculator _reboundMotionCalculator;
-        private readonly IMousePositionController _mousePositionController;
-        private readonly IKeyMapper _keyMapper;
-        private readonly IHeightCalculator _heightCalculator;
         private readonly IFrameTimeProvider _frameTimeProvider;
         private readonly IVehicleFinder _vehicleFinder;
         private readonly IVehicleClimber _vehicleUpClimber;
@@ -43,30 +38,22 @@ namespace Engine.Framework.PlayerMotion
         private Vehicle _vehicle;
 
         public PlayerMotionManager(IPlayerMotionEncapsulator playerMotionEncapsulator,
-            IVectorHelper vectorHelper,
             IWalkPositionCalculator walkPositionCalculator,
             ICuboidWithWorldTester cuboidWithWorldTester,
             IPressedKeyEncapsulator enteredVehicleKey,
             IVehicleMotionCalculator vehicleMotionCalculator,
             IReboundMotionCalculator reboundMotionCalculator,
-            IMousePositionController mousePositionController,
-            IKeyMapper keyMapper,
-            IHeightCalculator heightCalculator,
             IFrameTimeProvider frameTimeProvider,
             IVehicleFinder vehicleFinder,
             IVehicleClimber vehicleUpClimber,
             IVehicleClimber vehicleDownClimber)
         {
             _playerMotionEncapsulator = playerMotionEncapsulator;
-            _vectorHelper = vectorHelper;
             _walkPositionCalculator = walkPositionCalculator;
             _cuboidWithWorldTester = cuboidWithWorldTester;
             _enteredVehicleKey = enteredVehicleKey;
             _vehicleMotionCalculator = vehicleMotionCalculator;
             _reboundMotionCalculator = reboundMotionCalculator;
-            _mousePositionController = mousePositionController;
-            _keyMapper = keyMapper;
-            _heightCalculator = heightCalculator;
             _frameTimeProvider = frameTimeProvider;
             _vehicleFinder = vehicleFinder;
             _vehicleUpClimber = vehicleUpClimber;
@@ -138,11 +125,12 @@ namespace Engine.Framework.PlayerMotion
             _motionModus = MotionModus.ClimbDown;
             Position playerPosition = _playerMotionEncapsulator.GetPlayerPosition().Clone();
             playerPosition.X += 1.5;
-            _vehicleDownClimber.InitClimb(_playerMotionEncapsulator.GetPlayerPosition().Clone(),
+            _vehicleDownClimber.InitClimb(playerPosition,
                 _playerMotionEncapsulator.GetViewDirection().DegreeXZ,
-                _playerMotionEncapsulator.GetViewDirection().DegreeY, 
-                playerPosition,
-                _playerMotionEncapsulator.GetViewDirection().DegreeXZ, 0.0);
+                0, 
+                _playerMotionEncapsulator.GetPlayerPosition().Clone(),
+                _playerMotionEncapsulator.GetViewDirection().DegreeXZ, 
+                _playerMotionEncapsulator.GetViewDirection().DegreeY);
             _lastVehicleMotion = null;
         }
 
