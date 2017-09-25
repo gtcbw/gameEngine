@@ -1,6 +1,6 @@
 ﻿namespace World.Model
 {
-    public sealed class Position
+    public sealed class Position : IReadOnlyPosition
     {
         public double X { set; get; }
 

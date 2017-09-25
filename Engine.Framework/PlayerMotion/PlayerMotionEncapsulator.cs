@@ -22,7 +22,7 @@ namespace Engine.Framework.PlayerMotion
             _ray = new Ray { Direction = new Vector { X = 0, Y = 0, Z = 1 }, StartPosition = _position };
         }
 
-        public Position GetPlayerPosition()
+        public IReadOnlyPosition GetPlayerPosition()
         {
             return _position;
         }

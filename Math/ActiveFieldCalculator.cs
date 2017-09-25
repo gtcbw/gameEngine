@@ -15,7 +15,7 @@ namespace Math
             _numberOfFieldsPerAreaSide = numberOfFieldsPerAreaSide;
         }
 
-        public IEnumerable<FieldCoordinates> CalculateActiveFields(Position position)
+        public IEnumerable<FieldCoordinates> CalculateActiveFields(IReadOnlyPosition position)
         {
             int x = (int)position.X / _lengthPerField;
             int z = (int)position.Z / _lengthPerField;

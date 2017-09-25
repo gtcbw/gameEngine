@@ -15,7 +15,7 @@ namespace Engine.Contracts.PlayerMotion
 
     public interface IVehicleClimber
     {
-        void InitClimb(Position positionPlayer, double degreeXZPlayer, double degreeYPlayer, Position positionVehicle, double degreeXZVehicle, double degreeYVehicle);
+        void InitClimb(IReadOnlyPosition positionPlayer, double degreeXZPlayer, double degreeYPlayer, IReadOnlyPosition positionVehicle, double degreeXZVehicle, double degreeYVehicle);
 
         ClimbMotion GetClimbPosition();
     }

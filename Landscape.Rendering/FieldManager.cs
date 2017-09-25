@@ -27,7 +27,7 @@ namespace Landscape.Rendering
 
         public void UpdateFieldsByPlayerPosition()
         {
-            Position playerPosition = _playerPositionProvider.GetPlayerPosition();
+            IReadOnlyPosition playerPosition = _playerPositionProvider.GetPlayerPosition();
 
             var allActiveFields = _activeFieldCalculator.CalculateActiveFields(playerPosition);
             var addedFields = _fieldChangeAnalyzer.FindAddedFields(_activeFields, allActiveFields);

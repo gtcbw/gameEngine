@@ -45,6 +45,7 @@
     <Compile Include="Cuboid.cs" />
     <Compile Include="Face.cs" />
     <Compile Include="FieldCoordinates.cs" />
+    <Compile Include="IReadOnlyPosition.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ray.cs" />

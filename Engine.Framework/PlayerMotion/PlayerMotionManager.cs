@@ -101,7 +101,7 @@ namespace Engine.Framework.PlayerMotion
             if (_vehicle == null)
                 return;
             _motionModus = MotionModus.ClimbUp;
-            _vehicleUpClimber.InitClimb(_playerMotionEncapsulator.GetPlayerPosition().Clone(),
+            _vehicleUpClimber.InitClimb(_playerMotionEncapsulator.GetPlayerPosition(),
                 _playerMotionEncapsulator.GetViewDirection().DegreeXZ,
                 _playerMotionEncapsulator.GetViewDirection().DegreeY,
                 _vehicle.Position.Clone(), 
@@ -128,7 +128,7 @@ namespace Engine.Framework.PlayerMotion
             _vehicleDownClimber.InitClimb(playerPosition,
                 _playerMotionEncapsulator.GetViewDirection().DegreeXZ,
                 0, 
-                _playerMotionEncapsulator.GetPlayerPosition().Clone(),
+                _playerMotionEncapsulator.GetPlayerPosition(),
                 _playerMotionEncapsulator.GetViewDirection().DegreeXZ, 
                 _playerMotionEncapsulator.GetViewDirection().DegreeY);
             _lastVehicleMotion = null;
@@ -160,7 +160,7 @@ namespace Engine.Framework.PlayerMotion
 
             if (_cuboidWithWorldTester.ElementCollidesWithWorld(reboundMotion.Position, _playerSideLength, _height))
             {
-                reboundMotion.Position = _playerMotionEncapsulator.GetPlayerPosition();
+                reboundMotion.Position = _playerMotionEncapsulator.GetPlayerPosition().Clone();
                 reboundMotion.MovementDegree += 90.0;
                 if (reboundMotion.MovementDegree > 359)
                     reboundMotion.MovementDegree -= 360;
@@ -188,7 +188,7 @@ namespace Engine.Framework.PlayerMotion
             if (_lastVehicleMotion == null)
                 _lastVehicleMotion = new VehicleMotion
                 {
-                    Position = _playerMotionEncapsulator.GetPlayerPosition(),
+                    Position = _playerMotionEncapsulator.GetPlayerPosition().Clone(),
                     MainDegreeXZ = _playerMotionEncapsulator.GetViewDirection().DegreeXZ
                 };
 
@@ -212,7 +212,7 @@ namespace Engine.Framework.PlayerMotion
             if (_lastWalkMotion == null)
                 _lastWalkMotion = new WalkMotion
                 {
-                    Position = _playerMotionEncapsulator.GetPlayerPosition(),
+                    Position = _playerMotionEncapsulator.GetPlayerPosition().Clone(),
                     DegreeXZ = _playerMotionEncapsulator.GetViewDirection().DegreeXZ,
                     DegreeY = _playerMotionEncapsulator.GetViewDirection().DegreeY
                 };

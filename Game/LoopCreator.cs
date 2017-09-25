@@ -14,6 +14,7 @@ using Math.Contracts;
 using System.Linq;
 using Engine.Contracts.Models;
 using Engine.Framework.PlayerMotion;
+using Game.StaticGameContent;
 
 namespace Game
 {
@@ -67,7 +68,7 @@ namespace Game
                 new VehicleMotionCalculator(vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), heightCalculator, timeProvider),
                 new ReboundCalculator(vectorHelper, mousePositionController, heightCalculator, timeProvider),
                 timeProvider,
-                new VehicleFinder(new VehicleProvider()),
+                new VehicleFinder(new VehicleProvider(VehicleListProvider.GetVehicles(), playerMotionEncapsulator, lengthOfFieldSide)),
                 new VehicleUpClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.4), new PercentProvider(timeProvider, 0.6)),
                 new VehicleDownClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.6)));
 

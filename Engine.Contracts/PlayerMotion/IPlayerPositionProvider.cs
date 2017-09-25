@@ -4,6 +4,6 @@ namespace Engine.Contracts.PlayerMotion
 {
     public interface IPlayerPositionProvider
     {
-        Position GetPlayerPosition();
+        IReadOnlyPosition GetPlayerPosition();
     }
 }

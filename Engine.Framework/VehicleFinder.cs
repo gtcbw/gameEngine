@@ -18,7 +18,7 @@ namespace Engine.Framework
             _vehicleProvider = vehicleProvider;
         }
 
-        Vehicle IVehicleFinder.FindNearestVehicle(Position position)
+        Vehicle IVehicleFinder.FindNearestVehicle(IReadOnlyPosition position)
         {
             return new Vehicle
             {

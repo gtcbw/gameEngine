@@ -5,6 +5,6 @@ namespace Math.Contracts
 {
     public interface IActiveFieldCalculator
     {
-        IEnumerable<FieldCoordinates> CalculateActiveFields(Position position);
+        IEnumerable<FieldCoordinates> CalculateActiveFields(IReadOnlyPosition position);
     }
 }

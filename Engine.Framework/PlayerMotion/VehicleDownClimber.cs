@@ -6,8 +6,8 @@ namespace Engine.Framework.PlayerMotion
 {
     public sealed class VehicleDownClimber : IVehicleClimber
     {
-        private Position _positionPlayer;
-        private Position _positionVehicle;
+        private IReadOnlyPosition _positionPlayer;
+        private IReadOnlyPosition _positionVehicle;
         private double _degreeXZPlayer;
         private double _degreeYPlayer;
         private double _degreeXZVehicle;
@@ -64,7 +64,7 @@ namespace Engine.Framework.PlayerMotion
             };
         }
 
-        void IVehicleClimber.InitClimb(Position positionPlayer, double degreeXZPlayer, double degreeYPlayer, Position positionVehicle, double degreeXZVehicle, double degreeYVehicle)
+        void IVehicleClimber.InitClimb(IReadOnlyPosition positionPlayer, double degreeXZPlayer, double degreeYPlayer, IReadOnlyPosition positionVehicle, double degreeXZVehicle, double degreeYVehicle)
         {
             _positionPlayer = positionPlayer;
             _positionVehicle = positionVehicle;

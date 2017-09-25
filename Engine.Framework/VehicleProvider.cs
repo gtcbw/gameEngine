@@ -1,15 +1,12 @@
 ﻿using Engine.Contracts;
+using Engine.Contracts.Models;
 using Engine.Contracts.PlayerMotion;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using World.Model;
 
 namespace Engine.Framework
 {
-    public sealed class VehicleProvider : IVehicleProvider
+    public sealed class VehicleProvider : IVehicleProvider, IComplexShapeProvider
     {
         private readonly IEnumerable<Vehicle> _vehicles;
         private IEnumerable<Vehicle> _activeVehicles;
@@ -17,7 +14,7 @@ namespace Engine.Framework
 
         private readonly IPlayerPositionProvider _playerPositionProvider;
         private readonly double _fieldLength;
-        private Position _lastPosition;
+        private IReadOnlyPosition _lastPosition;
 
         public VehicleProvider(IEnumerable<Vehicle> vehicles,
             IPlayerPositionProvider playerPositionProvider, 
@@ -31,7 +28,7 @@ namespace Engine.Framework
 
         public void UpdateVehicles()
         {
-            Position position = _playerPositionProvider.GetPlayerPosition();
+            IReadOnlyPosition position = _playerPositionProvider.GetPlayerPosition();
 
             if (!PositionIsNearerThan(_lastPosition, position, 50))
                 return;
@@ -54,7 +51,7 @@ namespace Engine.Framework
             _activeVehicles = vehicles;
         }
 
-        private bool PositionIsNearerThan(Position positionOne, Position positionTwo, double distance)
+        private bool PositionIsNearerThan(IReadOnlyPosition positionOne, IReadOnlyPosition positionTwo, double distance)
         {
             if (positionOne.X < positionTwo.X)
             {
@@ -83,6 +80,11 @@ namespace Engine.Framework
         IEnumerable<Vehicle> IVehicleProvider.GetVehicles()
         {
             return _activeVehicles;
+        }
+
+        IEnumerable<ComplexShapeInstance> IComplexShapeProvider.GetComplexShapes()
+        {
+            return _collisionModels;
         }
     }
 }
