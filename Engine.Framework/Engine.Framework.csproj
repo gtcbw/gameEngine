@@ -75,6 +75,7 @@
     <Compile Include="RayTrigger.cs" />
     <Compile Include="RayWithModelsTester.cs" />
     <Compile Include="RayWithWorldTester.cs" />
+    <Compile Include="SpriteRenderer.cs" />
     <Compile Include="SurfaceRectangleBuilder.cs" />
     <Compile Include="TextureCache.cs" />
     <Compile Include="TextureRenderer.cs" />

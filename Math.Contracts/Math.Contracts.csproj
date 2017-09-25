@@ -45,6 +45,7 @@
     <Compile Include="IHeightCalculator.cs" />
     <Compile Include="IIntersectionCalculator.cs" />
     <Compile Include="IObtuseAngleTester.cs" />
+    <Compile Include="IPositionDistanceComparer.cs" />
     <Compile Include="IPositionDistanceTester.cs" />
     <Compile Include="IRayWithFacesTester.cs" />
     <Compile Include="IRayWithMapTester.cs" />

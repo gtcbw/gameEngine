@@ -46,6 +46,7 @@
     <Compile Include="IntersectionCalculatorWithoutFaceCulling.cs" />
     <Compile Include="IntersectionCalculatorWithFaceCulling.cs" />
     <Compile Include="ObtuseAngleTester.cs" />
+    <Compile Include="PositionDistanceComparer.cs" />
     <Compile Include="PositionDistanceTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RayWithFacesTester.cs" />

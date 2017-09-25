@@ -61,6 +61,14 @@ namespace Game
 
             PlayerMotionEncapsulator playerMotionEncapsulator = new PlayerMotionEncapsulator(vectorHelper, new World.Model.Position { X = 100, Y = 0, Z = 100 });
 
+            ITexture bike = textureCache.LoadTexture("bike.png");
+            IEnumerable<Polygon> bikeShape = surfaceRectangleBuilder.CreateRectangle(1, 0, 2, 1);
+
+            VehicleProvider vehicleProvider = new VehicleProvider(VehicleListProvider.GetVehicles(), playerMotionEncapsulator,
+                new SpriteRenderer(new TextureRenderer(new PolygonListRenderer(bikeShape, polygonRenderer), bike, textureChanger), worldTranslator, playerMotionEncapsulator, worldRotator),
+                new PositionDistanceComparer(),
+                lengthOfFieldSide);
+
             PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerMotionEncapsulator,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), 30),
                 cuboidWithWorldTester,
@@ -68,7 +76,7 @@ namespace Game
                 new VehicleMotionCalculator(vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), heightCalculator, timeProvider),
                 new ReboundCalculator(vectorHelper, mousePositionController, heightCalculator, timeProvider),
                 timeProvider,
-                new VehicleFinder(new VehicleProvider(VehicleListProvider.GetVehicles(), playerMotionEncapsulator, lengthOfFieldSide)),
+                new VehicleFinder(vehicleProvider, new PositionDistanceComparer()),
                 new VehicleUpClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.4), new PercentProvider(timeProvider, 0.6)),
                 new VehicleDownClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.6)));
 
@@ -168,6 +176,7 @@ namespace Game
 
                     timeProvider.MeasureTimeSinceLastFrame();
                     playerMotionManager.CalculatePlayerMotion();
+                    vehicleProvider.UpdateVehicles();
                     fieldManager.UpdateFieldsByPlayerPosition();
 
                     //rendering 2D
@@ -184,6 +193,8 @@ namespace Game
                     ((IRenderingElement)streetCollection).Render();
                     textureChanger.SetTexture(treetexture.TextureId);
                     alphaRenderer.Render();
+
+                    ((IRenderingElement)vehicleProvider).Render();
 
                     light.Enable();
                     ((IRenderingElement)modelContainer).Render();
