@@ -2,12 +2,30 @@
 
 namespace Engine.Contracts
 {
-    public sealed class Vehicle
+    public sealed class Vehicle : IVehicle
     {
-        public Position Position { set; get; }
+        public IReadOnlyPosition Position
+        {
+            get
+            {
+                return CollisionModel.Position;
+            }
+         }
 
-        public double DegreeXZ { set; get; }
+        public double DegreeXZ
+        {
+            get
+            {
+                return 0.0;
+            }
+        }
 
-        //public Cuboid Cuboid { set; get; }
+        public ComplexShapeInstance CollisionModel { set; get; }
+
+        public void UpdatePosition(Position position, double degreeXZ)
+        {
+            CollisionModel.Position = position;
+
+        }
     }
 }

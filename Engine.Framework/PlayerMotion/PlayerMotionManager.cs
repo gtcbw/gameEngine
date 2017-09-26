@@ -35,7 +35,7 @@ namespace Engine.Framework.PlayerMotion
         private WalkMotion _lastWalkMotion;
         private ReboundMotion _lastReboundMotion;
 
-        private Vehicle _vehicle;
+        private IVehicle _vehicle;
 
         public PlayerMotionManager(IPlayerMotionEncapsulator playerMotionEncapsulator,
             IWalkPositionCalculator walkPositionCalculator,
@@ -104,7 +104,7 @@ namespace Engine.Framework.PlayerMotion
             _vehicleUpClimber.InitClimb(_playerMotionEncapsulator.GetPlayerPosition(),
                 _playerMotionEncapsulator.GetViewDirection().DegreeXZ,
                 _playerMotionEncapsulator.GetViewDirection().DegreeY,
-                _vehicle.Position.Clone(), 
+                _vehicle.Position, 
                 _vehicle.DegreeXZ, 
                 0.0);
             _lastWalkMotion = null;
@@ -125,6 +125,7 @@ namespace Engine.Framework.PlayerMotion
             _motionModus = MotionModus.ClimbDown;
             Position playerPosition = _playerMotionEncapsulator.GetPlayerPosition().Clone();
             playerPosition.X += 1.5;
+            //TODO: calculate hieght of new position
             _vehicleDownClimber.InitClimb(playerPosition,
                 _playerMotionEncapsulator.GetViewDirection().DegreeXZ,
                 0, 
@@ -168,6 +169,7 @@ namespace Engine.Framework.PlayerMotion
             _lastReboundMotion = reboundMotion;
 
             _playerMotionEncapsulator.SetMotion(reboundMotion.Position, _height, reboundMotion.MainViewDegreeXZ + reboundMotion.RelativeViewDegreeXZ, reboundMotion.ViewDegreeY);
+            _vehicle.UpdatePosition(reboundMotion.Position, reboundMotion.MainViewDegreeXZ);
         }
 
         private void Brake()
@@ -198,6 +200,7 @@ namespace Engine.Framework.PlayerMotion
             {
                 _lastVehicleMotion = vehicleMotion;
                 _playerMotionEncapsulator.SetMotion(_lastVehicleMotion.Position, _height, _lastVehicleMotion.MainDegreeXZ + _lastVehicleMotion.RelativeDriveDegreeXZ, _lastVehicleMotion.ViewDegreeY);
+                _vehicle.UpdatePosition(_lastVehicleMotion.Position, _lastVehicleMotion.MainDegreeXZ);
             }
             else
             {

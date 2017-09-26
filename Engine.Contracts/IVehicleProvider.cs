@@ -8,6 +8,6 @@ namespace Engine.Contracts
 {
     public interface IVehicleProvider
     {
-        IEnumerable<Vehicle> GetVehicles();
+        IEnumerable<IVehicle> GetVehicles();
     }
 }

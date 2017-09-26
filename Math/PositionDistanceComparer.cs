@@ -5,7 +5,12 @@ namespace Math
 {
     public sealed class PositionDistanceComparer : IPositionDistanceComparer
     {
-        bool IPositionDistanceComparer.PositionIsNearerThan(IReadOnlyPosition positionOne, IReadOnlyPosition positionTwo, double distance)
+        public bool PositionIsNearerThan(IReadOnlyPosition positionOne, IReadOnlyPosition positionTwo, double distance)
+        {
+            return !PositionIsLargerThan(positionOne, positionTwo, distance);
+        }
+
+        public bool PositionIsLargerThan(IReadOnlyPosition positionOne, IReadOnlyPosition positionTwo, double distance)
         {
             if (positionOne.X < positionTwo.X)
             {

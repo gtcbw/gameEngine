@@ -17,9 +17,9 @@ namespace Engine.Framework
             _positionDistanceComparer = positionDistanceComparer;
         }
 
-        Vehicle IVehicleFinder.FindNearestVehicle(IReadOnlyPosition position)
+        IVehicle IVehicleFinder.FindNearestVehicle(IReadOnlyPosition position)
         {
-            foreach(Vehicle vehicle in _vehicleProvider.GetVehicles())
+            foreach(IVehicle vehicle in _vehicleProvider.GetVehicles())
             {
                 if (_positionDistanceComparer.PositionIsNearerThan(vehicle.Position, position, 2.5))
                     return vehicle;

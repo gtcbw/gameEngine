@@ -47,6 +47,7 @@
     <Compile Include="IParticleContainer.cs" />
     <Compile Include="IPercentProvider.cs" />
     <Compile Include="ISpriteRenderer.cs" />
+    <Compile Include="IVehicle.cs" />
     <Compile Include="IVehicleProvider.cs" />
     <Compile Include="Models\ICuboidWithModelsTester.cs" />
     <Compile Include="Models\ICuboidWithWorldTester.cs" />

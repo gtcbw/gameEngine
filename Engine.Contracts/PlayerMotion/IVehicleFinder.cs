@@ -4,6 +4,6 @@ namespace Engine.Contracts.PlayerMotion
 {
     public interface IVehicleFinder
     {
-        Vehicle FindNearestVehicle(IReadOnlyPosition position);
+        IVehicle FindNearestVehicle(IReadOnlyPosition position);
     }
 }

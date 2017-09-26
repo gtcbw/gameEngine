@@ -37,7 +37,7 @@ namespace Engine.Framework
         {
             IReadOnlyPosition position = _playerPositionProvider.GetPlayerPosition();
 
-            if (!_positionDistanceComparer.PositionIsNearerThan(_lastPosition, position, 50))
+            if (!_positionDistanceComparer.PositionIsLargerThan(_lastPosition, position, 50))
                 return;
 
             _lastPosition = position;
@@ -58,7 +58,7 @@ namespace Engine.Framework
             _activeVehicles = vehicles;
         }
 
-        IEnumerable<Vehicle> IVehicleProvider.GetVehicles()
+        IEnumerable<IVehicle> IVehicleProvider.GetVehicles()
         {
             return _activeVehicles;
         }

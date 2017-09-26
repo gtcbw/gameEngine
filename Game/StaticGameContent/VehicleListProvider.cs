@@ -13,7 +13,13 @@ namespace Game.StaticGameContent
         {
             return new List<Vehicle>
             {
-                new Vehicle { Position = new World.Model.Position { X = 100, Y = 1, Z = 100 } }
+                new Vehicle
+                {
+                    CollisionModel = new World.Model.ComplexShapeInstance
+                    {
+                        Position = new World.Model.Position { X = 100, Y = 1, Z = 100 }
+                    }
+                }
             };
         }
     }

@@ -62,7 +62,7 @@ namespace Game
             PlayerMotionEncapsulator playerMotionEncapsulator = new PlayerMotionEncapsulator(vectorHelper, new World.Model.Position { X = 100, Y = 0, Z = 100 });
 
             ITexture bike = textureCache.LoadTexture("bike.png");
-            IEnumerable<Polygon> bikeShape = surfaceRectangleBuilder.CreateRectangle(1, 0, 2, 1);
+            IEnumerable<Polygon> bikeShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 1, z: 0);
 
             VehicleProvider vehicleProvider = new VehicleProvider(VehicleListProvider.GetVehicles(), playerMotionEncapsulator,
                 new SpriteRenderer(new TextureRenderer(new PolygonListRenderer(bikeShape, polygonRenderer), bike, textureChanger), worldTranslator, playerMotionEncapsulator, worldRotator),
