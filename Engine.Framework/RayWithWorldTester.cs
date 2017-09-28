@@ -1,10 +1,6 @@
 ﻿using Engine.Contracts.Models;
 using Math.Contracts;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using World.Model;
 
 namespace Engine.Framework
@@ -14,26 +10,29 @@ namespace Engine.Framework
         private readonly IRayWithMapTester _rayWithMapTester;
         private readonly IRayWithModelsTester _rayWithModelsTester;
         private readonly IComplexShapeProvider _complexShapeProvider;
+        private readonly IComplexShapeProvider _vehicleCollisionModelProvider;
 
         public RayWithWorldTester(IRayWithMapTester rayWithMapTester,
             IRayWithModelsTester rayWithModelsTester,
-            IComplexShapeProvider complexShapeProvider)
+            IComplexShapeProvider complexShapeProvider,
+            IComplexShapeProvider vehicleCollisionModelProvider)
         {
             _rayWithMapTester = rayWithMapTester;
             _rayWithModelsTester = rayWithModelsTester;
             _complexShapeProvider = complexShapeProvider;
+            _vehicleCollisionModelProvider = vehicleCollisionModelProvider;
         }
 
         public Position Test(Ray ray)
         {
-            Position position = _rayWithMapTester.FindCollisionWithMap(ray);
+            Position nearestPosition = _rayWithMapTester.FindCollisionWithMap(ray);
             double maxDistance = 120;
 
-            if (position != null)
+            if (nearestPosition != null)
             {
-                maxDistance = System.Math.Sqrt((ray.StartPosition.X - position.X) * (ray.StartPosition.X - position.X)
-                     + (ray.StartPosition.Y - position.Y) * (ray.StartPosition.Y - position.Y)
-                    + (ray.StartPosition.Z - position.Z) * (ray.StartPosition.Z - position.Z));
+                maxDistance = System.Math.Sqrt((ray.StartPosition.X - nearestPosition.X) * (ray.StartPosition.X - nearestPosition.X)
+                     + (ray.StartPosition.Y - nearestPosition.Y) * (ray.StartPosition.Y - nearestPosition.Y)
+                    + (ray.StartPosition.Z - nearestPosition.Z) * (ray.StartPosition.Z - nearestPosition.Z));
             }
 
             IEnumerable<ComplexShapeInstance> models = _complexShapeProvider.GetComplexShapes();
@@ -46,10 +45,32 @@ namespace Engine.Framework
                     + (ray.StartPosition.Z - modelCollisionPosition.Z) * (ray.StartPosition.Z - modelCollisionPosition.Z));
 
                 if (newmaxDistance < maxDistance)
-                    return modelCollisionPosition;
+                {
+                    nearestPosition = modelCollisionPosition;
+                    maxDistance = newmaxDistance;
+                }
             }
 
-            return position;
+
+
+            models = _vehicleCollisionModelProvider.GetComplexShapes();
+            modelCollisionPosition = _rayWithModelsTester.TestRayWithModels(models, ray, maxDistance);
+
+            if (modelCollisionPosition != null)
+            {
+                double newmaxDistance = System.Math.Sqrt((ray.StartPosition.X - modelCollisionPosition.X) * (ray.StartPosition.X - modelCollisionPosition.X)
+                    + (ray.StartPosition.Y - modelCollisionPosition.Y) * (ray.StartPosition.Y - modelCollisionPosition.Y)
+                    + (ray.StartPosition.Z - modelCollisionPosition.Z) * (ray.StartPosition.Z - modelCollisionPosition.Z));
+
+                if (newmaxDistance < maxDistance)
+                {
+                    nearestPosition = modelCollisionPosition;
+                    maxDistance = newmaxDistance;
+                }
+            }
+
+
+            return nearestPosition;
         }
     }
 }

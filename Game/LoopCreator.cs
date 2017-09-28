@@ -56,7 +56,7 @@ namespace Game
             IModelRepository modelLoader = new ModelRepository("models", textureCache, bufferObjectFactory);
             IVertexBufferUnitRenderer bufferedMeshUnitRenderer = new VertexBufferUnitRenderer();
             ModelContainer modelContainer = new ModelContainer(modelLoader, textureChanger, bufferedMeshUnitRenderer, worldTranslator);
-            ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester()), modelContainer);
+            
 
             PlayerMotionEncapsulator playerMotionEncapsulator = new PlayerMotionEncapsulator(vectorHelper, new World.Model.Position { X = 100, Y = 0, Z = 100 });
 
@@ -69,6 +69,7 @@ namespace Game
                 new SpriteRenderer(new TextureRenderer(new PolygonListRenderer(bikeShape, polygonRenderer), bike, textureChanger), worldTranslator, playerMotionEncapsulator, worldRotator),
                 new PositionDistanceComparer(),
                 lengthOfFieldSide);
+            ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester()), modelContainer, vehicleProvider);
 
             PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerMotionEncapsulator,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), 30),
@@ -152,7 +153,7 @@ namespace Game
             IObtuseAngleTester obtuseAngleTester = new ObtuseAngleTester();
             IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(intersectionCalculator, obtuseAngleTester, positionDistanceTester);
             IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester, obtuseAngleTester);
-            RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer);
+            RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer, vehicleProvider);
             ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, 
                 surfaceRectangleBuilder.CreateRectangle(0.2, 0.5, 0.6f, 0.6f, z:0), playerMotionEncapsulator, worldRotator);
             RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerMotionEncapsulator, mouseButtonEventProvider, particleContainer);

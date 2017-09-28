@@ -25,7 +25,19 @@ namespace Engine.Framework
                 {
                     CollisionModel = new World.Model.ComplexShapeInstance
                     {
-                        Position = new World.Model.Position { X = 100, Y = _heightCalculator.CalculateHeight(100, 100), Z = 100 }
+                        Position = new World.Model.Position { X = 80, Y = _heightCalculator.CalculateHeight(80, 80), Z = 80 },
+                        ComplexShape = new World.Model.ComplexShape
+                        {
+                            Faces = new World.Model.Face[0],
+                            RadiusXZ = 1.5,
+                            MainCuboid = new World.Model.Cuboid
+                            {
+                                Center = new World.Model.Position(),
+                                SideLengthX = 10.5,
+                                SideLengthY = 1,
+                                SideLengthZ = 0.5
+                            }
+                        }
                     }
                 }
             };

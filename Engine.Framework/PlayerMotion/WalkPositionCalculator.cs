@@ -43,7 +43,7 @@ namespace Engine.Framework.PlayerMotion
             CalculateWalkViewDirection(walkMotion);
 
             walkMotion.VectorXZ = _vectorHelper.ConvertDegreeToVector(walkMotion.DegreeXZ);
-            MovePosition(walkMotion.Position, walkMotion.VectorXZ);
+            walkMotion.Motion = MovePosition(walkMotion.Position, walkMotion.VectorXZ);
 
             walkMotion.Position.Y = _heightCalculator.CalculateHeight(walkMotion.Position.X, walkMotion.Position.Z);
 
@@ -68,7 +68,7 @@ namespace Engine.Framework.PlayerMotion
                 walkMotion.DegreeY = -_maxDegreeY;
         }
 
-        private void MovePosition(Position position, Vector2D viewDirection)
+        private bool MovePosition(Position position, Vector2D viewDirection)
         {
             MovementInstruction instruction = _keyMapper.GetMappedKeys();
 
@@ -113,10 +113,12 @@ namespace Engine.Framework.PlayerMotion
             }
 
             if (movementVector == null)
-                return;
+                return false;
 
             position.X += movementVector.X * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * _metersPerSecond;
             position.Z += movementVector.Z * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * _metersPerSecond;
+
+            return true;
         }
     }
 }

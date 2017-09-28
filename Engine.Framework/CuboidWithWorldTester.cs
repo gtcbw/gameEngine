@@ -7,18 +7,34 @@ namespace Engine.Framework
     {
         private readonly ICuboidWithModelsTester _cuboidWithModelsTester;
         private readonly IComplexShapeProvider _complexShapeProvider;
+        private readonly IComplexShapeProvider _vehicleCollisionModelProvider;
 
         public CuboidWithWorldTester(ICuboidWithModelsTester cuboidWithModelsTester,
-            IComplexShapeProvider complexShapeProvider)
+            IComplexShapeProvider complexShapeProvider,
+             IComplexShapeProvider vehicleCollisionModelProvider)
         {
             _cuboidWithModelsTester = cuboidWithModelsTester;
             _complexShapeProvider = complexShapeProvider;
+            _vehicleCollisionModelProvider = vehicleCollisionModelProvider;
         }
 
         bool ICuboidWithWorldTester.ElementCollidesWithWorld(Position position, double sideLength, double height)
         {
-            Cuboid cuboid = new Cuboid { Center = new Position(), SideLengthX = sideLength, SideLengthZ = sideLength, SideLengthY = height };
-            return _cuboidWithModelsTester.CuboidCollides(_complexShapeProvider.GetComplexShapes(), cuboid, position);
+            Cuboid cuboid = new Cuboid
+            {
+                Center = new Position(),
+                SideLengthX = sideLength,
+                SideLengthZ = sideLength,
+                SideLengthY = height
+            };
+
+            if (_cuboidWithModelsTester.CuboidCollides(_complexShapeProvider.GetComplexShapes(), cuboid, position))
+                return true;
+
+            if (_cuboidWithModelsTester.CuboidCollides(_vehicleCollisionModelProvider.GetComplexShapes(), cuboid, position))
+                return true;
+
+            return false;
         }
     }
 }

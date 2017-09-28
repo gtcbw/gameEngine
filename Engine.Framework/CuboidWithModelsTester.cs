@@ -20,6 +20,9 @@ namespace Engine.Framework
             {
                 if (_cuboidCollisionTester.CuboidsCollide(cuboid, position, instance.ComplexShape.MainCuboid, instance.Position))
                 {
+                    if (instance.ComplexShape.SubCuboids == null)
+                        return true;
+
                     foreach (Cuboid subCuboid in instance.ComplexShape.SubCuboids)
                     {
                         if (_cuboidCollisionTester.CuboidsCollide(cuboid, position, subCuboid, instance.Position))

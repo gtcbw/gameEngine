@@ -222,10 +222,13 @@ namespace Engine.Framework.PlayerMotion
 
             WalkMotion walkMotion = _walkPositionCalculator.CalculateNextPosition(_lastWalkMotion);
 
-            if (!_cuboidWithWorldTester.ElementCollidesWithWorld(walkMotion.Position, _playerSideLength, _height))
+            if (walkMotion.Motion)
             {
-                _lastWalkMotion = walkMotion;
+                if (!_cuboidWithWorldTester.ElementCollidesWithWorld(walkMotion.Position, _playerSideLength, _height))
+                    _lastWalkMotion = walkMotion;
             }
+            else
+                _lastWalkMotion = walkMotion;
 
             _playerMotionEncapsulator.SetMotion(_lastWalkMotion.Position, _height, walkMotion.DegreeXZ, walkMotion.DegreeY, walkMotion.VectorXZ);
         }

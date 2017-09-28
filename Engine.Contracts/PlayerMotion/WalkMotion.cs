@@ -11,5 +11,7 @@ namespace Engine.Contracts.PlayerMotion
         public double DegreeY { set; get; }
 
         public Vector2D VectorXZ { set; get; }
+
+        public bool Motion { set; get; }
     }
 }

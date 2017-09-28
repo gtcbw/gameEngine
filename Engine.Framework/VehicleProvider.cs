@@ -48,14 +48,18 @@ namespace Engine.Framework
         private void UpdateVehicleLists()
         {
             List<Vehicle> vehicles = new List<Vehicle>();
-            foreach(Vehicle vehicle in _vehicles)
+            List<ComplexShapeInstance> collisionModels = new List<ComplexShapeInstance>();
+
+            foreach (Vehicle vehicle in _vehicles)
             {
                 if (_positionDistanceComparer.PositionIsNearerThan(vehicle.Position, _lastPosition, _fieldLength + 50))
                 {
                     vehicles.Add(vehicle);
+                    collisionModels.Add(vehicle.CollisionModel);
                 }
             }
             _activeVehicles = vehicles;
+            _collisionModels = collisionModels.ToArray();
         }
 
         IEnumerable<IVehicle> IVehicleProvider.GetVehicles()
