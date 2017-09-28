@@ -14,7 +14,6 @@ using Math.Contracts;
 using System.Linq;
 using Engine.Contracts.Models;
 using Engine.Framework.PlayerMotion;
-using Game.StaticGameContent;
 
 namespace Game
 {
@@ -64,7 +63,9 @@ namespace Game
             ITexture bike = textureCache.LoadTexture("bike.png");
             IEnumerable<Polygon> bikeShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 1, z: 0);
 
-            VehicleProvider vehicleProvider = new VehicleProvider(VehicleListProvider.GetVehicles(), playerMotionEncapsulator,
+            IVehicleRepository vehicleRepository = new VehicleRepository(heightCalculator);
+
+            VehicleProvider vehicleProvider = new VehicleProvider(vehicleRepository.GetAllVehicles(), playerMotionEncapsulator,
                 new SpriteRenderer(new TextureRenderer(new PolygonListRenderer(bikeShape, polygonRenderer), bike, textureChanger), worldTranslator, playerMotionEncapsulator, worldRotator),
                 new PositionDistanceComparer(),
                 lengthOfFieldSide);

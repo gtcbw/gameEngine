@@ -49,6 +49,7 @@
     <Compile Include="ISpriteRenderer.cs" />
     <Compile Include="IVehicle.cs" />
     <Compile Include="IVehicleProvider.cs" />
+    <Compile Include="IVehicleRepository.cs" />
     <Compile Include="Models\ICuboidWithModelsTester.cs" />
     <Compile Include="Models\ICuboidWithWorldTester.cs" />
     <Compile Include="Models\IModelContainer.cs" />
