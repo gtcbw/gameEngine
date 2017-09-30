@@ -7,11 +7,11 @@ using World.Model;
 
 namespace Engine.Framework
 {
-    public sealed class VehicleProvider : IVehicleProvider, IComplexShapeProvider, IRenderingElement
+    public sealed class VehicleManager : IVehicleManager, IComplexShapeProvider, IRenderingElement
     {
         private readonly IEnumerable<Vehicle> _vehicles;
-        private IEnumerable<Vehicle> _activeVehicles;
-        private IEnumerable<ComplexShapeInstance> _collisionModels;
+        private List<Vehicle> _activeVehicles;
+        private List<ComplexShapeInstance> _collisionModels;
 
         private readonly IPlayerPositionProvider _playerPositionProvider;
         private readonly ISpriteRenderer _spriteRenderer;
@@ -19,7 +19,9 @@ namespace Engine.Framework
         private readonly double _fieldLength;
         private IReadOnlyPosition _lastPosition;
 
-        public VehicleProvider(IEnumerable<Vehicle> vehicles,
+        private Vehicle _enteredVehicle;
+
+        public VehicleManager(IEnumerable<Vehicle> vehicles,
             IPlayerPositionProvider playerPositionProvider,
             ISpriteRenderer spriteRenderer,
             IPositionDistanceComparer positionDistanceComparer,
@@ -52,6 +54,9 @@ namespace Engine.Framework
 
             foreach (Vehicle vehicle in _vehicles)
             {
+                if (vehicle == _enteredVehicle)
+                    continue;
+
                 if (_positionDistanceComparer.PositionIsNearerThan(vehicle.Position, _lastPosition, _fieldLength + 50))
                 {
                     vehicles.Add(vehicle);
@@ -59,12 +64,17 @@ namespace Engine.Framework
                 }
             }
             _activeVehicles = vehicles;
-            _collisionModels = collisionModels.ToArray();
+            _collisionModels = collisionModels;
         }
 
-        IEnumerable<IVehicle> IVehicleProvider.GetVehicles()
+        IVehicle IVehicleManager.FindNearestVehicle(IReadOnlyPosition position)
         {
-            return _activeVehicles;
+            foreach (IVehicle vehicle in _activeVehicles)
+            {
+                if (_positionDistanceComparer.PositionIsNearerThan(vehicle.Position, position, 2.5))
+                    return vehicle;
+            }
+            return null;
         }
 
         IEnumerable<ComplexShapeInstance> IComplexShapeProvider.GetComplexShapes()
@@ -74,10 +84,22 @@ namespace Engine.Framework
 
         void IRenderingElement.Render()
         {
-            foreach (Vehicle vehicle in _vehicles)
+            foreach (Vehicle vehicle in _activeVehicles)
             {
                 _spriteRenderer.RenderSpriteAtPosition(vehicle.Position);
             }
+        }
+
+        void IVehicleManager.EnterVehicle(IVehicle vehicle)
+        {
+            _enteredVehicle = vehicle as Vehicle;
+            UpdateVehicleLists();
+        }
+
+        void IVehicleManager.LeaveVehicle(IVehicle vehicle)
+        {
+            _enteredVehicle = null;
+            UpdateVehicleLists();
         }
     }
 }

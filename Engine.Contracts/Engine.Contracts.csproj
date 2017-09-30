@@ -47,9 +47,8 @@
     <Compile Include="IParticleContainer.cs" />
     <Compile Include="IPercentProvider.cs" />
     <Compile Include="ISpriteRenderer.cs" />
-    <Compile Include="IVehicle.cs" />
-    <Compile Include="IVehicleProvider.cs" />
-    <Compile Include="IVehicleRepository.cs" />
+    <Compile Include="PlayerMotion\IVehicle.cs" />
+    <Compile Include="PlayerMotion\IVehicleRepository.cs" />
     <Compile Include="Models\ICuboidWithModelsTester.cs" />
     <Compile Include="Models\ICuboidWithWorldTester.cs" />
     <Compile Include="Models\IModelContainer.cs" />
@@ -88,13 +87,13 @@
     <Compile Include="Models\Submodel.cs" />
     <Compile Include="PlayerMotion\IReboundMotionCalculator.cs" />
     <Compile Include="PlayerMotion\IVehicleClimber.cs" />
-    <Compile Include="PlayerMotion\IVehicleFinder.cs" />
+    <Compile Include="PlayerMotion\IVehicleManager.cs" />
     <Compile Include="PlayerMotion\IVehicleMotionCalculator.cs" />
     <Compile Include="PlayerMotion\IWalkPositionCalculator.cs" />
     <Compile Include="PlayerMotion\ReboundMotion.cs" />
     <Compile Include="PlayerMotion\WalkMotion.cs" />
     <Compile Include="PlayerMotion\VehicleMotion.cs" />
-    <Compile Include="Vehicle.cs" />
+    <Compile Include="PlayerMotion\Vehicle.cs" />
     <Compile Include="ViewDirection.cs" />
     <Compile Include="IRenderingElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

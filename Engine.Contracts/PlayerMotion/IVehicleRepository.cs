@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Engine.Contracts
+namespace Engine.Contracts.PlayerMotion
 {
     public interface IVehicleRepository
     {

@@ -1,6 +1,6 @@
 ﻿using World.Model;
 
-namespace Engine.Contracts
+namespace Engine.Contracts.PlayerMotion
 {
     public sealed class Vehicle : IVehicle
     {
@@ -16,7 +16,7 @@ namespace Engine.Contracts
         {
             get
             {
-                return 0.0;
+                return CollisionModel.RotationXZ;
             }
         }
 
@@ -25,7 +25,7 @@ namespace Engine.Contracts
         public void UpdatePosition(Position position, double degreeXZ)
         {
             CollisionModel.Position = position;
-
+            CollisionModel.RotationXZ = degreeXZ;
         }
     }
 }

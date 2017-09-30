@@ -14,6 +14,7 @@ using Math.Contracts;
 using System.Linq;
 using Engine.Contracts.Models;
 using Engine.Framework.PlayerMotion;
+using Engine.Contracts.PlayerMotion;
 
 namespace Game
 {
@@ -65,11 +66,11 @@ namespace Game
 
             IVehicleRepository vehicleRepository = new VehicleRepository(heightCalculator);
 
-            VehicleProvider vehicleProvider = new VehicleProvider(vehicleRepository.GetAllVehicles(), playerMotionEncapsulator,
+            VehicleManager vehicleManager = new VehicleManager(vehicleRepository.GetAllVehicles(), playerMotionEncapsulator,
                 new SpriteRenderer(new TextureRenderer(new PolygonListRenderer(bikeShape, polygonRenderer), bike, textureChanger), worldTranslator, playerMotionEncapsulator, worldRotator),
                 new PositionDistanceComparer(),
                 lengthOfFieldSide);
-            ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester()), modelContainer, vehicleProvider);
+            ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester()), modelContainer, vehicleManager);
 
             PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerMotionEncapsulator,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), 30),
@@ -78,7 +79,7 @@ namespace Game
                 new VehicleMotionCalculator(vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), heightCalculator, timeProvider),
                 new ReboundCalculator(vectorHelper, mousePositionController, heightCalculator, timeProvider),
                 timeProvider,
-                new VehicleFinder(vehicleProvider, new PositionDistanceComparer()),
+                vehicleManager,
                 new VehicleUpClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.4), new PercentProvider(timeProvider, 0.6)),
                 new VehicleDownClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.6)));
 
@@ -153,7 +154,7 @@ namespace Game
             IObtuseAngleTester obtuseAngleTester = new ObtuseAngleTester();
             IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(intersectionCalculator, obtuseAngleTester, positionDistanceTester);
             IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester, obtuseAngleTester);
-            RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer, vehicleProvider);
+            RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer, vehicleManager);
             ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, 
                 surfaceRectangleBuilder.CreateRectangle(0.2, 0.5, 0.6f, 0.6f, z:0), playerMotionEncapsulator, worldRotator);
             RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerMotionEncapsulator, mouseButtonEventProvider, particleContainer);
@@ -178,7 +179,7 @@ namespace Game
 
                     timeProvider.MeasureTimeSinceLastFrame();
                     playerMotionManager.CalculatePlayerMotion();
-                    vehicleProvider.UpdateVehicles();
+                    vehicleManager.UpdateVehicles();
                     fieldManager.UpdateFieldsByPlayerPosition();
 
                     //rendering 2D
@@ -196,7 +197,7 @@ namespace Game
                     textureChanger.SetTexture(treetexture.TextureId);
                     alphaRenderer.Render();
 
-                    ((IRenderingElement)vehicleProvider).Render();
+                    ((IRenderingElement)vehicleManager).Render();
 
                     light.Enable();
                     ((IRenderingElement)modelContainer).Render();

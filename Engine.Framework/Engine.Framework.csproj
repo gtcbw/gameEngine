@@ -79,8 +79,7 @@
     <Compile Include="SurfaceRectangleBuilder.cs" />
     <Compile Include="TextureCache.cs" />
     <Compile Include="TextureRenderer.cs" />
-    <Compile Include="VehicleFinder.cs" />
-    <Compile Include="VehicleProvider.cs" />
+    <Compile Include="VehicleManager.cs" />
     <Compile Include="VehicleRepository.cs" />
   </ItemGroup>
   <ItemGroup>
