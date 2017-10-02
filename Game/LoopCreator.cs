@@ -56,7 +56,8 @@ namespace Game
             IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
             IModelRepository modelLoader = new ModelCache(new ModelLoader("models", textureCache, bufferObjectFactory));
             IVertexBufferUnitRenderer bufferedMeshUnitRenderer = new VertexBufferUnitRenderer();
-            ModelContainer modelContainer = new ModelContainer(modelLoader, textureChanger, bufferedMeshUnitRenderer, worldTranslator);
+            IModelInstanceRenderer modelInstanceRenderer = new ModelInstanceRenderer(textureChanger, bufferedMeshUnitRenderer, worldTranslator, worldRotator);
+            ModelContainer modelContainer = new ModelContainer(modelLoader, modelInstanceRenderer);
             
 
             PlayerMotionEncapsulator playerMotionEncapsulator = new PlayerMotionEncapsulator(vectorHelper, new World.Model.Position { X = 100, Y = 0, Z = 100 });

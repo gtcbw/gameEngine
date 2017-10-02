@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Engine.Contracts.Models;
-using Graphics.Contracts;
 using World.Model;
 
 namespace Landscape.Rendering
@@ -10,21 +9,15 @@ namespace Landscape.Rendering
     public sealed class ModelContainer : IModelContainer, IRenderingElement, IComplexShapeProvider
     {
         private IModelRepository _modelRepository;
-        private ITextureChanger _textureChanger;
-        private IVertexBufferUnitRenderer _vertexBufferUnitRenderer;
-        private IWorldTranslator _worldTranslator;
+        private IModelInstanceRenderer _modelInstanceRenderer;
         private Dictionary<int, List<ModelInstance>> _models = new Dictionary<int, List<ModelInstance>>();
         private List<ComplexShapeInstance> _shapes = new List<ComplexShapeInstance>();
 
         public ModelContainer(IModelRepository modelRepository,
-            ITextureChanger textureChanger,
-            IVertexBufferUnitRenderer vertexBufferUnitRenderer,
-            IWorldTranslator worldTranslator)
+            IModelInstanceRenderer modelInstanceRenderer)
         {
             _modelRepository = modelRepository;
-            _textureChanger = textureChanger;
-            _vertexBufferUnitRenderer = vertexBufferUnitRenderer;
-            _worldTranslator = worldTranslator;
+            _modelInstanceRenderer = modelInstanceRenderer;
         }
 
         void IModelContainer.AddModel(int fieldId, ModelInstance model)
@@ -64,15 +57,7 @@ namespace Landscape.Rendering
             {
                 foreach(ModelInstance model in _models[key])
                 {
-                    _worldTranslator.Store();
-                    _worldTranslator.TranslateWorld(model.CollisionModelInstance.Position.X, model.CollisionModelInstance.Position.Y, model.CollisionModelInstance.Position.Z);
-
-                    foreach (ModelRenderUnit unit in model.RenderUnits)
-                    {
-                        _textureChanger.SetTexture(unit.Texture.TextureId);
-                        _vertexBufferUnitRenderer.RenderMesh(unit.VertexBufferUnit);
-                    }
-                    _worldTranslator.Reset();
+                    _modelInstanceRenderer.Render(model);
                 }
             }
         }

@@ -50,6 +50,7 @@
     <Compile Include="Horizon.cs" />
     <Compile Include="DelayedMeshUnitLoader.cs" />
     <Compile Include="ModelContainer.cs" />
+    <Compile Include="ModelInstanceRenderer.cs" />
     <Compile Include="ModelQueue.cs" />
     <Compile Include="ModelQueuePusher.cs" />
     <Compile Include="PlantGrid.cs" />
