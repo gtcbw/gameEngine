@@ -45,7 +45,7 @@ namespace Engine.Framework
 
                 if (squareDistance > instance.ComplexShape.RadiusXZ * instance.ComplexShape.RadiusXZ)
                 {
-                    double[] rayToModelCenter = new double[]
+                   double[] rayToModelCenter = new double[]
                    {
                         instance.Position.X - ray.StartPosition.X,
                         instance.Position.Y - ray.StartPosition.Y,
@@ -63,10 +63,15 @@ namespace Engine.Framework
                     ray.StartPosition.Z - instance.Position.Z
                 };
 
+                rayDirection = Rotate(rayDirection, -instance.RotationXZ);
+                rayStartPosition = Rotate(rayStartPosition, -instance.RotationXZ);
+
                 Position position = _rayWithFacesTester.SearchCollision(rayStartPosition, rayDirection, instance.ComplexShape.Faces);
 
                 if (position != null)
                 {
+                    Rotate(position, instance.RotationXZ);
+
                     position.X += instance.Position.X;
                     position.Y += instance.Position.Y;
                     position.Z += instance.Position.Z;
@@ -78,6 +83,25 @@ namespace Engine.Framework
                 }
             }
             return collisionPosition;
+        }
+
+        private double[] Rotate(double[] values, double rotationXZ)
+        {
+            if (rotationXZ == 0.0)
+                return values;
+
+            return _positionRotator.Rotate(values[0], values[1], values[2], rotationXZ);
+        }
+
+        private void Rotate(Position position, double rotationXZ)
+        {
+            if (rotationXZ == 0.0)
+                return;
+
+            double[] rotation = _positionRotator.Rotate(position.X, position.Y, position.Z, rotationXZ);
+            position.X = rotation[0];
+            position.Y = rotation[1];
+            position.Z = rotation[2];
         }
     }
 }
