@@ -10,14 +10,17 @@ namespace Engine.Framework
         private IRayWithFacesTester _rayWithFacesTester;
         private readonly IPositionDistanceTester _positionDistanceTester;
         private readonly IObtuseAngleTester _obtuseAngleTester;
+        private readonly IPositionRotator _positionRotator;
 
         public RayWithModelsTester(IRayWithFacesTester rayWithFacesTester,
             IPositionDistanceTester positionDistanceTester,
-            IObtuseAngleTester obtuseAngleTester)
+            IObtuseAngleTester obtuseAngleTester,
+            IPositionRotator positionRotator)
         {
             _rayWithFacesTester = rayWithFacesTester;
             _positionDistanceTester = positionDistanceTester;
             _obtuseAngleTester = obtuseAngleTester;
+            _positionRotator = positionRotator;
         }
 
         Position IRayWithModelsTester.TestRayWithModels(IEnumerable<ComplexShapeInstance> models, Ray ray, double maxDistance)

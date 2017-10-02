@@ -13,7 +13,8 @@ namespace Landscape.Rendering
         private ITextureChanger _textureChanger;
         private IVertexBufferUnitRenderer _vertexBufferUnitRenderer;
         private IWorldTranslator _worldTranslator;
-        private Dictionary<int, List<Model>> _models = new Dictionary<int, List<Model>>();
+        private Dictionary<int, List<ModelInstance>> _models = new Dictionary<int, List<ModelInstance>>();
+        private List<ComplexShapeInstance> _shapes = new List<ComplexShapeInstance>();
 
         public ModelContainer(IModelRepository modelRepository,
             ITextureChanger textureChanger,
@@ -26,26 +27,14 @@ namespace Landscape.Rendering
             _worldTranslator = worldTranslator;
         }
 
-        void IModelContainer.AddModel(int fieldId, Model model)
+        void IModelContainer.AddModel(int fieldId, ModelInstance model)
         {
             if (_models.Keys.Contains(fieldId))
                 _models[fieldId].Add(model);
             else
-                _models.Add(fieldId, new List<Model> { model });
-        }
+                _models.Add(fieldId, new List<ModelInstance> { model });
 
-        IEnumerable<ComplexShapeInstance> IComplexShapeProvider.GetComplexShapes()
-        {
-            List<ComplexShapeInstance> shapes = new List<ComplexShapeInstance>();
-
-            foreach(List<Model> models in _models.Values)
-            {
-                foreach(Model model in models)
-                {
-                    shapes.Add(new ComplexShapeInstance { ComplexShape = model.CollisionModel, Position = model.Position });
-                }
-            }
-            return shapes;
+            _shapes.Add(model.CollisionModelInstance);
         }
 
         void IModelContainer.RemoveModels(int fieldId)
@@ -53,24 +42,30 @@ namespace Landscape.Rendering
             if (!_models.Keys.Contains(fieldId))
                 return;
 
-            List<Model> modelsToRemove = _models[fieldId];
+            List<ModelInstance> modelsToRemove = _models[fieldId];
 
-            foreach(Model model in modelsToRemove)
+            foreach(ModelInstance model in modelsToRemove)
             {
                 _modelRepository.Delete(model);
+                _shapes.Remove(model.CollisionModelInstance);
             }
 
             _models.Remove(fieldId);
+        }
+
+        IEnumerable<ComplexShapeInstance> IComplexShapeProvider.GetComplexShapes()
+        {
+            return _shapes;
         }
 
         void IRenderingElement.Render()
         {
             foreach(int key in _models.Keys)
             {
-                foreach(Model model in _models[key])
+                foreach(ModelInstance model in _models[key])
                 {
                     _worldTranslator.Store();
-                    _worldTranslator.TranslateWorld(model.Position.X, model.Position.Y, model.Position.Z);
+                    _worldTranslator.TranslateWorld(model.CollisionModelInstance.Position.X, model.CollisionModelInstance.Position.Y, model.CollisionModelInstance.Position.Z);
 
                     foreach (ModelRenderUnit unit in model.RenderUnits)
                     {

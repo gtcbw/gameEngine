@@ -58,7 +58,7 @@
     <Compile Include="KeyMapper.cs" />
     <Compile Include="MeshUnitBuilder.cs" />
     <Compile Include="ModelCache.cs" />
-    <Compile Include="ModelRepository.cs" />
+    <Compile Include="ModelLoader.cs" />
     <Compile Include="ParticleContainer.cs" />
     <Compile Include="PercentProvider.cs" />
     <Compile Include="PlantGridReader.cs" />

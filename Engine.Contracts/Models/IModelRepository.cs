@@ -2,8 +2,8 @@
 {
     public interface IModelRepository
     {
-        Model Load(ModelInstanceDescription modelInstance);
+        ModelInstance Load(ModelInstanceDescription modelInstance);
 
-        void Delete(Model model);
+        void Delete(ModelInstance model);
     }
 }

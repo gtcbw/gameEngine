@@ -23,7 +23,9 @@ namespace Engine.Framework
             {
                 new ModelInstanceDescription
                 {
-                    Filename = "box.mod", Position = new World.Model.Position
+                    Filename = "box.mod",
+                    RotationXZ = 45,
+                    Position = new World.Model.Position
                     {
                         X = 50 + (rowX * 100),
                         Y = _heightCalculator.CalculateHeight(50 + (rowX * 100), 50 +  + (rowZ * 100)),

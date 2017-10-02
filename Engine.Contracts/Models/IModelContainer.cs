@@ -2,7 +2,7 @@
 {
     public interface IModelContainer
     {
-        void AddModel(int fieldId, Model model);
+        void AddModel(int fieldId, ModelInstance model);
 
         void RemoveModels(int fieldId);
     }

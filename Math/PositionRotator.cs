@@ -1,8 +1,9 @@
-﻿using OpenTK;
+﻿using Math.Contracts;
+using OpenTK;
 
 namespace Math
 {
-    public sealed class PositionRotator
+    public sealed class PositionRotator : IPositionRotator
     {
         public double[] Rotate(double x, double y, double z, double rotationXZ)
         {

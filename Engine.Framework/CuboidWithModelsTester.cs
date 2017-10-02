@@ -8,10 +8,13 @@ namespace Engine.Framework
     public sealed class CuboidWithModelsTester : ICuboidWithModelsTester
     {
         private readonly ICuboidCollisionTester _cuboidCollisionTester;
+        private readonly IPositionRotator _positionRotator;
 
-        public CuboidWithModelsTester(ICuboidCollisionTester cuboidCollisionTester)
+        public CuboidWithModelsTester(ICuboidCollisionTester cuboidCollisionTester,
+            IPositionRotator positionRotator)
         {
             _cuboidCollisionTester = cuboidCollisionTester;
+            _positionRotator = positionRotator;
         }
 
         public bool CuboidCollides(IEnumerable<ComplexShapeInstance> models, Cuboid cuboid, Position position)

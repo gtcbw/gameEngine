@@ -6,13 +6,13 @@ using System.IO;
 
 namespace Engine.Framework
 {
-    public sealed class ModelRepository : IModelRepository
+    public sealed class ModelLoader : IModelLoader
     {
         private string _folder;
         private ITextureLoader _textureLoader;
         private IBufferObjectFactory _bufferObjectFactory;
 
-        public ModelRepository(string folder, 
+        public ModelLoader(string folder, 
             ITextureLoader textureLoader,
             IBufferObjectFactory bufferObjectFactory)
         {
@@ -21,11 +21,11 @@ namespace Engine.Framework
             _bufferObjectFactory = bufferObjectFactory;
         }
 
-        Model IModelRepository.Load(ModelInstanceDescription modelInstance)
+        Model IModelLoader.Load(string fileName)
         {
-            Model model = new Model { RenderUnits = new List<ModelRenderUnit>(), FileName = modelInstance.Filename };
+            Model model = new Model { RenderUnits = new List<ModelRenderUnit>() };
 
-            EditorModel editorModel = JsonConvert.DeserializeObject<EditorModel>(File.ReadAllText($"{_folder}\\{modelInstance.Filename}"));
+            EditorModel editorModel = JsonConvert.DeserializeObject<EditorModel>(File.ReadAllText($"{_folder}\\{fileName}"));
 
             foreach(Submodel submodel in editorModel.Submodels)
             {
@@ -36,13 +36,12 @@ namespace Engine.Framework
                 model.RenderUnits.Add(unit);
             }
 
-            model.Position = modelInstance.Position;
             model.CollisionModel = editorModel.CollisionModel;
 
             return model;
         }
 
-        void IModelRepository.Delete(Model model)
+        void IModelLoader.Delete(Model model)
         {
             foreach (ModelRenderUnit submodel in model.RenderUnits)
             {

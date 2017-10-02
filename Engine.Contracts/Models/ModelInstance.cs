@@ -3,10 +3,12 @@ using World.Model;
 
 namespace Engine.Contracts.Models
 {
-    public sealed class Model
+    public sealed class ModelInstance
     {
+        public string FileName { set; get; }
+
         public List<ModelRenderUnit> RenderUnits { set; get; }
 
-        public ComplexShape CollisionModel { set; get; }
+        public ComplexShapeInstance CollisionModelInstance { set; get; }
     }
 }

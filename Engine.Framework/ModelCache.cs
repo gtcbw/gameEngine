@@ -1,47 +1,65 @@
 ﻿using Engine.Contracts.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Engine.Framework
 {
     public sealed class ModelCache : IModelRepository
     {
-        private IModelRepository _modelRepository;
-        private List<LoadedModel> _loadedModels;
+        private Dictionary<string, LoadedModel> _loadedModels = new Dictionary<string, LoadedModel>();
+        private readonly IModelLoader _modelLoader;
 
         private sealed class LoadedModel
         {
             public Model Model { set; get; }
+
             public int Counter { set; get; }
         }
 
-        public ModelCache(IModelRepository modelRepository)
+        public ModelCache(IModelLoader modelLoader)
         {
-            _modelRepository = modelRepository;
+            _modelLoader = modelLoader;
         }
 
-        Model IModelRepository.Load(ModelInstanceDescription modelInstance)
+        ModelInstance IModelRepository.Load(ModelInstanceDescription modelInstance)
         {
-            LoadedModel loadedModel = _loadedModels.Find(x => x.Model.FileName.Equals(modelInstance.Filename));
+            LoadedModel loadedModel;
 
-            if (loadedModel == null)
+            if (!_loadedModels.Keys.Contains(modelInstance.Filename))
             {
-                Model model = _modelRepository.Load(modelInstance);
+                Model model = _modelLoader.Load(modelInstance.Filename);
                 loadedModel = new LoadedModel { Model = model, Counter = 1 };
-                _loadedModels.Add(loadedModel);
+                _loadedModels.Add(modelInstance.Filename, loadedModel);
             }
             else
+            {
+                loadedModel = _loadedModels[modelInstance.Filename];
                 loadedModel.Counter++;
+            }
 
-            return loadedModel.Model;
+            return new ModelInstance
+            {
+                FileName = modelInstance.Filename,
+                RenderUnits = loadedModel.Model.RenderUnits,
+                CollisionModelInstance = new World.Model.ComplexShapeInstance
+                {
+                    Position = modelInstance.Position,
+                    RotationXZ = modelInstance.RotationXZ,
+                    ComplexShape = loadedModel.Model.CollisionModel
+                }
+            };
         }
 
-        void IModelRepository.Delete(Model model)
+        void IModelRepository.Delete(ModelInstance model)
         {
-            LoadedModel loadedModel = _loadedModels.Find(x => x.Model.FileName == model.FileName);
+            LoadedModel loadedModel = _loadedModels[model.FileName];
             loadedModel.Counter--;
 
             if (loadedModel.Counter < 1)
-                _modelRepository.Delete(model);
+            {
+                _modelLoader.Delete(loadedModel.Model);
+                _loadedModels.Remove(model.FileName);
+            }
         }
     }
 }

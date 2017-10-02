@@ -1,5 +1,4 @@
-﻿using Engine.Contracts;
-using Engine.Contracts.Models;
+﻿using Engine.Contracts.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,7 +42,7 @@ namespace Landscape.Rendering
             List<ModelInstanceDescription> fieldQueue = _queuedModels[key];
             ModelInstanceDescription modelInstance = fieldQueue.First();
 
-            Model model = _modelRepository.Load(modelInstance);
+            ModelInstance model = _modelRepository.Load(modelInstance);
 
             _modelContainer.AddModel(key, model);
 

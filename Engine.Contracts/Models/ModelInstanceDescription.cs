@@ -7,5 +7,7 @@ namespace Engine.Contracts.Models
         public string Filename { set; get; }
 
         public Position Position { set; get; }
+
+        public double RotationXZ { set; get; }
     }
 }

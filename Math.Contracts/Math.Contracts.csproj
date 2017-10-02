@@ -47,6 +47,7 @@
     <Compile Include="IObtuseAngleTester.cs" />
     <Compile Include="IPositionDistanceComparer.cs" />
     <Compile Include="IPositionDistanceTester.cs" />
+    <Compile Include="IPositionRotator.cs" />
     <Compile Include="IRayWithFacesTester.cs" />
     <Compile Include="IRayWithMapTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
