@@ -84,18 +84,5 @@ namespace Math.Test
 
             Assert.IsFalse(cuboidCollisionTester.CuboidsCollide(cuboidOne, positionOne, cuboidTwo, positionTwo));
         }
-
-        //[TestMethod]
-        //public void Bug()
-        //{
-        //    Cuboid cuboidOne = new Cuboid { Center = new Position(), SideLengthX = 0.6, SideLengthY = 5.8, SideLengthZ = 0.6 };
-        //    Position positionOne = new Position { X = 3.2, Y = 0.03, Z = -3.7 };
-        //    Cuboid cuboidTwo = new Cuboid { Center = new Position(), SideLengthX = 1, SideLengthY = 3, SideLengthZ = 1 };
-        //    Position positionTwo = new Position { X = 0, Y = -5, Z = 0 };
-
-        //    ICuboidCollisionTester cuboidCollisionTester = new CuboidCollisionTester();
-
-        //    Assert.IsFalse(cuboidCollisionTester.CuboidsCollide(cuboidOne, positionOne, cuboidTwo, positionTwo));
-        //}
     }
 }

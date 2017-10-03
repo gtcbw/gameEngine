@@ -7,13 +7,13 @@ namespace Math
     {
         bool ICuboidCollisionTester.CuboidsCollide(Cuboid cuboidOne, Position positionOne, Cuboid cuboidTwo, Position positionTwo)
         {
-            if (System.Math.Abs(cuboidOne.Center.X + positionOne.X - (cuboidTwo.Center.X + positionTwo.X)) > (cuboidOne.SideLengthX / 2.0) + (cuboidTwo.SideLengthX / 2.0))
+            if (System.Math.Abs(cuboidOne.Center.X + positionOne.X - (cuboidTwo.Center.X + positionTwo.X)) > cuboidOne.HalfSideLengthX + cuboidTwo.HalfSideLengthX)
                 return false;
 
-            if (System.Math.Abs(cuboidOne.Center.Z + positionOne.Z - (cuboidTwo.Center.Z + positionTwo.Z)) > (cuboidOne.SideLengthZ / 2.0) + (cuboidTwo.SideLengthZ / 2.0))
+            if (System.Math.Abs(cuboidOne.Center.Z + positionOne.Z - (cuboidTwo.Center.Z + positionTwo.Z)) > cuboidOne.HalfSideLengthZ + cuboidTwo.HalfSideLengthZ)
                 return false;
 
-            if (System.Math.Abs(cuboidOne.Center.Y + positionOne.Y + cuboidOne.SideLengthY / 2.0 - (cuboidTwo.Center.Y + positionTwo.Y + cuboidTwo.SideLengthY / 2.0)) > (cuboidOne.SideLengthY / 2.0) + (cuboidTwo.SideLengthY / 2.0))
+            if (System.Math.Abs(cuboidOne.Center.Y + positionOne.Y + cuboidOne.HalfSideLengthY - (cuboidTwo.Center.Y + positionTwo.Y + cuboidTwo.HalfSideLengthY)) > cuboidOne.HalfSideLengthY + cuboidTwo.HalfSideLengthY)
                 return false;
 
             return true;
@@ -21,13 +21,13 @@ namespace Math
 
         bool ICuboidCollisionTester.CuboidOneWithoutCenterCollides(Cuboid cuboidOne, Position positionOne, Cuboid cuboidTwo)
         {
-            if (System.Math.Abs(positionOne.X - cuboidTwo.Center.X) > (cuboidOne.SideLengthX / 2.0) + (cuboidTwo.SideLengthX / 2.0))
+            if (System.Math.Abs(positionOne.X - cuboidTwo.Center.X) > cuboidOne.HalfSideLengthX + cuboidTwo.HalfSideLengthX)
                 return false;
 
-            if (System.Math.Abs(positionOne.Z - cuboidTwo.Center.Z) > (cuboidOne.SideLengthZ / 2.0) + (cuboidTwo.SideLengthZ / 2.0))
+            if (System.Math.Abs(positionOne.Z - cuboidTwo.Center.Z) > cuboidOne.HalfSideLengthZ + cuboidTwo.HalfSideLengthZ)
                 return false;
 
-            if (System.Math.Abs( positionOne.Y + cuboidOne.SideLengthY / 2.0 - (cuboidTwo.Center.Y + cuboidTwo.SideLengthY / 2.0)) > (cuboidOne.SideLengthY / 2.0) + (cuboidTwo.SideLengthY / 2.0))
+            if (System.Math.Abs( positionOne.Y + cuboidOne.HalfSideLengthY - (cuboidTwo.Center.Y + cuboidTwo.HalfSideLengthY)) > cuboidOne.HalfSideLengthY + cuboidTwo.HalfSideLengthY)
                 return false;
 
             return true;
@@ -35,13 +35,13 @@ namespace Math
 
         bool ICuboidCollisionTester.CuboidsWithoutCenterCollide(Cuboid cuboidOne, Position positionOne, Cuboid cuboidTwo)
         {
-            if (positionOne.X > (cuboidOne.SideLengthX / 2.0) + (cuboidTwo.SideLengthX / 2.0))
+            if (positionOne.X > cuboidOne.HalfSideLengthX + cuboidTwo.HalfSideLengthX)
                 return false;
 
-            if (positionOne.Z > (cuboidOne.SideLengthZ / 2.0) + (cuboidTwo.SideLengthZ / 2.0))
+            if (positionOne.Z > cuboidOne.HalfSideLengthZ + cuboidTwo.HalfSideLengthZ)
                 return false;
 
-            if (System.Math.Abs(positionOne.Y + cuboidOne.SideLengthY / 2.0 - (cuboidTwo.SideLengthY / 2.0)) > (cuboidOne.SideLengthY / 2.0) + (cuboidTwo.SideLengthY / 2.0))
+            if (System.Math.Abs(positionOne.Y + cuboidOne.HalfSideLengthY - cuboidTwo.HalfSideLengthY) > cuboidOne.HalfSideLengthY + cuboidTwo.HalfSideLengthY)
                 return false;
 
             return true;
