@@ -25,9 +25,10 @@ namespace Engine.Framework.PlayerMotion
         private readonly IVehicleMotionCalculator _vehicleMotionCalculator;
         private readonly IReboundMotionCalculator _reboundMotionCalculator;
         private readonly IFrameTimeProvider _frameTimeProvider;
-        private readonly IVehicleManager _vehicleFinder;
+        private readonly IVehicleManager _vehicleManager;
         private readonly IVehicleClimber _vehicleUpClimber;
         private readonly IVehicleClimber _vehicleDownClimber;
+        private readonly IVehicleUsageObserver _vehicleUsageObserver;
         private double _height = 1.8;
         private double _playerSideLength = 0.6;
         private MotionModus _motionModus;
@@ -44,9 +45,10 @@ namespace Engine.Framework.PlayerMotion
             IVehicleMotionCalculator vehicleMotionCalculator,
             IReboundMotionCalculator reboundMotionCalculator,
             IFrameTimeProvider frameTimeProvider,
-            IVehicleManager vehicleFinder,
+            IVehicleManager vehicleManager,
             IVehicleClimber vehicleUpClimber,
-            IVehicleClimber vehicleDownClimber)
+            IVehicleClimber vehicleDownClimber,
+            IVehicleUsageObserver vehicleUsageObserver)
         {
             _playerMotionEncapsulator = playerMotionEncapsulator;
             _walkPositionCalculator = walkPositionCalculator;
@@ -55,9 +57,10 @@ namespace Engine.Framework.PlayerMotion
             _vehicleMotionCalculator = vehicleMotionCalculator;
             _reboundMotionCalculator = reboundMotionCalculator;
             _frameTimeProvider = frameTimeProvider;
-            _vehicleFinder = vehicleFinder;
+            _vehicleManager = vehicleManager;
             _vehicleUpClimber = vehicleUpClimber;
             _vehicleDownClimber = vehicleDownClimber;
+            _vehicleUsageObserver = vehicleUsageObserver;
 
             _lastWalkMotion = new WalkMotion
             {
@@ -103,10 +106,11 @@ namespace Engine.Framework.PlayerMotion
 
         private void EnterVehicle()
         {
-            _vehicle = _vehicleFinder.FindNearestVehicle(_playerMotionEncapsulator.GetPlayerPosition());
+            _vehicle = _vehicleManager.FindNearestVehicle(_playerMotionEncapsulator.GetPlayerPosition());
             if (_vehicle == null)
                 return;
             _motionModus = MotionModus.ClimbUp;
+            _vehicleUsageObserver.ClimbingUpVehicle();
             _vehicleUpClimber.InitClimb(_playerMotionEncapsulator.GetPlayerPosition(),
                 _playerMotionEncapsulator.GetViewDirection().DegreeXZ,
                 _playerMotionEncapsulator.GetViewDirection().DegreeY,
@@ -128,6 +132,7 @@ namespace Engine.Framework.PlayerMotion
         private void InitClimbDown()
         {
             _motionModus = MotionModus.ClimbDown;
+            _vehicleUsageObserver.ClimbingDownVehicle();
             Position playerPosition = _playerMotionEncapsulator.GetPlayerPosition().Clone();
             playerPosition.X += 1.5;
             //TODO: calculate hieght of new position
@@ -154,7 +159,7 @@ namespace Engine.Framework.PlayerMotion
                     DegreeXZ = _playerMotionEncapsulator.GetViewDirection().DegreeXZ,
                     DegreeY = _playerMotionEncapsulator.GetViewDirection().DegreeY
                 };
-                _vehicleFinder.LeaveVehicle(_vehicle);
+                _vehicleManager.LeaveVehicle(_vehicle);
             }
         }
 
@@ -173,7 +178,7 @@ namespace Engine.Framework.PlayerMotion
                     MainDegreeXZ = _playerMotionEncapsulator.GetViewDirection().DegreeXZ
                 };
 
-                _vehicleFinder.EnterVehicle(_vehicle);
+                _vehicleManager.EnterVehicle(_vehicle);
             }
         }
 
@@ -192,6 +197,7 @@ namespace Engine.Framework.PlayerMotion
 
             _playerMotionEncapsulator.SetMotion(reboundMotion.Position, _height, reboundMotion.MainViewDegreeXZ + reboundMotion.RelativeViewDegreeXZ, reboundMotion.ViewDegreeY);
             _vehicle.UpdatePosition(reboundMotion.Position, reboundMotion.MainViewDegreeXZ);
+            _vehicleUsageObserver.SetDriveParameters(_lastReboundMotion.Speed, _lastReboundMotion.RelativeViewDegreeXZ, _lastReboundMotion.ViewDegreeY);
         }
 
         private void Brake()
@@ -232,6 +238,8 @@ namespace Engine.Framework.PlayerMotion
                 _motionModus = MotionModus.Rebound;
                 _lastReboundMotion = Convert(_lastVehicleMotion);
             }
+
+            _vehicleUsageObserver.SetDriveParameters(_lastVehicleMotion.Speed, _lastVehicleMotion.RelativeDriveDegreeXZ, _lastVehicleMotion.ViewDegreeY);
         }
 
         private void CalculateWalkPosition()

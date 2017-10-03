@@ -75,6 +75,10 @@ namespace Game
 
             ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester(), positionRotator), modelContainer, vehicleManager);
 
+            ITexture bikeInHands = textureCache.LoadTexture("bikeScreen.png");
+            IEnumerable<Polygon> bikeScreen = surfaceRectangleBuilder.CreateRectangle(0, 0, 1, 0.5f);
+            VehicleUsageRenderer vehicleUsageObserver = new VehicleUsageRenderer(new TextureRenderer(new PolygonListRenderer(bikeScreen, polygonRenderer), bikeInHands, textureChanger), worldTranslator);
+
             PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerMotionEncapsulator,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), 30),
                 cuboidWithWorldTester,
@@ -84,7 +88,8 @@ namespace Game
                 timeProvider,
                 vehicleManager,
                 new VehicleUpClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.4), new PercentProvider(timeProvider, 0.6)),
-                new VehicleDownClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.6)));
+                new VehicleDownClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.6)),
+                vehicleUsageObserver);
 
             ICamera camera = new Camera(config.Resolution.AspectRatio, playerMotionEncapsulator);
 
@@ -214,6 +219,8 @@ namespace Game
                     //rendering final 2D layer
                     camera.SetDefaultPerspective();
                     layerAlphaRenderer.Render();
+                    ((IRenderingElement)vehicleUsageObserver).Render();
+
 
                     // screenshot
                     screenshotMaker.ExecuteLogic();

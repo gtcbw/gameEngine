@@ -92,6 +92,7 @@
     <Compile Include="PlayerMotion\IVehicleClimber.cs" />
     <Compile Include="PlayerMotion\IVehicleManager.cs" />
     <Compile Include="PlayerMotion\IVehicleMotionCalculator.cs" />
+    <Compile Include="PlayerMotion\IVehicleUsageObserver.cs" />
     <Compile Include="PlayerMotion\IWalkPositionCalculator.cs" />
     <Compile Include="PlayerMotion\ReboundMotion.cs" />
     <Compile Include="PlayerMotion\WalkMotion.cs" />

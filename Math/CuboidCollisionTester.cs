@@ -35,10 +35,10 @@ namespace Math
 
         bool ICuboidCollisionTester.CuboidsWithoutCenterCollide(Cuboid cuboidOne, Position positionOne, Cuboid cuboidTwo)
         {
-            if (positionOne.X > cuboidOne.HalfSideLengthX + cuboidTwo.HalfSideLengthX)
+            if (System.Math.Abs(positionOne.X) > cuboidOne.HalfSideLengthX + cuboidTwo.HalfSideLengthX)
                 return false;
 
-            if (positionOne.Z > cuboidOne.HalfSideLengthZ + cuboidTwo.HalfSideLengthZ)
+            if (System.Math.Abs(positionOne.Z) > cuboidOne.HalfSideLengthZ + cuboidTwo.HalfSideLengthZ)
                 return false;
 
             if (System.Math.Abs(positionOne.Y + cuboidOne.HalfSideLengthY - cuboidTwo.HalfSideLengthY) > cuboidOne.HalfSideLengthY + cuboidTwo.HalfSideLengthY)
