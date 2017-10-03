@@ -9,7 +9,6 @@ namespace Engine.Framework
     {
         private readonly ICuboidCollisionTester _cuboidCollisionTester;
         private readonly IPositionRotator _positionRotator;
-        private readonly Position _emptyPosition = new Position();
 
         public CuboidWithModelsTester(ICuboidCollisionTester cuboidCollisionTester,
             IPositionRotator positionRotator)
@@ -34,16 +33,23 @@ namespace Engine.Framework
                     };
                 }
                 else
-                    rotatedPosition = position;
-                
-                if (_cuboidCollisionTester.CuboidsCollide(cuboid, rotatedPosition, instance.ComplexShape.MainCuboid, _emptyPosition))
+                {
+                    rotatedPosition = new Position
+                    {
+                        X = position.X - instance.Position.X,
+                        Y = position.Y - instance.Position.Y,
+                        Z = position.Z - instance.Position.Z
+                    };
+                }
+
+                if (_cuboidCollisionTester.CuboidsWithoutCenterCollide(cuboid, rotatedPosition, instance.ComplexShape.MainCuboid))
                 {
                     if (instance.ComplexShape.SubCuboids == null)
                         return true;
 
                     foreach (Cuboid subCuboid in instance.ComplexShape.SubCuboids)
                     {
-                        if (_cuboidCollisionTester.CuboidsCollide(cuboid, rotatedPosition, subCuboid, subCuboid.Center))
+                        if (_cuboidCollisionTester.CuboidOneWithoutCenterCollides(cuboid, rotatedPosition, subCuboid))
                             return true;
                     }
                 }

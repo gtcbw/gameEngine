@@ -117,7 +117,7 @@ namespace Engine.Framework.PlayerMotion
 
         private void ExitVehicle()
         {
-            if (_lastVehicleMotion.Speed > 0.5)
+            if (_lastVehicleMotion.Speed > 0.5 || _lastVehicleMotion.Speed < -0.5)
             {
                 _motionModus = MotionModus.FullBrake;
                 return;
@@ -196,14 +196,24 @@ namespace Engine.Framework.PlayerMotion
 
         private void Brake()
         {
-            _lastVehicleMotion.Speed -= _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * 30;
+            if (_lastVehicleMotion.Speed > 0)
+            {
+                _lastVehicleMotion.Speed -= _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * 30;
 
-            if (_lastVehicleMotion.Speed < 0)
-                _lastVehicleMotion.Speed = 0;
+                if (_lastVehicleMotion.Speed < 0)
+                    _lastVehicleMotion.Speed = 0;
+            }
+            else
+            {
+                _lastVehicleMotion.Speed += _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * 30;
+
+                if (_lastVehicleMotion.Speed > 0)
+                    _lastVehicleMotion.Speed = 0;
+            }
 
             CalculateDrivePosition();
 
-            if (_lastVehicleMotion.Speed < 0.5)
+            if (_lastVehicleMotion.Speed < 0.5 && _lastVehicleMotion.Speed > -0.5)
                 InitClimbDown();
         } 
 
@@ -264,7 +274,7 @@ namespace Engine.Framework.PlayerMotion
                 MovementDegree = vehicleMotion.MainDegreeXZ - 180
             };
 
-            if (reboundMotion.MovementDegree < 0)
+            while (reboundMotion.MovementDegree < 0)
                 reboundMotion.MovementDegree += 360;
 
             return reboundMotion;

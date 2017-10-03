@@ -24,7 +24,7 @@ namespace Engine.Framework
                 new ModelInstanceDescription
                 {
                     Filename = "box.mod",
-                    RotationXZ = 45,
+                    RotationXZ = 0,
                     Position = new World.Model.Position
                     {
                         X = 50 + (rowX * 100),
