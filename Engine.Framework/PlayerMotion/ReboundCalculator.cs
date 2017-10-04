@@ -54,7 +54,7 @@ namespace Engine.Framework.PlayerMotion
             reboundMotion.Position.Z += movementVector.Z * _frameTimeProvider.GetTimeInSecondsSinceLastFrame() * reboundMotion.Speed;
             reboundMotion.Position.Y = _heightCalculator.CalculateHeight(reboundMotion.Position.X, reboundMotion.Position.Z);
 
-            MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
+            MousePositionDelta mousePositionDelta = _mousePositionController.GetMousePositionDelta();
 
             reboundMotion.RelativeViewDegreeXZ += mousePositionDelta.PositionDeltaX;
 

@@ -12,7 +12,7 @@ namespace Engine.Framework
         public PercentProvider(IFrameTimeProvider frameTimeProvider, double duration)
         {
             _frameTimeProvider = frameTimeProvider;
-            _duration = duration;
+            _currentDuration = _duration = duration;
         }
 
         double IPercentProvider.GetPercent()

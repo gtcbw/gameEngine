@@ -25,7 +25,7 @@ namespace Game
             Window window = new Window(config.Resolution.X, config.Resolution.Y);
             window.VSync =  OpenTK.VSyncMode.Off;
 
-            IMousePositionController mousePositionController = new MousePositionController(window.Mouse, config.InvertMouse, config.MouseSensitivity);
+            MousePositionController mousePositionController = new MousePositionController(window.Mouse, config.InvertMouse, config.MouseSensitivity);
             IMouseButtonEventProvider mouseButtonEventProvider = new MouseButtonEventProvider(window.Mouse);
             IPressedKeyDetector pressedKeyDetector = new PressedKeyDetector(window.Keyboard);
             FrameTimeProvider timeProvider = new FrameTimeProvider();
@@ -77,7 +77,8 @@ namespace Game
 
             ITexture bikeInHands = textureCache.LoadTexture("bikeScreen.png");
             IEnumerable<Polygon> bikeScreen = surfaceRectangleBuilder.CreateRectangle(0, 0, 1, 0.5f);
-            VehicleUsageRenderer vehicleUsageObserver = new VehicleUsageRenderer(new TextureRenderer(new PolygonListRenderer(bikeScreen, polygonRenderer), bikeInHands, textureChanger), worldTranslator);
+            VehicleUsageRenderer vehicleUsageObserver = new VehicleUsageRenderer(new TextureRenderer(new PolygonListRenderer(bikeScreen, polygonRenderer), bikeInHands, textureChanger), 
+                worldTranslator, new PercentProvider(timeProvider, 0.7), new PercentProvider(timeProvider, 0.3));
 
             PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerMotionEncapsulator,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), 30),
@@ -186,6 +187,7 @@ namespace Game
                     screenClearer.CleanScreen();
 
                     timeProvider.MeasureTimeSinceLastFrame();
+                    mousePositionController.MeasureMousePositionDelta();
                     playerMotionManager.CalculatePlayerMotion();
                     vehicleManager.UpdateVehicles();
                     fieldManager.UpdateFieldsByPlayerPosition();

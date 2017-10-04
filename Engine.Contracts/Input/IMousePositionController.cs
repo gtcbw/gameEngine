@@ -2,6 +2,6 @@
 {
     public interface IMousePositionController
     {
-        MousePositionDelta MeasureMousePositionDelta();
+        MousePositionDelta GetMousePositionDelta();
     }
 }

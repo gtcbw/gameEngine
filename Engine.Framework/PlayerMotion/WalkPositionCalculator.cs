@@ -51,7 +51,7 @@ namespace Engine.Framework.PlayerMotion
         }
         private void CalculateWalkViewDirection(WalkMotion walkMotion)
         {
-            MousePositionDelta mousePositionDelta = _mousePositionController.MeasureMousePositionDelta();
+            MousePositionDelta mousePositionDelta = _mousePositionController.GetMousePositionDelta();
 
             walkMotion.DegreeXZ += mousePositionDelta.PositionDeltaX;
 

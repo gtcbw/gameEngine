@@ -10,6 +10,7 @@ namespace Game.OpenTkDependencies
         private const int _fixPixelCountForMouseCenter = 200;
         private bool _invertMouse;
         private double _mouseSensitivity;
+        private MousePositionDelta _mousePositionDelta;
 
         public MousePositionController(MouseDevice mouseDevice,
             bool invertMouse, 
@@ -20,24 +21,27 @@ namespace Game.OpenTkDependencies
             _mouseSensitivity = mouseSensitivity;
         }
 
-        MousePositionDelta IMousePositionController.MeasureMousePositionDelta()
+        MousePositionDelta IMousePositionController.GetMousePositionDelta()
         {
-            MousePositionDelta mousePositionDelta = new MousePositionDelta();
+            return _mousePositionDelta;
+        }
+
+        public void MeasureMousePositionDelta()
+        {
+            _mousePositionDelta = new MousePositionDelta();
 
             Point cursor = System.Windows.Forms.Cursor.Position;
 
-            mousePositionDelta.PositionDeltaX = cursor.X - _fixPixelCountForMouseCenter;
-            mousePositionDelta.PositionDeltaY = _fixPixelCountForMouseCenter - cursor.Y;
+            _mousePositionDelta.PositionDeltaX = cursor.X - _fixPixelCountForMouseCenter;
+            _mousePositionDelta.PositionDeltaY = _fixPixelCountForMouseCenter - cursor.Y;
 
             if (_invertMouse)
-                mousePositionDelta.PositionDeltaY *= -1;
+                _mousePositionDelta.PositionDeltaY *= -1;
 
-            mousePositionDelta.PositionDeltaX *= _mouseSensitivity;
-            mousePositionDelta.PositionDeltaY *= _mouseSensitivity;
+            _mousePositionDelta.PositionDeltaX *= _mouseSensitivity;
+            _mousePositionDelta.PositionDeltaY *= _mouseSensitivity;
 
             System.Windows.Forms.Cursor.Position = new Point(_fixPixelCountForMouseCenter, _fixPixelCountForMouseCenter);
-
-            return mousePositionDelta;
         }
     }
 }
