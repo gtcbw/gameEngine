@@ -29,6 +29,7 @@ namespace Engine.Framework.PlayerMotion
         private readonly IVehicleClimber _vehicleUpClimber;
         private readonly IVehicleClimber _vehicleDownClimber;
         private readonly IVehicleUsageObserver _vehicleUsageObserver;
+        private readonly IVehicleExitPositionFinder _vehicleExitPositionFinder;
         private double _height = 1.8;
         private double _playerSideLength = 0.6;
         private MotionModus _motionModus;
@@ -48,7 +49,8 @@ namespace Engine.Framework.PlayerMotion
             IVehicleManager vehicleManager,
             IVehicleClimber vehicleUpClimber,
             IVehicleClimber vehicleDownClimber,
-            IVehicleUsageObserver vehicleUsageObserver)
+            IVehicleUsageObserver vehicleUsageObserver,
+            IVehicleExitPositionFinder vehicleExitPositionFinder)
         {
             _playerMotionEncapsulator = playerMotionEncapsulator;
             _walkPositionCalculator = walkPositionCalculator;
@@ -61,6 +63,7 @@ namespace Engine.Framework.PlayerMotion
             _vehicleUpClimber = vehicleUpClimber;
             _vehicleDownClimber = vehicleDownClimber;
             _vehicleUsageObserver = vehicleUsageObserver;
+            _vehicleExitPositionFinder = vehicleExitPositionFinder;
 
             _lastWalkMotion = new WalkMotion
             {
@@ -131,12 +134,16 @@ namespace Engine.Framework.PlayerMotion
 
         private void InitClimbDown()
         {
+            Position position = _vehicleExitPositionFinder.FindPosition(_vehicle.Position, _vehicle.DegreeXZ);
+            if (position == null)
+            {
+                _motionModus = MotionModus.Drive;
+                return;
+            }
             _motionModus = MotionModus.ClimbDown;
             _vehicleUsageObserver.ClimbingDownVehicle();
-            Position playerPosition = _playerMotionEncapsulator.GetPlayerPosition().Clone();
-            playerPosition.X += 1.5;
-            //TODO: calculate hieght of new position
-            _vehicleDownClimber.InitClimb(playerPosition,
+
+            _vehicleDownClimber.InitClimb(position,
                 _playerMotionEncapsulator.GetViewDirection().DegreeXZ,
                 0, 
                 _playerMotionEncapsulator.GetPlayerPosition(),

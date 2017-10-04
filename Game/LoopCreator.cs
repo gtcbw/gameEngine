@@ -90,7 +90,8 @@ namespace Game
                 vehicleManager,
                 new VehicleUpClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.4), new PercentProvider(timeProvider, 0.6)),
                 new VehicleDownClimber(new PercentProvider(timeProvider, 1.0), new PercentProvider(timeProvider, 0.6)),
-                vehicleUsageObserver);
+                vehicleUsageObserver,
+                new VehicleExitPositionFinder(3, vectorHelper, cuboidWithWorldTester, heightCalculator));
 
             ICamera camera = new Camera(config.Resolution.AspectRatio, playerMotionEncapsulator);
 

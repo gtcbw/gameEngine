@@ -51,6 +51,7 @@
     <Compile Include="Models\IModelLoader.cs" />
     <Compile Include="Models\ModelInstance.cs" />
     <Compile Include="PlayerMotion\IVehicle.cs" />
+    <Compile Include="PlayerMotion\IVehicleExitPositionFinder.cs" />
     <Compile Include="PlayerMotion\IVehicleRepository.cs" />
     <Compile Include="Models\ICuboidWithModelsTester.cs" />
     <Compile Include="Models\ICuboidWithWorldTester.cs" />

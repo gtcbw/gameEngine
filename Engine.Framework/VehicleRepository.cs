@@ -29,7 +29,7 @@ namespace Engine.Framework
                             MainCuboid = new World.Model.Cuboid
                             {
                                 Center = new World.Model.Position(),
-                                SideLengthX = 10.5,
+                                SideLengthX = 1.5,
                                 SideLengthY = 1,
                                 SideLengthZ = 0.5
                             }
