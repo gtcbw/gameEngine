@@ -256,7 +256,17 @@ namespace Engine.Framework.PlayerMotion
             if (walkMotion.Motion)
             {
                 if (_cuboidWithWorldTester.ElementCollidesWithWorld(walkMotion.Position, _playerSideLength, _height))
-                    walkMotion.Position = _lastWalkMotion.Position;
+                {
+                    double x = walkMotion.Position.X;
+                    walkMotion.Position.X = _lastWalkMotion.Position.X;
+                    if (_cuboidWithWorldTester.ElementCollidesWithWorld(walkMotion.Position, _playerSideLength, _height))
+                    {
+                        walkMotion.Position.X = x;
+                        walkMotion.Position.Z = _lastWalkMotion.Position.Z;
+                        if (_cuboidWithWorldTester.ElementCollidesWithWorld(walkMotion.Position, _playerSideLength, _height))
+                            walkMotion.Position = _lastWalkMotion.Position;
+                    }
+                }
                 _lastWalkMotion = walkMotion;
             }
             else
