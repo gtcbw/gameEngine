@@ -255,8 +255,9 @@ namespace Engine.Framework.PlayerMotion
 
             if (walkMotion.Motion)
             {
-                if (!_cuboidWithWorldTester.ElementCollidesWithWorld(walkMotion.Position, _playerSideLength, _height))
-                    _lastWalkMotion = walkMotion;
+                if (_cuboidWithWorldTester.ElementCollidesWithWorld(walkMotion.Position, _playerSideLength, _height))
+                    walkMotion.Position = _lastWalkMotion.Position;
+                _lastWalkMotion = walkMotion;
             }
             else
                 _lastWalkMotion = walkMotion;
