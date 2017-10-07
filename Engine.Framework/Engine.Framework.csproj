@@ -56,6 +56,7 @@
     <Compile Include="FrameTimeProvider.cs" />
     <Compile Include="IndexFactorByViewDirectionProvider.cs" />
     <Compile Include="KeyMapper.cs" />
+    <Compile Include="ListRenderer.cs" />
     <Compile Include="MeshUnitBuilder.cs" />
     <Compile Include="ModelCache.cs" />
     <Compile Include="ModelLoader.cs" />

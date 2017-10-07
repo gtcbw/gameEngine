@@ -178,7 +178,11 @@ namespace Game
             //target cross
             ITexture cross = textureCache.LoadTexture("cross.png");
             IEnumerable<Polygon> crossShape = surfaceRectangleBuilder.CreateRectangle(0.45, 0.45, 0.1f, 0.1f);
-            IRenderingElement layerAlphaRenderer = new AlphaTestRenderer(new TextureRenderer(new PolygonListRenderer(crossShape, polygonRenderer), cross, textureChanger), new AlphaTester());
+            IRenderingElement layerAlphaRenderer = new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement>
+            {
+                new TextureRenderer(new PolygonListRenderer(crossShape, polygonRenderer), cross, textureChanger),
+                vehicleUsageObserver
+                }), new AlphaTester());
 
             ScreenshotMaker screenshotMaker = new ScreenshotMaker("C:\\screenshots\\", 60, 0.05, config.Resolution.X, config.Resolution.Y, pressedKeyDetector, timeProvider);
             return () =>
@@ -222,8 +226,6 @@ namespace Game
                     //rendering final 2D layer
                     camera.SetDefaultPerspective();
                     layerAlphaRenderer.Render();
-                    ((IRenderingElement)vehicleUsageObserver).Render();
-
 
                     // screenshot
                     screenshotMaker.ExecuteLogic();
