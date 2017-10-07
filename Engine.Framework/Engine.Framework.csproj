@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="BitmapToHeightConverter.cs" />
     <Compile Include="AlphaTestRenderer.cs" />
+    <Compile Include="CollisionModelCache.cs" />
     <Compile Include="ColorRenderer.cs" />
     <Compile Include="CuboidWithModelsTester.cs" />
     <Compile Include="CuboidWithWorldTester.cs" />

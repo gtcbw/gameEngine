@@ -67,13 +67,17 @@ namespace Game
 
             IVehicleRepository vehicleRepository = new VehicleRepository(heightCalculator);
 
+            PositionDistanceComparer positionDistanceComparer = new PositionDistanceComparer();
             VehicleManager vehicleManager = new VehicleManager(vehicleRepository.GetAllVehicles(), playerMotionEncapsulator,
                 new SpriteRenderer(new TextureRenderer(new PolygonListRenderer(bikeShape, polygonRenderer), bike, textureChanger), worldTranslator, playerMotionEncapsulator, worldRotator),
-                new PositionDistanceComparer(),
+                positionDistanceComparer,
                 lengthOfFieldSide);
             IPositionRotator positionRotator = new PositionRotator();
 
-            ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester(new CuboidWithModelsTester(new CuboidCollisionTester(), positionRotator), modelContainer, vehicleManager);
+            ICuboidWithWorldTester cuboidWithWorldTester = new CuboidWithWorldTester
+                (new CuboidWithModelsTester(new CuboidCollisionTester(), positionRotator), 
+                new CollisionModelCache(modelContainer, playerMotionEncapsulator, positionDistanceComparer, 15, 16),
+                vehicleManager);
 
             ITexture bikeInHands = textureCache.LoadTexture("bikeScreen.png");
             IEnumerable<Polygon> bikeScreen = surfaceRectangleBuilder.CreateRectangle(0, 0, 1, 0.5f);
