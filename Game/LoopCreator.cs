@@ -63,7 +63,7 @@ namespace Game
             PlayerMotionEncapsulator playerMotionEncapsulator = new PlayerMotionEncapsulator(vectorHelper, new World.Model.Position { X = 100, Y = 0, Z = 100 });
 
             ITexture bike = textureCache.LoadTexture("bike.png");
-            IEnumerable<Polygon> bikeShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 1, z: 0);
+            IEnumerable<Polygon> bikeShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 4, 4, z: 0);
 
             IVehicleRepository vehicleRepository = new VehicleRepository(heightCalculator);
 
@@ -100,7 +100,7 @@ namespace Game
             ICamera camera = new Camera(config.Resolution.AspectRatio, playerMotionEncapsulator);
 
             // environment rendring
-            ITexture horizontexture = textureCache.LoadTexture("horizon.bmp");
+            ITexture horizontexture = textureCache.LoadTexture("jungle.png");
             IEnumerable<Polygon> polygons = surfaceRectangleBuilder.CreateRectangle(-1, 0, 4, 1);
             
             IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerMotionEncapsulator, textureTranslator, worldTranslator);
@@ -128,7 +128,7 @@ namespace Game
                 lengthOfFieldSide, 
                 10);
             IVertexByFieldCreator treeCreator = new TreeVertexCreator(new TreePrototypeProvider(vectorHelper)
-                .GetPrototype(3, 16), positionGenerator);
+                .GetPrototype(8, 16), positionGenerator);
             IMeshUnitCreator treeMeshUnitCreator = new TreeMeshUnitCreator(bufferObjectFactory);
             IFieldChangeObserver treeLoader = new FrameDelayUnitByFieldLoader(
                 new DelayedMeshUnitLoader(treeCreator,
@@ -154,7 +154,7 @@ namespace Game
             ITexture treetexture = textureCache.LoadTexture("tree.png", true);
 
             IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
-            IRenderingElement alphaRenderer = new AlphaTestRenderer((IRenderingElement)treeCollection, new AlphaTester());
+            IRenderingElement alphaRenderer = new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement> { (IRenderingElement)treeCollection, vehicleManager }), new AlphaTester());
 
             //light
             ILightCollectionProvider lightCollectionProvider = new LightCollectionProvider();
@@ -215,8 +215,6 @@ namespace Game
                     ((IRenderingElement)streetCollection).Render();
                     textureChanger.SetTexture(treetexture.TextureId);
                     alphaRenderer.Render();
-
-                    ((IRenderingElement)vehicleManager).Render();
 
                     light.Enable();
                     ((IRenderingElement)modelContainer).Render();
