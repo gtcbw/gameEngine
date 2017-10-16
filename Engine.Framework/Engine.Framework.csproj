@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation\Animated360DegreeTextureLoader.cs" />
+    <Compile Include="Animation\TextureByAnimationPercentSelector.cs" />
     <Compile Include="BitmapToHeightConverter.cs" />
     <Compile Include="AlphaTestRenderer.cs" />
     <Compile Include="CollisionModelCache.cs" />
