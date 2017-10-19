@@ -15,6 +15,8 @@ using System.Linq;
 using Engine.Contracts.Models;
 using Engine.Framework.PlayerMotion;
 using Engine.Contracts.PlayerMotion;
+using Engine.Contracts.Animation;
+using Engine.Framework.Animation;
 
 namespace Game
 {
@@ -189,6 +191,20 @@ namespace Game
                 }), new AlphaTester());
 
             ScreenshotMaker screenshotMaker = new ScreenshotMaker("C:\\screenshots\\", 60, 0.05, config.Resolution.X, config.Resolution.Y, pressedKeyDetector, timeProvider);
+
+            //enemy
+            IAnimated360DegreeTextureLoader animated360DegreeTextureLoader = new Animated360DegreeTextureLoader(textureCache);
+            ITextureByAnimationPercentSelector textureByAnimationPercentSelector = new TextureByAnimationPercentSelector();
+            ITextureSequenceSelector textureSequenceSelector = new TextureSequenceSelector();
+
+            IEnumerable<Polygon> characterShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 4, 4, z: 0);
+
+            
+
+            Animation360DegreeRenderer animation360DegreeRenderer = new Animation360DegreeRenderer(new SpriteRenderer(new PolygonListRenderer(characterShape, polygonRenderer), worldTranslator, playerMotionEncapsulator, worldRotator),
+                textureByAnimationPercentSelector, textureSequenceSelector, textureChanger);
+            var animation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\feet\\walk");
+
             return () =>
             {
                 while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
@@ -222,6 +238,8 @@ namespace Game
 
                     ((IRenderingElement)particleContainer).Render();
                     //fog.StopFog();
+
+                    animation360DegreeRenderer.Render(animation);
 
                     rayTrigger.DoStuff();
 

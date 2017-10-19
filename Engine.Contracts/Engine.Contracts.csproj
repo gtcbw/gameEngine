@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="Animation\IAnimated360DegreeTextureLoader.cs" />
     <Compile Include="Animation\ITextureByAnimationPercentSelector.cs" />
+    <Compile Include="Animation\ITextureSequenceSelector.cs" />
     <Compile Include="Animation\RotationDegrees.cs" />
+    <Compile Include="Animation\SelectedTextureSequence.cs" />
     <Compile Include="Animation\TextureSequence.cs" />
     <Compile Include="Animation\TextureSequence360Degree.cs" />
     <Compile Include="IFontMapper.cs" />

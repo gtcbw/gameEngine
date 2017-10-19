@@ -2,6 +2,6 @@
 {
     public interface IAnimated360DegreeTextureLoader
     {
-        TextureSequence360Degree LoadAnimatedTexture(string name);
+        TextureSequence360Degree LoadAnimatedTexture(string animationName);
     }
 }

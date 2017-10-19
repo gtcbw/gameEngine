@@ -16,7 +16,7 @@ namespace Graphics
             _folder = folder;
         }
 
-        ITexture ITextureLoader.LoadTexture(string texturePath, bool mipmap)
+        ITexture ITextureLoader.LoadTexture(string texturePath, bool mipmap, bool fullPath)
         {
             int id = GL.GenTexture();
             
@@ -24,7 +24,7 @@ namespace Graphics
 
             bool hasAlphaChannel = texturePath.EndsWith(".png");
 
-            Bitmap bitmap = new Bitmap($"{_folder}\\{texturePath}");
+            Bitmap bitmap = fullPath ? new Bitmap(texturePath) :  new Bitmap($"{_folder}\\{texturePath}");
             BitmapData bitmapData;
 
             bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,

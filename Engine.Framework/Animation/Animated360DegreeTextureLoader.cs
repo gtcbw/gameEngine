@@ -10,24 +10,21 @@ namespace Engine.Framework.Animation
     public sealed class Animated360DegreeTextureLoader : IAnimated360DegreeTextureLoader
     {
         private readonly ITextureLoader _textureLoader;
-        private readonly string _basePath;
+        string basePath = "textures\\";
 
-        public Animated360DegreeTextureLoader(ITextureLoader textureLoader,
-            string basePath)
+        public Animated360DegreeTextureLoader(ITextureLoader textureLoader)
         {
             _textureLoader = textureLoader;
-            _basePath = basePath;
         }
 
-        TextureSequence360Degree IAnimated360DegreeTextureLoader.LoadAnimatedTexture(string name)
+        TextureSequence360Degree IAnimated360DegreeTextureLoader.LoadAnimatedTexture(string animationName)
         {
-            string animationName = $"{_basePath}\\{name}";
-
+            
             Dictionary<RotationDegrees, TextureSequence> animations = new Dictionary<RotationDegrees, TextureSequence>();
 
             foreach(RotationDegrees rotationDegrees in Enum.GetValues(typeof(RotationDegrees)))
             {
-                var subFolder = $"{animationName}\\{rotationDegrees}";
+                var subFolder = $"{basePath}{animationName}\\{rotationDegrees}";
 
                 if (!Directory.Exists(subFolder))
                     continue;
@@ -35,7 +32,7 @@ namespace Engine.Framework.Animation
                 List<ITexture> textures = new List<ITexture>();
                 foreach (string fileName in Directory.GetFiles(subFolder).OrderBy(x=>x))
                 {
-                    textures.Add(_textureLoader.LoadTexture(fileName));
+                    textures.Add(_textureLoader.LoadTexture(fileName, fullPath: true));
                 }
 
                 animations.Add(rotationDegrees, new TextureSequence { Textures = textures.ToArray() });

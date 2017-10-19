@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation\Animated360DegreeTextureLoader.cs" />
+    <Compile Include="Animation\Animation360DegreeRenderer.cs" />
     <Compile Include="Animation\TextureByAnimationPercentSelector.cs" />
+    <Compile Include="Animation\TextureSequenceSelector.cs" />
     <Compile Include="BitmapToHeightConverter.cs" />
     <Compile Include="AlphaTestRenderer.cs" />
     <Compile Include="CollisionModelCache.cs" />
