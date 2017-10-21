@@ -37,8 +37,8 @@ namespace Game
             BufferLoader bufferLoader = new BufferLoader(new WavFileReader());
             ISoundFactory soundFactory = new SoundFactory(bufferLoader, 100, config.SoundVolume / 100.0f);
             SurfaceRectangleBuilder surfaceRectangleBuilder = new SurfaceRectangleBuilder();
+            IMatrixManager matrixManager = new MatrixManager();
 
-           
             VectorHelper vectorHelper = new VectorHelper();
 
             BitmapToHeightConverter converter = new BitmapToHeightConverter();
@@ -51,14 +51,13 @@ namespace Game
             int lengthOfFieldSide = 100;
 
             IPolygonRenderer polygonRenderer = new PolygonRenderer();
-            ITextureTranslator textureTranslator = new TextureTranslator();
-            IWorldTranslator worldTranslator = new WorldTranslator();
+            ITranslator worldTranslator = new Translator();
             IWorldRotator worldRotator = new WorldRotator();
             IHeightCalculator heightCalculator = new HeightCalculator(heightValues, numberOfQuadsPerSideOfArea, metersPerQuad);
             IBufferObjectFactory bufferObjectFactory = new BufferObjectFactory();
             IModelRepository modelLoader = new ModelCache(new ModelLoader("models", textureCache, bufferObjectFactory));
             IVertexBufferUnitRenderer bufferedMeshUnitRenderer = new VertexBufferUnitRenderer();
-            IModelInstanceRenderer modelInstanceRenderer = new ModelInstanceRenderer(textureChanger, bufferedMeshUnitRenderer, worldTranslator, worldRotator);
+            IModelInstanceRenderer modelInstanceRenderer = new ModelInstanceRenderer(textureChanger, bufferedMeshUnitRenderer, worldTranslator, worldRotator, matrixManager);
             ModelContainer modelContainer = new ModelContainer(modelLoader, modelInstanceRenderer);
             
 
@@ -71,7 +70,7 @@ namespace Game
 
             PositionDistanceComparer positionDistanceComparer = new PositionDistanceComparer();
             VehicleManager vehicleManager = new VehicleManager(vehicleRepository.GetAllVehicles(), playerMotionEncapsulator,
-                new SpriteRenderer(new TextureRenderer(new PolygonListRenderer(bikeShape, polygonRenderer), bike, textureChanger), worldTranslator, playerMotionEncapsulator, worldRotator),
+                new SpriteRenderer(new TextureRenderer(new PolygonListRenderer(bikeShape, polygonRenderer), bike, textureChanger), worldTranslator, playerMotionEncapsulator, worldRotator, matrixManager),
                 positionDistanceComparer,
                 lengthOfFieldSide);
             IPositionRotator positionRotator = new PositionRotator();
@@ -84,7 +83,7 @@ namespace Game
             ITexture bikeInHands = textureCache.LoadTexture("bikeScreen.png");
             IEnumerable<Polygon> bikeScreen = surfaceRectangleBuilder.CreateRectangle(0, 0, 1, 0.5f);
             VehicleUsageRenderer vehicleUsageObserver = new VehicleUsageRenderer(new TextureRenderer(new PolygonListRenderer(bikeScreen, polygonRenderer), bikeInHands, textureChanger), 
-                worldTranslator, new PercentProvider(timeProvider, 0.7), new PercentProvider(timeProvider, 0.3));
+                worldTranslator, matrixManager, new PercentProvider(timeProvider, 0.7), new PercentProvider(timeProvider, 0.3));
 
             PlayerMotionManager playerMotionManager = new PlayerMotionManager(playerMotionEncapsulator,
                 new WalkPositionCalculator(heightCalculator, timeProvider, vectorHelper, mousePositionController, new KeyMapper(pressedKeyDetector), 30),
@@ -105,7 +104,7 @@ namespace Game
             ITexture horizontexture = textureCache.LoadTexture("jungle.png");
             IEnumerable<Polygon> polygons = surfaceRectangleBuilder.CreateRectangle(-1, 0, 4, 1);
             
-            IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerMotionEncapsulator, textureTranslator, worldTranslator);
+            IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerMotionEncapsulator, worldTranslator, matrixManager);
             IColorSetter colorSetter = new ColorSetter();
 
             IMeshUnitCollection floorCollection = new MeshUnitCollection(bufferedMeshUnitRenderer);
@@ -156,7 +155,7 @@ namespace Game
             ITexture treetexture = textureCache.LoadTexture("tree.png", true);
 
             IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
-            IRenderingElement alphaRenderer = new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement> { (IRenderingElement)treeCollection, vehicleManager }), new AlphaTester());
+           
 
             //light
             ILightCollectionProvider lightCollectionProvider = new LightCollectionProvider();
@@ -171,13 +170,13 @@ namespace Game
             IRayWithFacesTester rayWithFacesTester = new RayWithFacesTester(intersectionCalculator, obtuseAngleTester, positionDistanceTester);
             IRayWithModelsTester rayWithModelsTester = new RayWithModelsTester(rayWithFacesTester, positionDistanceTester, obtuseAngleTester, positionRotator);
             RayWithWorldTester rayWithWorldTester = new RayWithWorldTester(rayWithMapTester, rayWithModelsTester, modelContainer, vehicleManager);
-            ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, textureChanger, treetexture, polygonRenderer, 
+            ParticleContainer particleContainer = new ParticleContainer(timeProvider, worldTranslator, matrixManager, textureChanger, treetexture, polygonRenderer, 
                 surfaceRectangleBuilder.CreateRectangle(0.2, 0.5, 0.6f, 0.6f, z:0), playerMotionEncapsulator, worldRotator);
             RayTrigger rayTrigger = new RayTrigger(rayWithWorldTester, playerMotionEncapsulator, mouseButtonEventProvider, particleContainer);
             //
 
             IFontMapper fontMapper = new FontMapper(textureCache, "font");
-            IFontRenderer fontRenderer = new FontRenderer(surfaceRectangleBuilder.CreateRectangle(0, 0, 0.025f, 0.025f), polygonRenderer, worldTranslator, textureChanger, 0.03);
+            IFontRenderer fontRenderer = new FontRenderer(surfaceRectangleBuilder.CreateRectangle(0, 0, 0.025f, 0.025f), polygonRenderer, worldTranslator, textureChanger, matrixManager,  0.03);
             FrameCounter frameCounter = new FrameCounter(fontMapper, fontRenderer);
 
 
@@ -197,13 +196,18 @@ namespace Game
             ITextureByAnimationPercentSelector textureByAnimationPercentSelector = new TextureByAnimationPercentSelector();
             ITextureSequenceSelector textureSequenceSelector = new TextureSequenceSelector();
 
-            IEnumerable<Polygon> characterShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 4, 4, z: 0);
-
-            
-
-            Animation360DegreeRenderer animation360DegreeRenderer = new Animation360DegreeRenderer(new SpriteRenderer(new PolygonListRenderer(characterShape, polygonRenderer), worldTranslator, playerMotionEncapsulator, worldRotator),
-                textureByAnimationPercentSelector, textureSequenceSelector, textureChanger);
+            IEnumerable<Polygon> characterShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 1, z: 0);
             var animation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\feet\\walk");
+
+            IRenderedRotationCalculator renderedRotationCalculator = new RenderedRotationCalculator(playerMotionEncapsulator);
+            Animation360DegreeRenderer animation360DegreeRenderer = new Animation360DegreeRenderer(textureByAnimationPercentSelector, textureSequenceSelector, textureChanger, 
+                new PercentProvider(timeProvider, 0.6), animation, renderedRotationCalculator, matrixManager, 
+                new PolygonListRenderer(characterShape, polygonRenderer), worldTranslator, playerMotionEncapsulator, worldRotator);
+
+
+
+            IRenderingElement cullingDeactivator = new CullingDeactivator(new CullingController(), 
+                new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement> { (IRenderingElement)treeCollection, vehicleManager, animation360DegreeRenderer, particleContainer }), new AlphaTester()));
 
             return () =>
             {
@@ -229,17 +233,14 @@ namespace Game
                     colorRenderer.Render();
                     textureChanger.SetTexture(streettexture.TextureId);
                     ((IRenderingElement)streetCollection).Render();
-                    textureChanger.SetTexture(treetexture.TextureId);
-                    alphaRenderer.Render();
+                    textureChanger.SetTexture(treetexture.TextureId); // TODO: in tree renderer nei
+                    cullingDeactivator.Render();
 
                     light.Enable();
                     ((IRenderingElement)modelContainer).Render();
                     light.Disable();
 
-                    ((IRenderingElement)particleContainer).Render();
                     //fog.StopFog();
-
-                    animation360DegreeRenderer.Render(animation);
 
                     rayTrigger.DoStuff();
 

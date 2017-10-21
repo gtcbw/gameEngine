@@ -15,13 +15,15 @@ namespace Engine.Framework.Animation
                 case RotationDegrees.degree_90:
                     return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_90] };
                 case RotationDegrees.degree_135:
-                    return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_135] };
+                    return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_90] };
+                //return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_135] };
                 case RotationDegrees.degree_180:
                     return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_180] };
                 case RotationDegrees.degree_225:
                    if (textureSequence360Degree.TextureSequences.Keys.Contains(RotationDegrees.degree_225))
                         return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_225] };
-                    return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_135], IsMirrored = true };
+                    return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_90] };
+                //return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_135], IsMirrored = true };
                 case RotationDegrees.degree_270:
                     if (textureSequence360Degree.TextureSequences.Keys.Contains(RotationDegrees.degree_270))
                         return new SelectedTextureSequence { TextureSequence = textureSequence360Degree.TextureSequences[RotationDegrees.degree_270] };

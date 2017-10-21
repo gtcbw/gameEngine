@@ -21,7 +21,8 @@ namespace Engine.Framework
 
         private List<ParticleDefinition> _particles = new List<ParticleDefinition>();
         private readonly IGameTimeProvider _gameTimeProvider;
-        private readonly IWorldTranslator _worldTranslator;
+        private readonly ITranslator _worldTranslator;
+        private readonly IMatrixManager _matrixManager;
         private readonly ITextureChanger _textureChanger;
         private readonly ITexture _texture;
         private readonly IPolygonRenderer _polygonRenderer;
@@ -30,7 +31,8 @@ namespace Engine.Framework
         private readonly IWorldRotator _worldRotator;
 
         public ParticleContainer(IGameTimeProvider gameTimeProvider,
-            IWorldTranslator worldTranslator,
+            ITranslator worldTranslator,
+            IMatrixManager matrixManager,
             ITextureChanger textureChanger,
             ITexture texture,
             IPolygonRenderer polygonRenderer,
@@ -40,6 +42,7 @@ namespace Engine.Framework
         {
             _gameTimeProvider = gameTimeProvider;
             _worldTranslator = worldTranslator;
+            _matrixManager = matrixManager;
             _textureChanger = textureChanger;
             _texture = texture;
             _polygonRenderer = polygonRenderer;
@@ -57,12 +60,12 @@ namespace Engine.Framework
         {
             foreach(ParticleDefinition particleDefinition in _particles)
             {
-                _worldTranslator.Store();
-                _worldTranslator.TranslateWorld(particleDefinition.Position.X, particleDefinition.Position.Y, particleDefinition.Position.Z);
+                _matrixManager.Store();
+                _worldTranslator.Translate(particleDefinition.Position.X, particleDefinition.Position.Y, particleDefinition.Position.Z);
                 _worldRotator.RotateY(270 - _playerViewDirectionProvider.GetViewDirection().DegreeXZ);
                 _textureChanger.SetTexture(_texture.TextureId);
                 _polygonRenderer.RenderPolygons(_polygons);
-                _worldTranslator.Reset();
+                _matrixManager.Reset();
             }
         }
     }

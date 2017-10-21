@@ -1,42 +1,70 @@
 ﻿using Engine.Contracts;
 using Engine.Contracts.Animation;
+using Engine.Contracts.PlayerMotion;
 using Graphics.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using World.Model;
 
 namespace Engine.Framework.Animation
 {
-    public sealed class Animation360DegreeRenderer
+    public sealed class Animation360DegreeRenderer : IRenderingElement
     {
-        private readonly ISpriteRenderer _spriteRenderer;
         private readonly ITextureByAnimationPercentSelector _textureByAnimationPercentSelector;
         private readonly ITextureSequenceSelector _textureSequenceSelector;
         private readonly ITextureChanger _textureChanger;
+        private readonly IPercentProvider _percentProvider;
+        private readonly TextureSequence360Degree _walkAnimation;
+        private readonly IRenderedRotationCalculator _renderedRotationCalculator;
+        private readonly IMatrixManager _matrixManager;
+        private readonly IRenderingElement _footSprite;
+        private readonly ITranslator _worldTranslator;
+        private readonly IPlayerViewDirectionProvider _playerViewDirectionProvider;
+        private readonly IWorldRotator _worldRotator;
 
-        public Animation360DegreeRenderer(ISpriteRenderer spriteRenderer,
-            ITextureByAnimationPercentSelector textureByAnimationPercentSelector,
+        public Animation360DegreeRenderer(ITextureByAnimationPercentSelector textureByAnimationPercentSelector,
             ITextureSequenceSelector textureSequenceSelector,
-            ITextureChanger textureChanger)
+            ITextureChanger textureChanger,
+            IPercentProvider percentProvider,
+            TextureSequence360Degree walkAnimation,
+            IRenderedRotationCalculator renderedRotationCalculator,
+            IMatrixManager matrixManager,
+            IRenderingElement footSprite,
+            ITranslator worldTranslator,
+            IPlayerViewDirectionProvider playerViewDirectionProvider,
+            IWorldRotator worldRotator)
         {
-            _spriteRenderer = spriteRenderer;
             _textureByAnimationPercentSelector = textureByAnimationPercentSelector;
             _textureSequenceSelector = textureSequenceSelector;
             _textureChanger = textureChanger;
+            _percentProvider = percentProvider;
+            _walkAnimation = walkAnimation;
+            _renderedRotationCalculator = renderedRotationCalculator;
+            _matrixManager = matrixManager;
+            _footSprite = footSprite;
+            _worldTranslator = worldTranslator;
+            _playerViewDirectionProvider = playerViewDirectionProvider;
+            _worldRotator = worldRotator;
         }
 
-        public void Render(TextureSequence360Degree textureSequence360Degree)//, RotationDegrees rotationDegrees, double percent, IReadOnlyPosition position)
+        void IRenderingElement.Render()
         {
-            RotationDegrees rotationDegrees = RotationDegrees.degree_0;
-            double percent = 0;
+            if (_percentProvider.IsOver())
+                _percentProvider.Start();
+            RotationDegrees rotationDegrees = RotationDegrees.degree_180;
+            double percent = _percentProvider.GetPercent();
+
             IReadOnlyPosition position = new Position { X = 110, Y = 1, Z = 110 };
-            SelectedTextureSequence selectedTextureSequence = _textureSequenceSelector.SelectedTextureSequence(textureSequence360Degree, rotationDegrees);
+
+            var renderedRotation = _renderedRotationCalculator.CalculateRotationRelativeToCamera(rotationDegrees, position.X, position.Z);
+
+            SelectedTextureSequence selectedTextureSequence = _textureSequenceSelector.SelectedTextureSequence(_walkAnimation, renderedRotation);
             int textureId = _textureByAnimationPercentSelector.GetTextureIdByPercentage(selectedTextureSequence.TextureSequence, percent);
             _textureChanger.SetTexture(textureId);
-            _spriteRenderer.RenderSpriteAtPosition(position);
+
+            _matrixManager.Store();
+            _worldTranslator.Translate(position.X, position.Y, position.Z);
+            _worldRotator.RotateY((selectedTextureSequence.IsMirrored ? 90 : 270) - _playerViewDirectionProvider.GetViewDirection().DegreeXZ);
+            _footSprite.Render();
+            _matrixManager.Reset();
         }
     }
 }

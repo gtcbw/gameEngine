@@ -8,25 +8,28 @@ namespace Landscape.Rendering
     {
         private ITextureChanger _textureChanger;
         private IVertexBufferUnitRenderer _vertexBufferUnitRenderer;
-        private IWorldTranslator _worldTranslator;
+        private ITranslator _worldTranslator;
         private readonly IWorldRotator _worldRotator;
+        private readonly IMatrixManager _matrixManager;
 
         public ModelInstanceRenderer(ITextureChanger textureChanger,
             IVertexBufferUnitRenderer vertexBufferUnitRenderer,
-            IWorldTranslator worldTranslator,
-            IWorldRotator worldRotator)
+            ITranslator worldTranslator,
+            IWorldRotator worldRotator,
+            IMatrixManager matrixManager)
         {
             _textureChanger = textureChanger;
             _vertexBufferUnitRenderer = vertexBufferUnitRenderer;
             _worldTranslator = worldTranslator;
             _worldRotator = worldRotator;
+            _matrixManager = matrixManager;
         }
 
         void IModelInstanceRenderer.Render(ModelInstance model)
         {
-            _worldTranslator.Store();
+            _matrixManager.Store();
             Position position = model.CollisionModelInstance.Position;
-            _worldTranslator.TranslateWorld(position.X, position.Y, position.Z);
+            _worldTranslator.Translate(position.X, position.Y, position.Z);
             _worldRotator.RotateY(model.CollisionModelInstance.RotationXZ);
 
             foreach (ModelRenderUnit unit in model.RenderUnits)
@@ -34,7 +37,7 @@ namespace Landscape.Rendering
                 _textureChanger.SetTexture(unit.Texture.TextureId);
                 _vertexBufferUnitRenderer.RenderMesh(unit.VertexBufferUnit);
             }
-            _worldTranslator.Reset();
+            _matrixManager.Reset();
         }
     }
 }

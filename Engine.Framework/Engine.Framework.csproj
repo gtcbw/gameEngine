@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Animation\Animated360DegreeTextureLoader.cs" />
     <Compile Include="Animation\Animation360DegreeRenderer.cs" />
+    <Compile Include="Animation\RenderedRotationCalculator.cs" />
     <Compile Include="Animation\TextureByAnimationPercentSelector.cs" />
     <Compile Include="Animation\TextureSequenceSelector.cs" />
     <Compile Include="BitmapToHeightConverter.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="ColorRenderer.cs" />
     <Compile Include="CuboidWithModelsTester.cs" />
     <Compile Include="CuboidWithWorldTester.cs" />
+    <Compile Include="CullingDeactivator.cs" />
     <Compile Include="FieldModelLoader.cs" />
     <Compile Include="FontMapper.cs" />
     <Compile Include="FontRenderer.cs" />

@@ -50,6 +50,8 @@
     <Compile Include="AlphaBlender.cs" />
     <Compile Include="AlphaTester.cs" />
     <Compile Include="BackgroundColor.cs" />
+    <Compile Include="CullingController.cs" />
+    <Compile Include="MatrixManager.cs" />
     <Compile Include="VertexBufferUnitOffsetRenderer.cs" />
     <Compile Include="VertexBufferUnitRenderer.cs" />
     <Compile Include="Camera.cs" />
@@ -72,10 +74,9 @@
     <Compile Include="Texture.cs" />
     <Compile Include="TextureChanger.cs" />
     <Compile Include="TextureLoader.cs" />
-    <Compile Include="TextureTranslator.cs" />
     <Compile Include="BufferObjectFactory.cs" />
     <Compile Include="WorldRotator.cs" />
-    <Compile Include="WorldTranslater.cs" />
+    <Compile Include="Translator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine.Contracts\Engine.Contracts.csproj">

@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICullingController.cs" />
     <Compile Include="IIndexFactorProvider.cs" />
+    <Compile Include="IMatrixManager.cs" />
     <Compile Include="VertexBufferUnit.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="IAlphaBlender.cs" />
@@ -69,9 +71,8 @@
     <Compile Include="ITexture.cs" />
     <Compile Include="ITextureChanger.cs" />
     <Compile Include="ITextureLoader.cs" />
-    <Compile Include="ITextureTranslator.cs" />
     <Compile Include="IWorldRotator.cs" />
-    <Compile Include="IWorldTranslater.cs" />
+    <Compile Include="ITranslator.cs" />
     <Compile Include="Normal.cs" />
     <Compile Include="Polygon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

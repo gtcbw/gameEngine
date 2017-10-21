@@ -7,7 +7,8 @@ namespace Engine.Framework
     public sealed class VehicleUsageRenderer : IVehicleUsageObserver, IRenderingElement
     {
         private readonly IRenderingElement _vehicleOnScreen;
-        private readonly IWorldTranslator _worldTranslator;
+        private readonly ITranslator _worldTranslator;
+        private readonly IMatrixManager _matrixManager;
         private readonly IPercentProvider _climbUpDelay;
         private readonly IPercentProvider _climbTimer;
         private double _speed;
@@ -18,12 +19,14 @@ namespace Engine.Framework
         private bool _parametersAreUpdated;
 
         public VehicleUsageRenderer(IRenderingElement vehicleOnScreen,
-            IWorldTranslator worldTranslator,
+            ITranslator worldTranslator,
+            IMatrixManager matrixManager,
             IPercentProvider climbUpDelay,
             IPercentProvider climbTimer)
         {
             _vehicleOnScreen = vehicleOnScreen;
             _worldTranslator = worldTranslator;
+            _matrixManager = matrixManager;
             _climbUpDelay = climbUpDelay;
             _climbTimer = climbTimer;
         }
@@ -77,7 +80,7 @@ namespace Engine.Framework
                 }
             }
 
-            _worldTranslator.Store();
+            _matrixManager.Store();
 
             double translateX = 0;
             double translateY = 0;
@@ -89,12 +92,12 @@ namespace Engine.Framework
             }
 
             if (!_climbTimer.IsOver())
-                _worldTranslator.TranslateWorld(_climbingDown ? translateX : 0, -0.5 + percent / 2.0 + (_climbingDown ? translateY : 0), 0); 
+                _worldTranslator.Translate(_climbingDown ? translateX : 0, -0.5 + percent / 2.0 + (_climbingDown ? translateY : 0), 0); 
             else
-                _worldTranslator.TranslateWorld(translateX, translateY, 0);
+                _worldTranslator.Translate(translateX, translateY, 0);
 
             _vehicleOnScreen.Render();
-            _worldTranslator.Reset();
+            _matrixManager.Reset();
         }
     }
 }
