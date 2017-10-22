@@ -201,8 +201,8 @@ namespace Game
 
             IRenderedRotationCalculator renderedRotationCalculator = new RenderedRotationCalculator(playerMotionEncapsulator);
             Animation360DegreeRenderer animation360DegreeRenderer = new Animation360DegreeRenderer(textureByAnimationPercentSelector, textureSequenceSelector, textureChanger, 
-                new PercentProvider(timeProvider, 0.6), animation, renderedRotationCalculator, matrixManager, 
-                new PolygonListRenderer(characterShape, polygonRenderer), worldTranslator, playerMotionEncapsulator, worldRotator);
+                new PercentProvider(timeProvider, 1.0), animation, renderedRotationCalculator, matrixManager, 
+                new PolygonListRenderer(characterShape, polygonRenderer), worldTranslator, playerMotionEncapsulator, worldRotator, timeProvider, heightCalculator);
 
 
 

@@ -2,6 +2,7 @@
 using Engine.Contracts.Animation;
 using Engine.Contracts.PlayerMotion;
 using Graphics.Contracts;
+using Math.Contracts;
 using World.Model;
 
 namespace Engine.Framework.Animation
@@ -20,6 +21,10 @@ namespace Engine.Framework.Animation
         private readonly IPlayerViewDirectionProvider _playerViewDirectionProvider;
         private readonly IWorldRotator _worldRotator;
 
+        private readonly IFrameTimeProvider _timeProvider;
+        private readonly IHeightCalculator _heightCalculator;
+        private readonly Position _position = new Position { X = 110, Y = 1, Z = 110 };
+
         public Animation360DegreeRenderer(ITextureByAnimationPercentSelector textureByAnimationPercentSelector,
             ITextureSequenceSelector textureSequenceSelector,
             ITextureChanger textureChanger,
@@ -30,7 +35,10 @@ namespace Engine.Framework.Animation
             IRenderingElement footSprite,
             ITranslator worldTranslator,
             IPlayerViewDirectionProvider playerViewDirectionProvider,
-            IWorldRotator worldRotator)
+            IWorldRotator worldRotator,
+
+            IFrameTimeProvider timeProvider, 
+            IHeightCalculator heightCalculator)
         {
             _textureByAnimationPercentSelector = textureByAnimationPercentSelector;
             _textureSequenceSelector = textureSequenceSelector;
@@ -43,25 +51,29 @@ namespace Engine.Framework.Animation
             _worldTranslator = worldTranslator;
             _playerViewDirectionProvider = playerViewDirectionProvider;
             _worldRotator = worldRotator;
+
+            _timeProvider = timeProvider;
+            _heightCalculator = heightCalculator;
         }
 
         void IRenderingElement.Render()
         {
             if (_percentProvider.IsOver())
                 _percentProvider.Start();
-            RotationDegrees rotationDegrees = RotationDegrees.degree_180;
+            RotationDegrees rotationDegrees = RotationDegrees.degree_0;
             double percent = _percentProvider.GetPercent();
 
-            IReadOnlyPosition position = new Position { X = 110, Y = 1, Z = 110 };
+            _position.X += _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
+            _position.Y = _heightCalculator.CalculateHeight(_position.X, _position.Z);
 
-            var renderedRotation = _renderedRotationCalculator.CalculateRotationRelativeToCamera(rotationDegrees, position.X, position.Z);
+            var renderedRotation = _renderedRotationCalculator.CalculateRotationRelativeToCamera(rotationDegrees, _position.X, _position.Z);
 
             SelectedTextureSequence selectedTextureSequence = _textureSequenceSelector.SelectedTextureSequence(_walkAnimation, renderedRotation);
             int textureId = _textureByAnimationPercentSelector.GetTextureIdByPercentage(selectedTextureSequence.TextureSequence, percent);
             _textureChanger.SetTexture(textureId);
 
             _matrixManager.Store();
-            _worldTranslator.Translate(position.X, position.Y, position.Z);
+            _worldTranslator.Translate(_position.X, _position.Y, _position.Z);
             _worldRotator.RotateY((selectedTextureSequence.IsMirrored ? 90 : 270) - _playerViewDirectionProvider.GetViewDirection().DegreeXZ);
             _footSprite.Render();
             _matrixManager.Reset();
