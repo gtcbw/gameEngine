@@ -14,9 +14,11 @@ namespace Engine.Framework.Animation
         private readonly ITextureChanger _textureChanger;
         private readonly IPercentProvider _percentProvider;
         private readonly TextureSequence360Degree _walkAnimation;
+        private readonly TextureSequence360Degree _torso;
         private readonly IRenderedRotationCalculator _renderedRotationCalculator;
         private readonly IMatrixManager _matrixManager;
         private readonly IRenderingElement _footSprite;
+        private readonly IRenderingElement _torsoSprite;
         private readonly ITranslator _worldTranslator;
         private readonly IPlayerViewDirectionProvider _playerViewDirectionProvider;
         private readonly IWorldRotator _worldRotator;
@@ -30,9 +32,11 @@ namespace Engine.Framework.Animation
             ITextureChanger textureChanger,
             IPercentProvider percentProvider,
             TextureSequence360Degree walkAnimation,
+            TextureSequence360Degree torso,
             IRenderedRotationCalculator renderedRotationCalculator,
             IMatrixManager matrixManager,
             IRenderingElement footSprite,
+            IRenderingElement torsoSprite,
             ITranslator worldTranslator,
             IPlayerViewDirectionProvider playerViewDirectionProvider,
             IWorldRotator worldRotator,
@@ -45,9 +49,11 @@ namespace Engine.Framework.Animation
             _textureChanger = textureChanger;
             _percentProvider = percentProvider;
             _walkAnimation = walkAnimation;
+            _torso = torso;
             _renderedRotationCalculator = renderedRotationCalculator;
             _matrixManager = matrixManager;
             _footSprite = footSprite;
+            _torsoSprite = torsoSprite;
             _worldTranslator = worldTranslator;
             _playerViewDirectionProvider = playerViewDirectionProvider;
             _worldRotator = worldRotator;
@@ -68,14 +74,24 @@ namespace Engine.Framework.Animation
 
             var renderedRotation = _renderedRotationCalculator.CalculateRotationRelativeToCamera(rotationDegrees, _position.X, _position.Z);
 
-            SelectedTextureSequence selectedTextureSequence = _textureSequenceSelector.SelectedTextureSequence(_walkAnimation, renderedRotation);
-            int textureId = _textureByAnimationPercentSelector.GetTextureIdByPercentage(selectedTextureSequence.TextureSequence, percent);
-            _textureChanger.SetTexture(textureId);
+            SelectedTextureSequence selectedWalkAnimationTexture = _textureSequenceSelector.SelectedTextureSequence(_walkAnimation, renderedRotation);
+            int footTextureId = _textureByAnimationPercentSelector.GetTextureIdByPercentage(selectedWalkAnimationTexture.TextureSequence, percent);
+
+            SelectedTextureSequence selectedTorsoTexture = _textureSequenceSelector.SelectedTextureSequence(_torso, renderedRotation);
+            int torsoTextureId = selectedTorsoTexture.TextureSequence.Textures[0].TextureId;
+
+            double torsoY = (System.Math.Sin((percent * 4 - 0.5) * System.Math.PI) + 1) * 0.5;
 
             _matrixManager.Store();
             _worldTranslator.Translate(_position.X, _position.Y, _position.Z);
-            _worldRotator.RotateY((selectedTextureSequence.IsMirrored ? 90 : 270) - _playerViewDirectionProvider.GetViewDirection().DegreeXZ);
+            _worldRotator.RotateY((selectedWalkAnimationTexture.IsMirrored ? 90 : 270) - _playerViewDirectionProvider.GetViewDirection().DegreeXZ);
+            _textureChanger.SetTexture(footTextureId);
             _footSprite.Render();
+
+            _worldTranslator.Translate(0, 0.15 + torsoY * 0.15, 0);
+            _textureChanger.SetTexture(torsoTextureId);
+            _torsoSprite.Render();
+
             _matrixManager.Reset();
         }
     }

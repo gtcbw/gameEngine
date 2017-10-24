@@ -196,13 +196,17 @@ namespace Game
             ITextureByAnimationPercentSelector textureByAnimationPercentSelector = new TextureByAnimationPercentSelector();
             ITextureSequenceSelector textureSequenceSelector = new TextureSequenceSelector();
 
-            IEnumerable<Polygon> characterShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 1, z: 0);
-            var animation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\feet\\walk");
+            IEnumerable<Polygon> footShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 1, z: 0);
+            var footWalkAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\feet\\walk");
+
+            IEnumerable<Polygon> torsoShape = surfaceRectangleBuilder.CreateRectangle(0, 0.5, 1, 1, z: 0);
+            var torsoAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\torso");
 
             IRenderedRotationCalculator renderedRotationCalculator = new RenderedRotationCalculator(playerMotionEncapsulator);
             Animation360DegreeRenderer animation360DegreeRenderer = new Animation360DegreeRenderer(textureByAnimationPercentSelector, textureSequenceSelector, textureChanger, 
-                new PercentProvider(timeProvider, 1.0), animation, renderedRotationCalculator, matrixManager, 
-                new PolygonListRenderer(characterShape, polygonRenderer), worldTranslator, playerMotionEncapsulator, worldRotator, timeProvider, heightCalculator);
+                new PercentProvider(timeProvider, 1.0), footWalkAnimation, torsoAnimation, renderedRotationCalculator, matrixManager, 
+                new PolygonListRenderer(footShape, polygonRenderer), new PolygonListRenderer(torsoShape, polygonRenderer), 
+                worldTranslator, playerMotionEncapsulator, worldRotator, timeProvider, heightCalculator);
 
 
 
