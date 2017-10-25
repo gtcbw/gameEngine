@@ -5,7 +5,7 @@ namespace Engine.Framework
 {
     public class SurfaceRectangleBuilder
     {
-        public IEnumerable<Polygon> CreateRectangle(double leftCornerX, double leftCornerY, float lengthX, float lengthY, float textureZero = 0.01f, float textureOne = 0.99f, float z = -0.865f)
+        public IEnumerable<Polygon> CreateRectangle(double leftCornerX, double leftCornerY, float lengthX, float lengthY, float textureZero = 0.001f, float textureOne = 0.999f, float z = -0.865f)
         {
             float startX = (float)(leftCornerX) - 0.5f;
             float startY = (float)(leftCornerY) - 0.5f;

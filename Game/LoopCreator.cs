@@ -202,14 +202,19 @@ namespace Game
             IEnumerable<Polygon> torsoShape = surfaceRectangleBuilder.CreateRectangle(0, 0.5, 1, 1, z: 0);
             var torsoAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\torso");
 
+            IEnumerable<Polygon> headShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 2, z: 0);
+            var headAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\head");
+
+           var gunModel = modelLoader.Load(new ModelInstanceDescription { Filename = "gun.mod", Position = new World.Model.Position() });
+
             IRenderedRotationCalculator renderedRotationCalculator = new RenderedRotationCalculator(playerMotionEncapsulator);
             Animation360DegreeRenderer animation360DegreeRenderer = new Animation360DegreeRenderer(textureByAnimationPercentSelector, textureSequenceSelector, textureChanger, 
-                new PercentProvider(timeProvider, 1.0), footWalkAnimation, torsoAnimation, renderedRotationCalculator, matrixManager, 
-                new PolygonListRenderer(footShape, polygonRenderer), new PolygonListRenderer(torsoShape, polygonRenderer), 
+                new PercentProvider(timeProvider, 1.0), footWalkAnimation, torsoAnimation, headAnimation, gunModel, modelInstanceRenderer, renderedRotationCalculator, matrixManager, 
+                new PolygonListRenderer(footShape, polygonRenderer), new PolygonListRenderer(torsoShape, polygonRenderer), new PolygonListRenderer(headShape, polygonRenderer),
                 worldTranslator, playerMotionEncapsulator, worldRotator, timeProvider, heightCalculator);
 
 
-
+        
             IRenderingElement cullingDeactivator = new CullingDeactivator(new CullingController(), 
                 new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement> { (IRenderingElement)treeCollection, vehicleManager, animation360DegreeRenderer, particleContainer }), new AlphaTester()));
 

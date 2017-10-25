@@ -1,5 +1,6 @@
 ﻿using Engine.Contracts;
 using Engine.Contracts.Animation;
+using Engine.Contracts.Models;
 using Engine.Contracts.PlayerMotion;
 using Graphics.Contracts;
 using Math.Contracts;
@@ -15,10 +16,16 @@ namespace Engine.Framework.Animation
         private readonly IPercentProvider _percentProvider;
         private readonly TextureSequence360Degree _walkAnimation;
         private readonly TextureSequence360Degree _torso;
+        private readonly TextureSequence360Degree _head;
+
+        private readonly ModelInstance _modelInstance;
+        private readonly IModelInstanceRenderer _modelInstanceRenderer;
+
         private readonly IRenderedRotationCalculator _renderedRotationCalculator;
         private readonly IMatrixManager _matrixManager;
         private readonly IRenderingElement _footSprite;
         private readonly IRenderingElement _torsoSprite;
+        private readonly IRenderingElement _headSprite;
         private readonly ITranslator _worldTranslator;
         private readonly IPlayerViewDirectionProvider _playerViewDirectionProvider;
         private readonly IWorldRotator _worldRotator;
@@ -33,10 +40,14 @@ namespace Engine.Framework.Animation
             IPercentProvider percentProvider,
             TextureSequence360Degree walkAnimation,
             TextureSequence360Degree torso,
+            TextureSequence360Degree head,
+            ModelInstance modelInstance,
+            IModelInstanceRenderer modelInstanceRenderer,
             IRenderedRotationCalculator renderedRotationCalculator,
             IMatrixManager matrixManager,
             IRenderingElement footSprite,
             IRenderingElement torsoSprite,
+            IRenderingElement headSprite,
             ITranslator worldTranslator,
             IPlayerViewDirectionProvider playerViewDirectionProvider,
             IWorldRotator worldRotator,
@@ -50,10 +61,14 @@ namespace Engine.Framework.Animation
             _percentProvider = percentProvider;
             _walkAnimation = walkAnimation;
             _torso = torso;
+            _head = head;
+            _modelInstance = modelInstance;
+            _modelInstanceRenderer = modelInstanceRenderer;
             _renderedRotationCalculator = renderedRotationCalculator;
             _matrixManager = matrixManager;
             _footSprite = footSprite;
             _torsoSprite = torsoSprite;
+            _headSprite = headSprite;
             _worldTranslator = worldTranslator;
             _playerViewDirectionProvider = playerViewDirectionProvider;
             _worldRotator = worldRotator;
@@ -80,10 +95,15 @@ namespace Engine.Framework.Animation
             SelectedTextureSequence selectedTorsoTexture = _textureSequenceSelector.SelectedTextureSequence(_torso, renderedRotation);
             int torsoTextureId = selectedTorsoTexture.TextureSequence.Textures[0].TextureId;
 
+            SelectedTextureSequence selectedHeadTexture = _textureSequenceSelector.SelectedTextureSequence(_head, renderedRotation);
+            int headTextureId = selectedHeadTexture.TextureSequence.Textures[0].TextureId;
+
+
             double torsoY = (System.Math.Sin((percent * 4 - 0.5) * System.Math.PI) + 1) * 0.5;
 
             _matrixManager.Store();
             _worldTranslator.Translate(_position.X, _position.Y, _position.Z);
+            _matrixManager.Store();
             _worldRotator.RotateY((selectedWalkAnimationTexture.IsMirrored ? 90 : 270) - _playerViewDirectionProvider.GetViewDirection().DegreeXZ);
             _textureChanger.SetTexture(footTextureId);
             _footSprite.Render();
@@ -91,6 +111,17 @@ namespace Engine.Framework.Animation
             _worldTranslator.Translate(0, 0.15 + torsoY * 0.15, 0);
             _textureChanger.SetTexture(torsoTextureId);
             _torsoSprite.Render();
+
+            _worldTranslator.Translate(0, 0.9 + torsoY * 0.05, 0);
+            _textureChanger.SetTexture(headTextureId);
+            _headSprite.Render();
+
+            _matrixManager.Reset();
+            _worldRotator.RotateY(180);
+            _worldTranslator.Translate(-0.2, 0.8, 0.6);
+            _modelInstanceRenderer.Render(_modelInstance);
+            _worldTranslator.Translate(0, 0, -1.2);
+            _modelInstanceRenderer.Render(_modelInstance);
 
             _matrixManager.Reset();
         }
