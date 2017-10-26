@@ -117,8 +117,7 @@ namespace Engine.Framework.Animation
             _headSprite.Render();
 
             _matrixManager.Reset();
-            _worldRotator.RotateY(180);
-            _worldTranslator.Translate(-0.2, 0.8, 0.6);
+            _worldTranslator.Translate(0.2, 0.8, 0.6);
             _modelInstanceRenderer.Render(_modelInstance);
             _worldTranslator.Translate(0, 0, -1.2);
             _modelInstanceRenderer.Render(_modelInstance);
