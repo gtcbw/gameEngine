@@ -10,6 +10,7 @@ namespace Graphics
         {
             foreach (Polygon polygon in polygons)
             {
+                GL.Normal3(0f, 1f, 0f);
                 GL.Begin(PrimitiveType.Polygon);
 
                 foreach (Vertex vertex in polygon.Vertices)

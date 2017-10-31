@@ -117,9 +117,9 @@ namespace Engine.Framework.Animation
             _headSprite.Render();
 
             _matrixManager.Reset();
-            _worldTranslator.Translate(0, 0.4 + torsoY * 0.15, 0.65);
+            _worldTranslator.Translate(0, 0.1 + torsoY * 0.15, 0.7);
             _modelInstanceRenderer.Render(_modelInstance);
-            _worldTranslator.Translate(0, 0, -1.3);
+            _worldTranslator.Translate(0, 0, -1.4);
             _modelInstanceRenderer.Render(_modelInstance);
 
             _matrixManager.Reset();

@@ -183,10 +183,15 @@ namespace Game
             //target cross
             ITexture cross = textureCache.LoadTexture("cross.png");
             IEnumerable<Polygon> crossShape = surfaceRectangleBuilder.CreateRectangle(0.45, 0.45, 0.1f, 0.1f);
+            //gun in my hands
+            ITexture gunscreentexture = textureCache.LoadTexture("gunscreen.png");
+            IEnumerable<Polygon> gunScreenShape = surfaceRectangleBuilder.CreateRectangle(-0.2, 0.0, 1, 0.5f);
+            //
             IRenderingElement layerAlphaRenderer = new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement>
             {
+                 vehicleUsageObserver,
                 new TextureRenderer(new PolygonListRenderer(crossShape, polygonRenderer), cross, textureChanger),
-                vehicleUsageObserver
+                new TextureRenderer(new PolygonListRenderer(gunScreenShape, polygonRenderer), gunscreentexture, textureChanger)
                 }), new AlphaTester());
 
             ScreenshotMaker screenshotMaker = new ScreenshotMaker("C:\\screenshots\\", 60, 0.05, config.Resolution.X, config.Resolution.Y, pressedKeyDetector, timeProvider);
@@ -205,7 +210,7 @@ namespace Game
             IEnumerable<Polygon> headShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 2, z: 0);
             var headAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\head");
 
-           var gunModel = modelLoader.Load(new ModelInstanceDescription { Filename = "gun.mod", Position = new World.Model.Position() });
+           var gunModel = modelLoader.Load(new ModelInstanceDescription { Filename = "uzi.mod", Position = new World.Model.Position() });
 
             IRenderedRotationCalculator renderedRotationCalculator = new RenderedRotationCalculator(playerMotionEncapsulator);
             Animation360DegreeRenderer animation360DegreeRenderer = new Animation360DegreeRenderer(textureByAnimationPercentSelector, textureSequenceSelector, textureChanger, 
@@ -214,7 +219,8 @@ namespace Game
                 worldTranslator, playerMotionEncapsulator, worldRotator, timeProvider, heightCalculator);
 
 
-        
+
+
             IRenderingElement cullingDeactivator = new CullingDeactivator(new CullingController(), 
                 new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement> { (IRenderingElement)treeCollection, vehicleManager, animation360DegreeRenderer, particleContainer }), new AlphaTester()));
 
@@ -243,6 +249,7 @@ namespace Game
                     textureChanger.SetTexture(streettexture.TextureId);
                     ((IRenderingElement)streetCollection).Render();
                     textureChanger.SetTexture(treetexture.TextureId); // TODO: in tree renderer nei
+
                     cullingDeactivator.Render();
 
                     light.Enable();
