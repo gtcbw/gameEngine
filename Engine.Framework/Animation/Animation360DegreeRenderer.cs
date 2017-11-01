@@ -84,6 +84,7 @@ namespace Engine.Framework.Animation
             RotationDegrees rotationDegrees = RotationDegrees.degree_0;
             double percent = _percentProvider.GetPercent();
 
+            //_position.Z -= _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
             _position.X += _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
             _position.Y = _heightCalculator.CalculateHeight(_position.X, _position.Z);
 
@@ -108,11 +109,11 @@ namespace Engine.Framework.Animation
             _textureChanger.SetTexture(footTextureId);
             _footSprite.Render();
 
-            _worldTranslator.Translate(0, 0.15 + torsoY * 0.15, 0);
+            _worldTranslator.Translate(0, 0.3 + torsoY * 0.15, 0);
             _textureChanger.SetTexture(torsoTextureId);
             _torsoSprite.Render();
 
-            _worldTranslator.Translate(0, 0.9 + torsoY * 0.05, 0);
+            _worldTranslator.Translate(0, 0.75 + torsoY * 0.05, 0);
             _textureChanger.SetTexture(headTextureId);
             _headSprite.Render();
 
