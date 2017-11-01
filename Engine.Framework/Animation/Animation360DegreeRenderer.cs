@@ -84,8 +84,8 @@ namespace Engine.Framework.Animation
             RotationDegrees rotationDegrees = RotationDegrees.degree_0;
             double percent = _percentProvider.GetPercent();
 
-            //_position.Z -= _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
-            _position.X += _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
+            _position.Z -= _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
+            //_position.X += _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
             _position.Y = _heightCalculator.CalculateHeight(_position.X, _position.Z);
 
             var renderedRotation = _renderedRotationCalculator.CalculateRotationRelativeToCamera(rotationDegrees, _position.X, _position.Z);
@@ -100,7 +100,8 @@ namespace Engine.Framework.Animation
             int headTextureId = selectedHeadTexture.TextureSequence.Textures[0].TextureId;
 
 
-            double torsoY = (System.Math.Sin((percent * 4 - 0.5) * System.Math.PI) + 1) * 0.5;
+            //double torsoY = (System.Math.Sin((percent * 4 - 0.5) * System.Math.PI) + 1) * 0.5;
+            double torsoY = (System.Math.Sin((percent * 2 - 1.5) * System.Math.PI) + 1) * 0.2 + 0.7;
 
             _matrixManager.Store();
             _worldTranslator.Translate(_position.X, _position.Y, _position.Z);

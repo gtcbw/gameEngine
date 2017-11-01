@@ -202,7 +202,7 @@ namespace Game
             ITextureSequenceSelector textureSequenceSelector = new TextureSequenceSelector();
 
             IEnumerable<Polygon> footShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 1, z: 0);
-            var footWalkAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\feet\\walk forward");
+            var footWalkAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\feet\\walk sideward");
 
             IEnumerable<Polygon> torsoShape = surfaceRectangleBuilder.CreateRectangle(0, 0.5, 1, 1, z: 0);
             var torsoAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\torso");
