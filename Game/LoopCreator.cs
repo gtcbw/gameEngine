@@ -183,7 +183,7 @@ namespace Game
             //target cross
             ITexture cross = textureCache.LoadTexture("cross.png");
             IEnumerable<Polygon> crossShape = surfaceRectangleBuilder.CreateRectangle(0.45, 0.45, 0.1f, 0.1f);
-            //gun in my hands
+            //hell in my hands
             ITexture gunscreentexture = textureCache.LoadTexture("gunscreen.png");
             IEnumerable<Polygon> gunScreenShape = surfaceRectangleBuilder.CreateRectangle(-0.2, 0.0, 1, 0.5f);
             //
@@ -194,7 +194,7 @@ namespace Game
                 new TextureRenderer(new PolygonListRenderer(gunScreenShape, polygonRenderer), gunscreentexture, textureChanger)
                 }), new AlphaTester());
 
-            ScreenshotMaker screenshotMaker = new ScreenshotMaker("C:\\screenshots\\", 60, 0.05, config.Resolution.X, config.Resolution.Y, pressedKeyDetector, timeProvider);
+            ScreenshotMaker screenshotMaker = new ScreenshotMaker("C:\\screenshots\\", 100, 0.04, config.Resolution.X, config.Resolution.Y, pressedKeyDetector, timeProvider);
 
             //enemy
             IAnimated360DegreeTextureLoader animated360DegreeTextureLoader = new Animated360DegreeTextureLoader(textureCache);
@@ -202,7 +202,7 @@ namespace Game
             ITextureSequenceSelector textureSequenceSelector = new TextureSequenceSelector();
 
             IEnumerable<Polygon> footShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 1, z: 0);
-            var footWalkAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\feet\\walk sideward");
+            var footWalkAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\feet\\walk forward");
 
             IEnumerable<Polygon> torsoShape = surfaceRectangleBuilder.CreateRectangle(0, 0.5, 1, 1, z: 0);
             var torsoAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\torso");
@@ -210,16 +210,13 @@ namespace Game
             IEnumerable<Polygon> headShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 2, 2, z: 0);
             var headAnimation = animated360DegreeTextureLoader.LoadAnimatedTexture("characters\\head");
 
-           var gunModel = modelLoader.Load(new ModelInstanceDescription { Filename = "uzi.mod", Position = new World.Model.Position() });
+           var gunModel = modelLoader.Load(new ModelInstanceDescription { Filename = "gun hands.mod", Position = new World.Model.Position() });
 
             IRenderedRotationCalculator renderedRotationCalculator = new RenderedRotationCalculator(playerMotionEncapsulator);
             Animation360DegreeRenderer animation360DegreeRenderer = new Animation360DegreeRenderer(textureByAnimationPercentSelector, textureSequenceSelector, textureChanger, 
                 new PercentProvider(timeProvider, 1.0), footWalkAnimation, torsoAnimation, headAnimation, gunModel, modelInstanceRenderer, renderedRotationCalculator, matrixManager, 
                 new PolygonListRenderer(footShape, polygonRenderer), new PolygonListRenderer(torsoShape, polygonRenderer), new PolygonListRenderer(headShape, polygonRenderer),
-                worldTranslator, playerMotionEncapsulator, worldRotator, timeProvider, heightCalculator);
-
-
-
+                worldTranslator, playerMotionEncapsulator, worldRotator, timeProvider, heightCalculator, playerMotionEncapsulator, new RotationCalculator());
 
             IRenderingElement cullingDeactivator = new CullingDeactivator(new CullingController(), 
                 new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement> { (IRenderingElement)treeCollection, vehicleManager, animation360DegreeRenderer, particleContainer }), new AlphaTester()));

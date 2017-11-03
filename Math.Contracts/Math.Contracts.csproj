@@ -50,6 +50,7 @@
     <Compile Include="IPositionRotator.cs" />
     <Compile Include="IRayWithFacesTester.cs" />
     <Compile Include="IRayWithMapTester.cs" />
+    <Compile Include="IRotationCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IVectorHelper.cs" />
   </ItemGroup>

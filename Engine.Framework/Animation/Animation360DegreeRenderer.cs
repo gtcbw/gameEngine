@@ -1,4 +1,5 @@
-﻿using Engine.Contracts;
+﻿using System;
+using Engine.Contracts;
 using Engine.Contracts.Animation;
 using Engine.Contracts.Models;
 using Engine.Contracts.PlayerMotion;
@@ -32,6 +33,8 @@ namespace Engine.Framework.Animation
 
         private readonly IFrameTimeProvider _timeProvider;
         private readonly IHeightCalculator _heightCalculator;
+        private readonly IPlayerPositionProvider _playerPositionProvider;
+        private readonly IRotationCalculator _rotationCalculator;
         private readonly Position _position = new Position { X = 110, Y = 1, Z = 110 };
 
         public Animation360DegreeRenderer(ITextureByAnimationPercentSelector textureByAnimationPercentSelector,
@@ -53,7 +56,10 @@ namespace Engine.Framework.Animation
             IWorldRotator worldRotator,
 
             IFrameTimeProvider timeProvider, 
-            IHeightCalculator heightCalculator)
+            IHeightCalculator heightCalculator,
+            
+            IPlayerPositionProvider playerPositionProvider,
+            IRotationCalculator rotationCalculator)
         {
             _textureByAnimationPercentSelector = textureByAnimationPercentSelector;
             _textureSequenceSelector = textureSequenceSelector;
@@ -75,6 +81,8 @@ namespace Engine.Framework.Animation
 
             _timeProvider = timeProvider;
             _heightCalculator = heightCalculator;
+            _playerPositionProvider = playerPositionProvider;
+            _rotationCalculator = rotationCalculator;
         }
 
         void IRenderingElement.Render()
@@ -84,8 +92,8 @@ namespace Engine.Framework.Animation
             RotationDegrees rotationDegrees = RotationDegrees.degree_0;
             double percent = _percentProvider.GetPercent();
 
-            _position.Z -= _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
-            //_position.X += _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
+            //_position.Z -= _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
+            _position.X += _timeProvider.GetTimeInSecondsSinceLastFrame() * 1.8;
             _position.Y = _heightCalculator.CalculateHeight(_position.X, _position.Z);
 
             var renderedRotation = _renderedRotationCalculator.CalculateRotationRelativeToCamera(rotationDegrees, _position.X, _position.Z);
@@ -100,8 +108,10 @@ namespace Engine.Framework.Animation
             int headTextureId = selectedHeadTexture.TextureSequence.Textures[0].TextureId;
 
 
-            //double torsoY = (System.Math.Sin((percent * 4 - 0.5) * System.Math.PI) + 1) * 0.5;
-            double torsoY = (System.Math.Sin((percent * 2 - 1.5) * System.Math.PI) + 1) * 0.2 + 0.7;
+            double torsoY = (System.Math.Sin((percent * 4 - 0.5) * System.Math.PI) + 1) * 0.5;
+            //double torsoY = (System.Math.Sin((percent * 2 - 1.5) * System.Math.PI) + 1) * 0.2 + 0.7;
+
+            double gunrotation = CalculateGunRotation();
 
             _matrixManager.Store();
             _worldTranslator.Translate(_position.X, _position.Y, _position.Z);
@@ -120,11 +130,35 @@ namespace Engine.Framework.Animation
 
             _matrixManager.Reset();
             _worldTranslator.Translate(0, 0.1 + torsoY * 0.15, 0.7);
+            _matrixManager.Store();
+            
+            _worldRotator.RotateY(gunrotation);
+            //_worldRotator.RotateZ(20);
             _modelInstanceRenderer.Render(_modelInstance);
+            _matrixManager.Reset();
+
             _worldTranslator.Translate(0, 0, -1.4);
+            //_worldRotator.RotateZ(20);
+            _worldRotator.RotateY(gunrotation);
             _modelInstanceRenderer.Render(_modelInstance);
 
             _matrixManager.Reset();
+        }
+
+        private double CalculateGunRotation()
+        {
+            var playerPosition = _playerPositionProvider.GetPlayerPosition();
+
+            Vector vector = new Vector
+            {
+                X = playerPosition.X - _position.X,
+                Y = playerPosition.Y - _position.Y,
+                Z = playerPosition.Z - _position.Z
+            };
+
+            var rotation = _rotationCalculator.CalculateRotation(vector);
+
+            return rotation.DegreeXZ;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Engine.Framework.PlayerMotion
     {
         private Position _position;
         private Ray _ray;
-        ViewDirection _direction;
+        TwoComponentRotation _direction;
         private readonly IVectorHelper _vectorHelper;
 
         public PlayerMotionEncapsulator(IVectorHelper vectorHelper,
@@ -18,7 +18,7 @@ namespace Engine.Framework.PlayerMotion
             _vectorHelper = vectorHelper;
 
             _position = startPosition;
-            _direction = new ViewDirection { DegreeXZ = 0, DegreeY = 0 };
+            _direction = new TwoComponentRotation { DegreeXZ = 0, DegreeY = 0 };
             _ray = new Ray { Direction = new Vector { X = 0, Y = 0, Z = 1 }, StartPosition = _position };
         }
 
@@ -32,7 +32,7 @@ namespace Engine.Framework.PlayerMotion
             return _ray;
         }
 
-        public ViewDirection GetViewDirection()
+        public TwoComponentRotation GetViewDirection()
         {
             return _direction;
         }
@@ -49,7 +49,7 @@ namespace Engine.Framework.PlayerMotion
             if (vectorXZ == null)
                 vectorXZ = _vectorHelper.ConvertDegreeToVector(degreeXZ);
 
-            _direction = new ViewDirection { DegreeXZ = degreeXZ, DegreeY = degreeY };
+            _direction = new TwoComponentRotation { DegreeXZ = degreeXZ, DegreeY = degreeY };
             Vector2D vectorY = _vectorHelper.ConvertDegreeToVector(degreeY);
             _ray.Direction = new Vector
             {

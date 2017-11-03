@@ -57,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RayWithFacesTesterTest.cs" />
     <Compile Include="RayWithMapTesterTest.cs" />
+    <Compile Include="RotationCalculatorTest.cs" />
     <Compile Include="VectorHelperTest.cs" />
   </ItemGroup>
   <ItemGroup>

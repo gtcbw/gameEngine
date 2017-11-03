@@ -107,7 +107,6 @@
     <Compile Include="PlayerMotion\WalkMotion.cs" />
     <Compile Include="PlayerMotion\VehicleMotion.cs" />
     <Compile Include="PlayerMotion\Vehicle.cs" />
-    <Compile Include="ViewDirection.cs" />
     <Compile Include="IRenderingElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

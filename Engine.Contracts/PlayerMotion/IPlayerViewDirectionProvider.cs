@@ -1,7 +1,9 @@
-﻿namespace Engine.Contracts.PlayerMotion
+﻿using World.Model;
+
+namespace Engine.Contracts.PlayerMotion
 {
     public interface IPlayerViewDirectionProvider
     {
-        ViewDirection GetViewDirection();
+        TwoComponentRotation GetViewDirection();
     }
 }
