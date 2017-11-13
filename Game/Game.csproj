@@ -63,6 +63,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Character.Animation\Character.Animation.csproj">
+      <Project>{8d998f8c-9eb2-4a67-bb3c-c2fee28f4061}</Project>
+      <Name>Character.Animation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine.Contracts\Engine.Contracts.csproj">
       <Project>{a9140007-c3ae-4dce-a75c-407031cc5481}</Project>
       <Name>Engine.Contracts</Name>

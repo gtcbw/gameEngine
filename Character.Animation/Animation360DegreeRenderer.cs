@@ -7,7 +7,7 @@ using Graphics.Contracts;
 using Math.Contracts;
 using World.Model;
 
-namespace Engine.Framework.Animation
+namespace Character.Animation
 {
     public sealed class Animation360DegreeRenderer : IRenderingElement
     {

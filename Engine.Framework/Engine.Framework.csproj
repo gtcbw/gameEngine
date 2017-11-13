@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation\Animated360DegreeTextureLoader.cs" />
-    <Compile Include="Animation\Animation360DegreeRenderer.cs" />
     <Compile Include="Animation\RenderedRotationCalculator.cs" />
     <Compile Include="Animation\TextureByAnimationPercentSelector.cs" />
     <Compile Include="Animation\TextureSequenceSelector.cs" />

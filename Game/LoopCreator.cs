@@ -17,6 +17,7 @@ using Engine.Framework.PlayerMotion;
 using Engine.Contracts.PlayerMotion;
 using Engine.Contracts.Animation;
 using Engine.Framework.Animation;
+using Character.Animation;
 
 namespace Game
 {
