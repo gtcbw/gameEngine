@@ -62,7 +62,7 @@ namespace Game
             ModelContainer modelContainer = new ModelContainer(modelLoader, modelInstanceRenderer);
             
 
-            PlayerMotionEncapsulator playerMotionEncapsulator = new PlayerMotionEncapsulator(vectorHelper, new World.Model.Position { X = 100, Y = 0, Z = 100 });
+            PlayerMotionEncapsulator playerMotionEncapsulator = new PlayerMotionEncapsulator(vectorHelper, new World.Model.Position { X = 84, Y = 0, Z = 85 });
 
             ITexture bike = textureCache.LoadTexture("bike.png");
             IEnumerable<Polygon> bikeShape = surfaceRectangleBuilder.CreateRectangle(-0.5, 0.5, 4, 4, z: 0);
@@ -113,6 +113,9 @@ namespace Game
             IMeshUnitCollection treeCollection = new MeshUnitCollection
                 (new VertexBufferUnitOffsetRenderer(8, new IndexFactorByViewDirectionProvider(playerMotionEncapsulator)));
 
+            IMeshUnitCollection tree2Collection = new MeshUnitCollection
+                (new VertexBufferUnitOffsetRenderer(8, new IndexFactorByViewDirectionProvider(playerMotionEncapsulator)));
+
             IVertexByFieldCreator floorVertexCreator = new FloorVertexCreator(heightCalculator, lengthOfFieldSide / metersPerQuad, metersPerQuad);
             IMeshUnitCreator floorMeshUnitCreator = new FloorMeshUnitCreator(bufferObjectFactory, lengthOfFieldSide / metersPerQuad);
             IFieldChangeObserver floorLoader = new DelayedMeshUnitLoader(floorVertexCreator, floorMeshUnitCreator, floorCollection);
@@ -124,18 +127,33 @@ namespace Game
                 streetMeshUnitCreator, 
                 streetCollection), 6);
 
-            IPositionGenerator positionGenerator = new PositionGenerator(filter, 
+            IPositionGenerator treePositionGenerator = new PositionGenerator(filter, 
                 new BoolProvider(new [] { false, true, false, false, true, false, true, false, false, false, true}), 
                 heightCalculator, 
                 lengthOfFieldSide, 
-                10);
+                6);
             IVertexByFieldCreator treeCreator = new TreeVertexCreator(new TreePrototypeProvider(vectorHelper)
-                .GetPrototype(8, 16), positionGenerator);
+                .GetPrototype(16, 16), treePositionGenerator);
             IMeshUnitCreator treeMeshUnitCreator = new TreeMeshUnitCreator(bufferObjectFactory);
             IFieldChangeObserver treeLoader = new FrameDelayUnitByFieldLoader(
                 new DelayedMeshUnitLoader(treeCreator,
                 treeMeshUnitCreator,
                 treeCollection), 12);
+
+            ////////////////// redundant tree 2
+            IPositionGenerator tree2PositionGenerator = new PositionGenerator(filter,
+                new BoolProvider(new[] { true, false, true, true, false, true, false, true, false, true, false }),
+                heightCalculator,
+                lengthOfFieldSide,
+                8);
+            IVertexByFieldCreator tree2Creator = new TreeVertexCreator(new TreePrototypeProvider(vectorHelper)
+               .GetPrototype(8, 4), tree2PositionGenerator);
+            IFieldChangeObserver tree2Loader = new FrameDelayUnitByFieldLoader(
+                new DelayedMeshUnitLoader(tree2Creator,
+                treeMeshUnitCreator,
+                tree2Collection), 18);
+            ///////////////////////////////
+
 
             //model
             ModelQueue modelQueue = new ModelQueue(modelLoader, modelContainer);
@@ -144,16 +162,17 @@ namespace Game
 
 
             FieldManager fieldManager = new FieldManager(playerMotionEncapsulator,
-                new List<IFieldChangeObserver> { floorLoader, streetLoader, treeLoader, modelQueuePusher },
+                new List<IFieldChangeObserver> { floorLoader, streetLoader, treeLoader, tree2Loader, modelQueuePusher },
                 new FieldChangeAnalyzer(),
                 new ActiveFieldCalculator(lengthOfFieldSide, numberOfFieldsPerAreaSide));
 
             IFog fog = new Fog();
-            float[] color = { (float)(1.0 / 255.0 * 50.0), (float)(1.0 / 255.0 * 150.0), (float)(1.0 / 255.0 * 50.0) };
+            float[] color = { (float)(1.0 / 255.0 * 0.0), (float)(1.0 / 255.0 * 255.0), (float)(1.0 / 255.0 * 0.0) };
             fog.SetColor(color);
 
             ITexture streettexture = textureCache.LoadTexture("street.bmp");
             ITexture treetexture = textureCache.LoadTexture("tree.png", true);
+            ITexture treetexture2 = textureCache.LoadTexture("tree2.png", true);
 
             IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
            
@@ -192,7 +211,7 @@ namespace Game
             {
                  vehicleUsageObserver,
                 new TextureRenderer(new PolygonListRenderer(crossShape, polygonRenderer), cross, textureChanger),
-                new TextureRenderer(new PolygonListRenderer(gunScreenShape, polygonRenderer), gunscreentexture, textureChanger)
+                //new TextureRenderer(new PolygonListRenderer(gunScreenShape, polygonRenderer), gunscreentexture, textureChanger)
                 }), new AlphaTester());
 
             ScreenshotMaker screenshotMaker = new ScreenshotMaker("C:\\screenshots\\", 100, 0.04, config.Resolution.X, config.Resolution.Y, pressedKeyDetector, timeProvider);
@@ -219,8 +238,11 @@ namespace Game
                 new PolygonListRenderer(footShape, polygonRenderer), new PolygonListRenderer(torsoShape, polygonRenderer), new PolygonListRenderer(headShape, polygonRenderer),
                 worldTranslator, playerMotionEncapsulator, worldRotator, timeProvider, heightCalculator, playerMotionEncapsulator, new RotationCalculator());
 
+            IRenderingElement tree1 = new TextureRenderer((IRenderingElement)treeCollection, treetexture, textureChanger);
+            IRenderingElement tree2 = new TextureRenderer((IRenderingElement)tree2Collection, treetexture2, textureChanger);
+
             IRenderingElement cullingDeactivator = new CullingDeactivator(new CullingController(), 
-                new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement> { (IRenderingElement)treeCollection, vehicleManager, animation360DegreeRenderer, particleContainer }), new AlphaTester()));
+                new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement> { tree1, tree2, vehicleManager, animation360DegreeRenderer, particleContainer }), new AlphaTester()));
 
             return () =>
             {
@@ -237,7 +259,7 @@ namespace Game
                     //rendering 2D
                     camera.SetDefaultPerspective();
                     horizon.Render();
-                    frameCounter.MeasureAndRenderFramesPerSecond();
+                   
 
                     //rendering 3D
                     camera.SetInGamePerspective();
@@ -246,7 +268,6 @@ namespace Game
                     colorRenderer.Render();
                     textureChanger.SetTexture(streettexture.TextureId);
                     ((IRenderingElement)streetCollection).Render();
-                    textureChanger.SetTexture(treetexture.TextureId); // TODO: in tree renderer nei
 
                     cullingDeactivator.Render();
 
@@ -261,6 +282,7 @@ namespace Game
                     //rendering final 2D layer
                     camera.SetDefaultPerspective();
                     layerAlphaRenderer.Render();
+                    frameCounter.MeasureAndRenderFramesPerSecond();
 
                     // screenshot
                     screenshotMaker.ExecuteLogic();

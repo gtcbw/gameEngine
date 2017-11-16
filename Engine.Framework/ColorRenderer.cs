@@ -17,7 +17,7 @@ namespace Engine.Framework
 
         void IRenderingElement.Render()
         {
-            _colorSetter.SetColor(0.33f, 0.66f, 0.0f);
+            _colorSetter.SetColor(0.0f, 0.0f, 0.0f);
             _innerElement.Render();
             _colorSetter.DisableColor();
         }

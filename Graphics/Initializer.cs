@@ -14,8 +14,8 @@ namespace Graphics
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
             GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
-            GL.Fog(FogParameter.FogStart, 50.0f);
-            GL.Fog(FogParameter.FogEnd, 100.0f);
+            GL.Fog(FogParameter.FogStart, 5.00f);
+            GL.Fog(FogParameter.FogEnd, 35.0f);
             GL.Fog(FogParameter.FogDensity, 0.5f);
             GL.Hint(HintTarget.FogHint, HintMode.Fastest);
 

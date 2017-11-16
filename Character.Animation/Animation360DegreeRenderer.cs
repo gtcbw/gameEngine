@@ -35,7 +35,7 @@ namespace Character.Animation
         private readonly IHeightCalculator _heightCalculator;
         private readonly IPlayerPositionProvider _playerPositionProvider;
         private readonly IRotationCalculator _rotationCalculator;
-        private readonly Position _position = new Position { X = 110, Y = 1, Z = 110 };
+        private readonly Position _position = new Position { X = 105, Y = 1, Z = 106 };
 
         public Animation360DegreeRenderer(ITextureByAnimationPercentSelector textureByAnimationPercentSelector,
             ITextureSequenceSelector textureSequenceSelector,

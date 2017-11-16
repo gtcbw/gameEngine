@@ -65,7 +65,6 @@
     <Compile Include="IPolygonRenderer.cs" />
     <Compile Include="IResolutionProvider.cs" />
     <Compile Include="IScaler.cs" />
-    <Compile Include="IScreen.cs" />
     <Compile Include="IRenderedSideSwitcher.cs" />
     <Compile Include="IScreenClearer.cs" />
     <Compile Include="ITexture.cs" />
