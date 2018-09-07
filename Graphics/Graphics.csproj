@@ -51,6 +51,7 @@
     <Compile Include="AlphaTester.cs" />
     <Compile Include="BackgroundColor.cs" />
     <Compile Include="CullingController.cs" />
+    <Compile Include="FrameBufferFactory.cs" />
     <Compile Include="MatrixManager.cs" />
     <Compile Include="VertexBufferUnitOffsetRenderer.cs" />
     <Compile Include="VertexBufferUnitRenderer.cs" />

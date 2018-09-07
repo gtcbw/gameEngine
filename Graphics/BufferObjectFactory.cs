@@ -1,6 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using Graphics.Contracts;
-using System;
 
 namespace Graphics
 {

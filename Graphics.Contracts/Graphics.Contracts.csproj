@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrameBuffer.cs" />
     <Compile Include="ICullingController.cs" />
+    <Compile Include="IFrameBufferFactory.cs" />
     <Compile Include="IIndexFactorProvider.cs" />
     <Compile Include="IMatrixManager.cs" />
     <Compile Include="VertexBufferUnit.cs" />

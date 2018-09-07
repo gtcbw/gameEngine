@@ -174,7 +174,7 @@ namespace Game
             ITexture treetexture = textureCache.LoadTexture("tree.png", true);
             ITexture treetexture2 = textureCache.LoadTexture("tree2.png", true);
 
-            IRenderingElement colorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
+            IRenderingElement floorRenderer = new ColorRenderer((IRenderingElement)floorCollection, colorSetter);
            
 
             //light
@@ -244,6 +244,13 @@ namespace Game
             IRenderingElement cullingDeactivator = new CullingDeactivator(new CullingController(), 
                 new AlphaTestRenderer(new ListRenderer(new List<IRenderingElement> { tree1, tree2, vehicleManager, animation360DegreeRenderer, particleContainer }), new AlphaTester()));
 
+            /////////////framebuffer test
+            ///
+            IFrameBufferFactory f = new FrameBufferFactory();
+            FrameBuffer fId = f.GenerateFrameBuffer();
+            ///////////////////
+
+
             return () =>
             {
                 while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
@@ -256,17 +263,25 @@ namespace Game
                     vehicleManager.UpdateVehicles();
                     fieldManager.UpdateFieldsByPlayerPosition();
 
+                    //framebuffer füllen
+                    f.SetFrameBuffer(fId.FrameBufferId);
+
                     //rendering 2D
                     camera.SetDefaultPerspective();
                     horizon.Render();
-                   
 
                     //rendering 3D
                     camera.SetInGamePerspective();
 
+
+
                     //fog.StartFog();
-                    colorRenderer.Render();
-                    textureChanger.SetTexture(streettexture.TextureId);
+                    floorRenderer.Render();
+
+                    f.UnbindFrameBuffer();
+
+                    //textureChanger.SetTexture(streettexture.TextureId);
+                    textureChanger.SetTexture(fId.TextureId);
                     ((IRenderingElement)streetCollection).Render();
 
                     cullingDeactivator.Render();
