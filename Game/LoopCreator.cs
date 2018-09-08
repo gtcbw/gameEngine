@@ -247,7 +247,10 @@ namespace Game
             /////////////framebuffer test
             ///
             IFrameBufferFactory f = new FrameBufferFactory();
-            FrameBuffer fId = f.GenerateFrameBuffer();
+            FrameBuffer fId = f.GenerateFrameBuffer(config.Resolution.X, config.Resolution.Y);
+
+            IEnumerable<Polygon> finalScreen = surfaceRectangleBuilder.CreateRectangle(-0.3, 0, 1.6f, 0.9f, textureYOne: 0, textureYZero: 1);
+            IRenderingElement polygonListRenderer = new PolygonListRenderer(finalScreen, polygonRenderer);
             ///////////////////
 
 
@@ -255,8 +258,6 @@ namespace Game
             {
                 while(!pressedKeyDetector.IsKeyDown(Keys.Escape))
                 {
-                    screenClearer.CleanScreen();
-
                     timeProvider.MeasureTimeSinceLastFrame();
                     mousePositionController.MeasureMousePositionDelta();
                     playerMotionManager.CalculatePlayerMotion();
@@ -266,6 +267,7 @@ namespace Game
                     //framebuffer füllen
                     f.SetFrameBuffer(fId.FrameBufferId);
 
+                    screenClearer.CleanScreen();
                     //rendering 2D
                     camera.SetDefaultPerspective();
                     horizon.Render();
@@ -273,15 +275,10 @@ namespace Game
                     //rendering 3D
                     camera.SetInGamePerspective();
 
-
-
                     //fog.StartFog();
                     floorRenderer.Render();
 
-                    f.UnbindFrameBuffer();
-
-                    //textureChanger.SetTexture(streettexture.TextureId);
-                    textureChanger.SetTexture(fId.TextureId);
+                    textureChanger.SetTexture(streettexture.TextureId);
                     ((IRenderingElement)streetCollection).Render();
 
                     cullingDeactivator.Render();
@@ -294,10 +291,15 @@ namespace Game
 
                     rayTrigger.DoStuff();
 
-                    //rendering final 2D layer
+                    //rendering 2D layer
                     camera.SetDefaultPerspective();
                     layerAlphaRenderer.Render();
                     frameCounter.MeasureAndRenderFramesPerSecond();
+
+                    //render final layer
+                    f.UnbindFrameBuffer();
+                    textureChanger.SetTexture(fId.TextureId);
+                    polygonListRenderer.Render();
 
                     // screenshot
                     screenshotMaker.ExecuteLogic();
