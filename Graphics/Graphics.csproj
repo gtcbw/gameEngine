@@ -53,6 +53,7 @@
     <Compile Include="CullingController.cs" />
     <Compile Include="FrameBufferFactory.cs" />
     <Compile Include="MatrixManager.cs" />
+    <Compile Include="ShaderFactory.cs" />
     <Compile Include="VertexBufferUnitOffsetRenderer.cs" />
     <Compile Include="VertexBufferUnitRenderer.cs" />
     <Compile Include="Camera.cs" />

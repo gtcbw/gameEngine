@@ -251,6 +251,12 @@ namespace Game
 
             IEnumerable<Polygon> finalScreen = surfaceRectangleBuilder.CreateRectangle(-0.3, 0, 1.6f, 0.9f, textureYOne: 0, textureYZero: 1);
             IRenderingElement polygonListRenderer = new PolygonListRenderer(finalScreen, polygonRenderer);
+
+            /////////////shader
+            ShaderFactory shaderFactory = new ShaderFactory();
+            int programId = shaderFactory.CreateShaderProgram();
+
+            //wann shader deleten????
             ///////////////////
 
 
@@ -299,7 +305,10 @@ namespace Game
                     //render final layer
                     f.UnbindFrameBuffer();
                     textureChanger.SetTexture(fId.TextureId);
+
+                    shaderFactory.ActivateShaderProgram(programId);
                     polygonListRenderer.Render();
+                    shaderFactory.DeactivateShaderProgram();
 
                     // screenshot
                     screenshotMaker.ExecuteLogic();
