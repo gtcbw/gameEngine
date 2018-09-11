@@ -249,9 +249,10 @@ namespace Game
             IFrameBufferFactory f = new FrameBufferFactory();
             FrameBuffer fId = f.GenerateFrameBuffer(config.Resolution.X, config.Resolution.Y);
 
-            IEnumerable<Polygon> finalScreen = surfaceRectangleBuilder.CreateRectangle(-0.3, 0, 1.6f, 0.9f, textureYOne: 0, textureYZero: 1);
-            IRenderingElement polygonListRenderer = new PolygonListRenderer(finalScreen, polygonRenderer);
-
+            IEnumerable<Polygon> finalScreenLeft = surfaceRectangleBuilder.CreateRectangle(-0.3, 0, 0.8f, 0.9f, textureYOne: 0, textureYZero: 1);
+            IRenderingElement polygonListRendererLeft = new PolygonListRenderer(finalScreenLeft, polygonRenderer);
+            IEnumerable<Polygon> finalScreenRight = surfaceRectangleBuilder.CreateRectangle(0.5, 0, 0.8f, 0.9f, textureYOne: 0, textureYZero: 1);
+            IRenderingElement polygonListRendererRight = new PolygonListRenderer(finalScreenRight, polygonRenderer);
             /////////////shader
             ShaderFactory shaderFactory = new ShaderFactory();
             int programId = shaderFactory.CreateShaderProgram();
@@ -281,7 +282,7 @@ namespace Game
                     //rendering 3D
                     camera.SetInGamePerspective();
 
-                    //fog.StartFog();
+                    fog.StartFog();
                     floorRenderer.Render();
 
                     textureChanger.SetTexture(streettexture.TextureId);
@@ -293,7 +294,7 @@ namespace Game
                     ((IRenderingElement)modelContainer).Render();
                     light.Disable();
 
-                    //fog.StopFog();
+                    fog.StopFog();
 
                     rayTrigger.DoStuff();
 
@@ -304,10 +305,15 @@ namespace Game
 
                     //render final layer
                     f.UnbindFrameBuffer();
+
+                    screenClearer.CleanScreen();
+
                     textureChanger.SetTexture(fId.TextureId);
 
+                    polygonListRendererLeft.Render();
+
                     shaderFactory.ActivateShaderProgram(programId);
-                    polygonListRenderer.Render();
+                    polygonListRendererRight.Render();
                     shaderFactory.DeactivateShaderProgram();
 
                     // screenshot
