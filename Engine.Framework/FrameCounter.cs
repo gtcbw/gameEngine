@@ -32,7 +32,7 @@ namespace Engine.Framework
             }
 
             _counter++;
-            _fontRenderer.RenderFont(_characters, 1.2, 0.9);
+            _fontRenderer.RenderFont(_characters, 0.8, 0.9);
         }
     }
 }

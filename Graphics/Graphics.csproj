@@ -76,6 +76,7 @@
     <Compile Include="TextureChanger.cs" />
     <Compile Include="TextureLoader.cs" />
     <Compile Include="BufferObjectFactory.cs" />
+    <Compile Include="ViewPortSetter.cs" />
     <Compile Include="WorldRotator.cs" />
     <Compile Include="Translator.cs" />
   </ItemGroup>

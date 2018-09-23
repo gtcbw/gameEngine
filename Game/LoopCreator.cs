@@ -28,7 +28,7 @@ namespace Game
             Window window = new Window(config.Resolution.X, config.Resolution.Y);
             window.VSync =  OpenTK.VSyncMode.Off;
 
-            MousePositionController mousePositionController = new MousePositionController(window.Mouse, config.InvertMouse, config.MouseSensitivity);
+            MousePositionController mousePositionController = new MousePositionController(config.InvertMouse, config.MouseSensitivity);
             IMouseButtonEventProvider mouseButtonEventProvider = new MouseButtonEventProvider(window.Mouse);
             IPressedKeyDetector pressedKeyDetector = new PressedKeyDetector(window.Keyboard);
             FrameTimeProvider timeProvider = new FrameTimeProvider();
@@ -167,7 +167,7 @@ namespace Game
                 new ActiveFieldCalculator(lengthOfFieldSide, numberOfFieldsPerAreaSide));
 
             IFog fog = new Fog();
-            float[] color = { (float)(1.0 / 255.0 * 0.0), (float)(1.0 / 255.0 * 255.0), (float)(1.0 / 255.0 * 0.0) };
+            float[] color = { (float)(1.0 / 255.0 * 0.0), (float)(1.0 / 255.0 * 0.0), (float)(1.0 / 255.0 * 0.0) };
             fog.SetColor(color);
 
             ITexture streettexture = textureCache.LoadTexture("street.bmp");
@@ -196,7 +196,7 @@ namespace Game
             //
 
             IFontMapper fontMapper = new FontMapper(textureCache, "font");
-            IFontRenderer fontRenderer = new FontRenderer(surfaceRectangleBuilder.CreateRectangle(0, 0, 0.025f, 0.025f), polygonRenderer, worldTranslator, textureChanger, matrixManager,  0.03);
+            IFontRenderer fontRenderer = new FontRenderer(surfaceRectangleBuilder.CreateRectangle(0, 0, 0.1f, 0.1f), polygonRenderer, worldTranslator, textureChanger, matrixManager,  0.1);
             FrameCounter frameCounter = new FrameCounter(fontMapper, fontRenderer);
 
 
@@ -247,16 +247,17 @@ namespace Game
             /////////////framebuffer test
             ///
             IFrameBufferFactory f = new FrameBufferFactory();
-            FrameBuffer fId = f.GenerateFrameBuffer(config.Resolution.X, config.Resolution.Y);
+            FrameBuffer fId = f.GenerateFrameBuffer(config.Resolution.X / 10, config.Resolution.Y / 10);
 
             IEnumerable<Polygon> finalScreenLeft = surfaceRectangleBuilder.CreateRectangle(-0.3, 0, 0.8f, 0.9f, textureYOne: 0, textureYZero: 1);
             IRenderingElement polygonListRendererLeft = new PolygonListRenderer(finalScreenLeft, polygonRenderer);
-            IEnumerable<Polygon> finalScreenRight = surfaceRectangleBuilder.CreateRectangle(0.5, 0, 0.8f, 0.9f, textureYOne: 0, textureYZero: 1);
+            float lengthx = (float)config.Resolution.X / (float)config.Resolution.Y;
+            IEnumerable<Polygon> finalScreenRight = surfaceRectangleBuilder.CreateRectangle(-(lengthx - 1) / 2.0, 0, lengthx, 1.0f, textureYOne: 0, textureYZero: 1);
             IRenderingElement polygonListRendererRight = new PolygonListRenderer(finalScreenRight, polygonRenderer);
             /////////////shader
             ShaderFactory shaderFactory = new ShaderFactory();
             int programId = shaderFactory.CreateShaderProgram();
-
+            ViewPortSetter viewPortSetter = new ViewPortSetter();
             //wann shader deleten????
             ///////////////////
 
@@ -273,7 +274,7 @@ namespace Game
 
                     //framebuffer füllen
                     f.SetFrameBuffer(fId.FrameBufferId);
-
+                    viewPortSetter.SetViewport(1920 / 10, 1080 / 10);
                     screenClearer.CleanScreen();
                     //rendering 2D
                     camera.SetDefaultPerspective();
@@ -305,12 +306,11 @@ namespace Game
 
                     //render final layer
                     f.UnbindFrameBuffer();
-
+                    viewPortSetter.SetViewport(1920, 1080);
                     screenClearer.CleanScreen();
 
                     textureChanger.SetTexture(fId.TextureId);
-
-                    polygonListRendererLeft.Render();
+                    //polygonListRendererLeft.Render();
 
                     shaderFactory.ActivateShaderProgram(programId);
                     polygonListRendererRight.Render();
