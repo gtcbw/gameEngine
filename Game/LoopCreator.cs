@@ -102,7 +102,7 @@ namespace Game
             ICamera camera = new Camera(config.Resolution.AspectRatio, playerMotionEncapsulator);
 
             // environment rendring
-            ITexture horizontexture = textureCache.LoadTexture("jungle.png");
+            ITexture horizontexture = textureCache.LoadTexture("white.png");
             IEnumerable<Polygon> polygons = surfaceRectangleBuilder.CreateRectangle(-1, 0, 4, 1);
             
             IRenderingElement horizon = new Horizon(horizontexture, textureChanger, polygonRenderer, polygons, playerMotionEncapsulator, worldTranslator, matrixManager);
@@ -167,7 +167,8 @@ namespace Game
                 new ActiveFieldCalculator(lengthOfFieldSide, numberOfFieldsPerAreaSide));
 
             IFog fog = new Fog();
-            float[] color = { (float)(1.0 / 255.0 * 0.0), (float)(1.0 / 255.0 * 0.0), (float)(1.0 / 255.0 * 0.0) };
+            //float[] color = { (float)(1.0 / 255.0 * 1.0), (float)(1.0 / 255.0 * 1.0), (float)(1.0 / 255.0 * 1.0) };
+            float[] color = { (float)(1.0), (float)(1.0), (float)(1.0) };
             fog.SetColor(color);
 
             ITexture streettexture = textureCache.LoadTexture("street.bmp");
@@ -258,6 +259,9 @@ namespace Game
             ShaderFactory shaderFactory = new ShaderFactory();
             int programId = shaderFactory.CreateShaderProgram();
             ViewPortSetter viewPortSetter = new ViewPortSetter();
+
+            //second texture
+            ITexture caro = textureCache.LoadTexture("wall.bmp");
             //wann shader deleten????
             ///////////////////
 
@@ -286,14 +290,14 @@ namespace Game
                     fog.StartFog();
                     floorRenderer.Render();
 
-                    textureChanger.SetTexture(streettexture.TextureId);
-                    ((IRenderingElement)streetCollection).Render();
+                    //textureChanger.SetTexture(streettexture.TextureId);
+                    //((IRenderingElement)streetCollection).Render();
 
-                    cullingDeactivator.Render();
+                    //cullingDeactivator.Render();
 
-                    light.Enable();
-                    ((IRenderingElement)modelContainer).Render();
-                    light.Disable();
+                    //light.Enable();
+                    //((IRenderingElement)modelContainer).Render();
+                    //light.Disable();
 
                     fog.StopFog();
 
@@ -309,9 +313,10 @@ namespace Game
                     viewPortSetter.SetViewport(1920, 1080);
                     screenClearer.CleanScreen();
 
-                    textureChanger.SetTexture(fId.TextureId);
+                    textureChanger.SetTexture(fId.TextureId, 0);
                     //polygonListRendererLeft.Render();
 
+                    textureChanger.SetTexture(caro.TextureId, 1);
                     shaderFactory.ActivateShaderProgram(programId);
                     polygonListRendererRight.Render();
                     shaderFactory.DeactivateShaderProgram();

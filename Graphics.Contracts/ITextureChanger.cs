@@ -2,6 +2,6 @@
 {
     public interface ITextureChanger
     {
-        void SetTexture(int textureId);
+        void SetTexture(int textureId, int channel = 0);
     }
 }
