@@ -33,7 +33,6 @@ namespace Graphics
                     GL.ActiveTexture(TextureUnit.Texture3);
                     break;
             }
-            GL.Enable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, textureId);
         }
     }
