@@ -8,8 +8,6 @@
 
         public uint? TextureBufferId { get; set; }
 
-        public uint? NormalBufferId { get; set; }
-
         public int NumberOfTriangleCorners { set; get; }
     }
 }

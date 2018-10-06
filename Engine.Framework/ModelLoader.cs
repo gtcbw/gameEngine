@@ -46,7 +46,6 @@ namespace Engine.Framework
             foreach (ModelRenderUnit submodel in model.RenderUnits)
             {
                 _textureLoader.DeleteTexture(submodel.Texture);
-                _bufferObjectFactory.Delete(submodel.VertexBufferUnit.NormalBufferId.Value);
                 _bufferObjectFactory.Delete(submodel.VertexBufferUnit.VertexBufferId);
                 _bufferObjectFactory.Delete(submodel.VertexBufferUnit.TextureBufferId.Value);
             }
@@ -72,16 +71,11 @@ namespace Engine.Framework
 
                     texcoords[texcoordIndex++] = vertex.TextureCoordinate.X;
                     texcoords[texcoordIndex++] = vertex.TextureCoordinate.Y;
-
-                    normals[normalIndex++] = polygon.Normal.X;
-                    normals[normalIndex++] = polygon.Normal.Y;
-                    normals[normalIndex++] = polygon.Normal.Z;
                 }
             }
 
             vertexBufferUnit.VertexBufferId = _bufferObjectFactory.GenerateVertexBuffer(vertices);
             vertexBufferUnit.TextureBufferId = _bufferObjectFactory.GenerateTextureCoordBuffer(texcoords);
-            vertexBufferUnit.NormalBufferId = _bufferObjectFactory.GenerateNormalBuffer(normals);
 
             vertexBufferUnit.NumberOfTriangleCorners = vertices.Length / 3;
 

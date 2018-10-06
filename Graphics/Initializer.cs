@@ -11,7 +11,7 @@ namespace Graphics
             GL.DepthFunc(DepthFunction.Lequal);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             GL.AlphaFunc(AlphaFunction.Greater, 0.9f);
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            GL.ClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
             GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
             GL.Fog(FogParameter.FogStart, 5.0f);

@@ -12,8 +12,6 @@ namespace Graphics
 
             foreach (Polygon polygon in polygons)
             {
-                GL.Normal3(polygon.Normal.X, polygon.Normal.Y, polygon.Normal.Z);
-
                 foreach (Vertex vertex in polygon.Vertices)
                 {
                     GL.TexCoord2(vertex.TextureCoordinate.X, vertex.TextureCoordinate.Y);

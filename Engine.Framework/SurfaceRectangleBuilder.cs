@@ -20,7 +20,7 @@ namespace Engine.Framework
 
             List<Polygon> triangles = new List<Polygon>();
 
-            Polygon polygonOne = new Polygon { Normal = new Normal { Y = 1 } };
+            Polygon polygonOne = new Polygon();
             List<Vertex> vertices = new List<Vertex>();
             vertices.Add(new Vertex
             {
@@ -41,7 +41,7 @@ namespace Engine.Framework
 
             triangles.Add(polygonOne);
 
-            Polygon polygonTwo = new Polygon { Normal = new Normal { Y = 1 } };
+            Polygon polygonTwo = new Polygon();
             vertices = new List<Vertex>();
             vertices.Add(new Vertex
             {
